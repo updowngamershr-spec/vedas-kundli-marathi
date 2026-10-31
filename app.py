@@ -808,7 +808,7 @@ def index_ui():
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>વેદાસ કુંડળી પ્રોફેશનલ - ગુજરાતી અને અંગ્રેજી વૈદિક જ્યોતિષ</title>
+  <title>वेदास कुंडली प्रोफेशनल - महाराष्ट्रियन मराठी (Vedas Kundli)</title>
   <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2190,7 +2190,7 @@ def index_ui():
           </div>
 
           <!-- Language Selector -->
-          <div class="control-pill" title="Language Switcher (ભાષા બદલો / भाषा बदलें)">
+          <div class="control-pill" title="Language Switcher (भाषा बदला / भाषा बदलें)">
             <button class="control-btn active" id="lang_mr" onclick="setLang('mr')">मराठी</button>
             <button class="control-btn" id="lang_hi" onclick="setLang('hi')">हिन्दी</button>
             <button class="control-btn" id="lang_en" onclick="setLang('en')">English</button>
@@ -2218,7 +2218,7 @@ def index_ui():
             <div style="background:#FFFFFF; border:1.5px solid #FDE68A; border-radius:10px; padding:10px; box-shadow:0 2px 8px rgba(212,175,55,0.08);">
               <img src="/assets/gods/ganesha.png" alt="Shree Ganesh" style="width:70px; height:70px; object-fit:cover; border-radius:50%; border:2px solid #D4AF37; margin:0 auto 6px auto; display:block; box-shadow:0 0 10px rgba(212,175,55,0.3);"/>
               <strong style="color:#7C2D12; font-size:12px; display:block;">श्री गणेश (विघ्नहर्ता)</strong>
-              <span style="font-size:10.5px; color:#C2540A; font-weight:700;">વિઘ્નહર્તા સિદ્ધિ-દાતા (विघ्नहर्ता)</span>
+              <span style="font-size:10.5px; color:#C2540A; font-weight:700;">विघ्नहर्ता सिद्धिविनायक</span>
             </div>
             <div style="background:#FFFFFF; border:1.5px solid #FDE68A; border-radius:10px; padding:10px; box-shadow:0 2px 8px rgba(212,175,55,0.08);">
               <img src="/assets/gods/shiva.png" alt="Lord Shiva" style="width:70px; height:70px; object-fit:cover; border-radius:50%; border:2px solid #D4AF37; margin:0 auto 6px auto; display:block; box-shadow:0 0 10px rgba(212,175,55,0.3);"/>
@@ -2238,7 +2238,7 @@ def index_ui():
             <div style="background:#FFFFFF; border:1.5px solid #FDE68A; border-radius:10px; padding:10px; box-shadow:0 2px 8px rgba(212,175,55,0.08);">
               <img src="/assets/gods/hanuman.png" alt="Hanuman Ji" style="width:70px; height:70px; object-fit:cover; border-radius:50%; border:2px solid #D4AF37; margin:0 auto 6px auto; display:block; box-shadow:0 0 10px rgba(212,175,55,0.3);"/>
               <strong style="color:#7C2D12; font-size:12px; display:block;">श्री हनुमान जी (संकटमोचन)</strong>
-              <span style="font-size:10.5px; color:#B45309; font-weight:700;">સંકટમોચન મહાબલી (संकटमोचन रक्षा)</span>
+              <span style="font-size:10.5px; color:#B45309; font-weight:700;">संकटमोचन महाबली रक्षक</span>
             </div>
           </div>
         </div>
@@ -2256,14 +2256,14 @@ def index_ui():
               <div class="metric-icon-box">📄</div>
               <div class="metric-data">
                 <div class="val" id="dashTotalReports">0</div>
-                <div class="lbl">જનરેટ કરેલા PDF રિપોર્ટ્સ (निर्मित PDF)</div>
+                <div class="lbl">तयार केलेले PDF अहवाल (निर्मित अहवाल)</div>
               </div>
             </div>
             <div class="metric-card">
               <div class="metric-icon-box">🪐</div>
               <div class="metric-data">
                 <div class="val" id="dashActiveClient">Ready</div>
-                <div class="lbl">સક્રિય જાતક વર્કસ્પેસ (सक्रिय जातक)</div>
+                <div class="lbl">सक्रिय जातक वर्कस्पेस (सक्रिय जातक)</div>
               </div>
             </div>
             <div class="metric-card">
@@ -2294,7 +2294,7 @@ def index_ui():
               <table class="crm-table">
                 <thead>
                   <tr>
-                    <th>ग्राहकाचे नाव (Client Name / जातक)</th><th>લિંગ (Gender)</th><th>जन्म तारीख (DOB / जन्म)</th><th>जन्म वेळ (Time / वेळ)</th><th>जन्म ठिकाण (Place / ठिकाण)</th><th>सल्ला श्रेणी (Category)</th><th>कृती (Actions / कृती)</th>
+                    <th>ग्राहकाचे नाव (Client Name / जातक)</th><th>लिंग (Gender)</th><th>जन्म तारीख (DOB / जन्म)</th><th>जन्म वेळ (Time / वेळ)</th><th>जन्म ठिकाण (Place / ठिकाण)</th><th>सल्ला श्रेणी (Category)</th><th>कृती (Actions / कृती)</th>
                   </tr>
                 </thead>
                 <tbody id="dashRecentClientsBody">
@@ -2489,7 +2489,7 @@ def index_ui():
               <table class="crm-table">
                 <thead>
                   <tr>
-                    <th>આઈડી (ID)</th><th>ग्राहकाचे नाव (Client Name / जातक)</th><th>લિંગ (Gender)</th><th>જન્મ તારીખ અને સમય (DOB &amp; TOB)</th><th>જન્મ जन्म ठिकाण (Place / ठिकाण)</th><th>ફોન (Phone)</th><th>કેટેગરી (Category)</th><th>નોંધણી તારીખ (Created)</th><th>कृती (Actions / कृती)</th>
+                    <th>आयडी (ID)</th><th>ग्राहकाचे नाव (Client Name)</th><th>लिंग (Gender)</th><th>जन्म तारीख व वेळ (DOB &amp; TOB)</th><th>जन्म ठिकाण (Place)</th><th>फोन (Phone)</th><th>श्रेणी (Category)</th><th>नोंदणी तारीख (Created)</th><th>कृती (Actions)</th>
                   </tr>
                 </thead>
                 <tbody id="clientsFullTableBody">
@@ -2510,7 +2510,7 @@ def index_ui():
               <span style="font-size:24px;">👑</span>
               <div>
                 <strong style="font-family:'Cinzel', serif; font-size:14px; font-weight:900; color:#78350F; display:block;">
-                  સંપૂર્ણ ૫૬-પેજ VIP કુંડળી મહા-ડોસિયર (Full Gujarati VIP Dossier)
+                  संपूर्ण ५६-पृष्ठीय VIP महा-जन्मपत्रिका (Full 56-Page VIP Dossier)
                 </strong>
                 <span style="font-size:11px; color:#92400E; font-weight:600;">
                   १६ वर्ग कुंडली • विंशोत्तरी महादशा • लाल किताब १९५२ चे अचूक उपाय व अष्टकवर्ग
@@ -2542,7 +2542,7 @@ def index_ui():
               <div class="val" id="statNakshatra">-</div>
             </div>
             <div class="stat-pill-card">
-              <div class="lbl">માંગલિક દોષ (Manglik / मांगलिक)</div>
+              <div class="lbl">मांगलिक दोष (Manglik / मांगलिक)</div>
               <div class="val" id="statManglik">-</div>
             </div>
             <div class="stat-pill-card">
@@ -2580,7 +2580,7 @@ def index_ui():
             <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; font-weight:700;" onclick="document.getElementById('sec_shadbala_sav').scrollIntoView({behavior:'smooth'})">⚖️ षड्बल व SAV (Shadbala)</button>
             <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; background:#FEF3C7; color:#78350F; font-weight:800; border-color:#FDE68A;" onclick="document.getElementById('sec_kp_system').scrollIntoView({behavior:'smooth'})">🏛️ KP System &amp; Cusps</button>
             <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; background:#FEE2E2; color:#991B1B; font-weight:800; border-color:#FCA5A5;" onclick="document.getElementById('sec_lal_kitab').scrollIntoView({behavior:'smooth'})">📖 Lal Kitab &amp; Upay</button>
-            <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; background:#DCFCE7; color:#166534; font-weight:800; border-color:#86EFAC;" onclick="document.getElementById('sec_ratna_yantra').scrollIntoView({behavior:'smooth'})">💎 રત્ન અને સિદ્ધ યંત્ર (रत्न व यंत्र)</button>
+            <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; background:#DCFCE7; color:#166534; font-weight:800; border-color:#86EFAC;" onclick="document.getElementById('sec_ratna_yantra').scrollIntoView({behavior:'smooth'})">💎 रत्ने व सिद्ध यंत्रे (रत्न व यंत्र)</button>
             <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; background:#E0E7FF; color:#3730A3; font-weight:800; border-color:#C7D2FE;" onclick="document.getElementById('sec_avkahada_science').scrollIntoView({behavior:'smooth'})">🔬 अवकहडा व विज्ञान (Avakahada &amp; Science)</button>
           </div>
 
@@ -2608,18 +2608,18 @@ def index_ui():
                     <option value="D9" selected>D9 नवमांश (धर्म, जोडीदार व आत्मा / नवमांश)</option>
                     <option value="D10">D10 दशमांश (उद्योग, करिअर व प्रतिष्ठा / दशमांश)</option>
                     <option value="D2">D2 होरा (धन व संपत्ती / होरा)</option>
-                    <option value="D3">D3 દ્રેષ્કાણ (ભાઈ-ભાંડુ અને પરાક્રમ / द्रेष्काण)</option>
-                    <option value="D4">D4 ચતુર્થાંશ (ભાગ્ય અને સંપત્તિ / चतुर्थांश)</option>
-                    <option value="D7">D7 સપ્તાંશ (સંતાન અને વંશ / सप्तांश)</option>
-                    <option value="D12">D12 દ્વાદશાંશ (માતા-પિતા અને પૂર્વજો / द्वादशांश)</option>
-                    <option value="D16">D16 ષોડશાંશ (વાહન અને સુખ / षोडशांश)</option>
-                    <option value="D20">D20 વિંશાંશ (અધ્યાત્મ અને ઉપાસના / विंशांश)</option>
-                    <option value="D24">D24 ચતુર્વિંશાંશ (વિદ્યા અને જ્ઞાન / चतुर्विंशांश)</option>
-                    <option value="D27">D27 સપ્તવિંશાંશ (શારીરિક બળ અને સામર્થ્ય / सप्तविंशांश)</option>
-                    <option value="D30">D30 ત્રિંશાંશ (અનિષ્ટ અને અરિષ્ટ નિવારણ / त्रिंशांश)</option>
-                    <option value="D40">D40 ખવેદાંશ (શુભ ફળ અને પરિણામ / खवेदांश)</option>
-                    <option value="D45">D45 અક્ષવેદાંશ (સમગ્ર કલ્યાણ / अक्षवेदांश)</option>
-                    <option value="D60">D60 ષષ્ટ્યાંશ (પૂર્વ જન્મ સંચિત કર્મ / षष्ट्यंश)</option>
+                    <option value="D3">D3 द्रेष्काण (भावंडे व पराक्रम / द्रेष्काण)</option>
+                    <option value="D4">D4 चतुर्थांश (भाग्य व अचल संपत्ती / चतुर्थांश)</option>
+                    <option value="D7">D7 सप्तांश (संतती व वंशवृद्धी / सप्तांश)</option>
+                    <option value="D12">D12 द्वादशांश (माता-पिता व पूर्वज / द्वादशांश)</option>
+                    <option value="D16">D16 षोडशांश (वाहन व गृहसुख / षोडशांश)</option>
+                    <option value="D20">D20 विंशांश (अध्यात्म व उपासना / विंशांश)</option>
+                    <option value="D24">D24 चतुर्विंशांश (उच्च विद्या व ज्ञान / चतुर्विंशांश)</option>
+                    <option value="D27">D27 सप्तविंशांश (शारीरिक ताकद व सामर्थ्य / सप्तविंशांश)</option>
+                    <option value="D30">D30 त्रिंशांश (अरिष्ट व संकट निवारण / त्रिंशांश)</option>
+                    <option value="D40">D40 खवेदांश (शुभ फळे व परिणाम / खवेदांश)</option>
+                    <option value="D45">D45 अक्षवेदांश (सर्वंकष कल्याण / अक्षवेदांश)</option>
+                    <option value="D60">D60 षष्ट्यंश (पूर्वजन्म संचित कर्म / षष्ट्यंश)</option>
                     <option value="TRANSIT">आजचे गोचर (Real-Time Transit / आज का गोचर)</option>
                   </select>
                 </div>
@@ -2638,12 +2638,12 @@ def index_ui():
               <table class="dash-table">
                 <thead>
                   <tr>
-                    <th>ગ્રહ (Planet / ग्रह)</th>
-                    <th>રાશિ (Sign / राशि)</th>
-                    <th>અંશ-કલા-વિકલા (Degree / अंश)</th>
-                    <th>નક્ષત્ર અને પદ (Nakshatra &amp; Pada / नक्षत्र)</th>
-                    <th>અવસ્થા (Dignity / अवस्था)</th>
-                    <th>સ્થિતિ (Status / गति)</th>
+                    <th>ग्रह (Planet / ग्रह)</th>
+                    <th>राशी (Sign / राशि)</th>
+                    <th>अंश-कला-विकला (Degree / अंश)</th>
+                    <th>नक्षत्र व चरण (Nakshatra &amp; Pada / नक्षत्र)</th>
+                    <th>अवस्था (Dignity / अवस्था)</th>
+                    <th>स्थिती (Status / गति)</th>
                   </tr>
                 </thead>
                 <tbody id="planetTableBody">
@@ -2656,7 +2656,7 @@ def index_ui():
           <!-- 12 Bhavas (Houses) -->
           <div class="glass-card">
             <div class="card-header">
-              <span>🪐 ૧૨ ભાવ વિશ્લેષણ અને ભાવેશ (द्वादश भाव विश्लेषण)</span>
+              <span>🪐 १२ भाव विश्लेषण व भावेश (द्वादश भाव विश्लेषण)</span>
             </div>
             <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:10px;" id="bhavasGrid"></div>
           </div>
@@ -2664,7 +2664,7 @@ def index_ui():
           <!-- Vimshottari Dasha Timeline -->
           <div class="glass-card">
             <div class="card-header">
-              <span>🔮 વિંશોત્તરી મહાદશા અને અંતર્દશા સમયગાળો (विंशोत्तरी महादशा व अंतर्दशा)</span>
+              <span>🔮 विंशोत्तरी महादशा व अंतर्दशा कालखंड (विंशोत्तरी महादशा व अंतर्दशा)</span>
             </div>
             <div id="dashaSummary"></div>
             <div style="margin-top:16px;">
@@ -2676,7 +2676,7 @@ def index_ui():
           <!-- Doshas & Shastriya Remedies -->
           <div class="glass-card">
             <div class="card-header">
-              <span>🛡️ શાસ્ત્રીય દોષ અને પ્રામાણિક વૈદિક ઉપાય (दोष एवं वैदिक उपाय)</span>
+              <span>🛡️ शास्त्रीय दोष आणि प्रामाणिक वैदिक उपाय (दोष एवं वैदिक उपाय)</span>
             </div>
             <div class="doshas-grid" id="doshasList"></div>
           </div>
@@ -2684,7 +2684,7 @@ def index_ui():
           <!-- Auspicious Yogas -->
           <div class="glass-card">
             <div class="card-header">
-              <span>🌟 પ્રાચીન શાસ્ત્રીય ગ્રહ યોગ અને શુભ ફળ (शुभ योग फल)</span>
+              <span>🌟 प्राचीन शास्त्रीय ग्रह योग आणि शुभ फळे (शुभ योग फल)</span>
             </div>
             <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:10px;" id="yogasList"></div>
           </div>
@@ -2692,7 +2692,7 @@ def index_ui():
           <!-- Shadbala & Ashtakavarga Matrix -->
           <div class="glass-card" id="sec_shadbala_sav">
             <div class="card-header">
-              <span>⚖️ ષડ્બળ ૬-સ્તરીય ગ્રહ સામર્થ્ય અને ભાવબળ (षड्बल व भावबल)</span>
+              <span>⚖️ षड्बल ६-स्तरीय ग्रह सामर्थ्य आणि भावबल (षड्बल व भावबल)</span>
             </div>
             <div style="overflow-x:auto; margin-bottom:14px;">
               <table class="crm-table" id="tableShadbala" style="text-align:center;">
@@ -2709,7 +2709,7 @@ def index_ui():
 
             <!-- SAV Grid -->
             <div class="card-header">
-              <span>સર્વાષ્ટકવર્ગ ચક્ર (सर्वाष्टकवर्ग - ३૩૭ શુભ બિંદુ)</span>
+              <span>सर्वाष्टकवर्ग चक्र (सर्वाष्टकवर्ग - ३३७ शुभ बिंदू)</span>
             </div>
             <div style="overflow-x:auto;">
               <table class="crm-table" style="text-align:center;">
@@ -2741,7 +2741,7 @@ def index_ui():
           <!-- ========================================================= -->
           <div class="glass-card" id="sec_kp_system">
             <div class="card-header">
-              <span>🏛️ કૃષ્ણમૂર્તિ પદ્ધતિ અને ૧૨ ભાવ સબ-લોર્ડ્સ (कृष्णमूर्ति पद्धति)</span>
+              <span>🏛️ कृष्णमूर्ती पद्धती आणि १२ भाव सब-लॉर्ड्स (कृष्णमूर्ति पद्धति)</span>
               <span class="badge">KP Horary &amp; Cuspal Precision</span>
             </div>
             
@@ -2791,7 +2791,7 @@ def index_ui():
           <!-- ========================================================= -->
           <div class="glass-card" id="sec_lal_kitab">
             <div class="card-header">
-              <span>📖 લાલ કિતાબ તેવા અને પિતૃ ઋણ વિશ્લેષણ (लाल किताब ऋण व अचूक उपाय)</span>
+              <span>📖 लाल किताब तेवा आणि पितृ ऋण विश्लेषण (लाल किताब ऋण व अचूक उपाय)</span>
               <span class="badge">Lal Kitab 1952 Remedial Science</span>
             </div>
 
@@ -2817,8 +2817,8 @@ def index_ui():
           <!-- ========================================================= -->
           <div class="glass-card" id="sec_ratna_yantra">
             <div class="card-header">
-              <span>💎 શુભ રત્ન, સિદ્ધ યંત્ર અને દૈવી મંત્ર (रत्न, सिद्ध यंत्र व मंत्र)</span>
-              <span class="badge">વૈદિક રત્ન અને યંત્ર વિજ્ઞાન (रत्न व यंत्र विज्ञान)</span>
+              <span>💎 शुभ रत्ने, सिद्ध यंत्रे आणि दैवी मंत्र (रत्न, सिद्ध यंत्र व मंत्र)</span>
+              <span class="badge">वैदिक रत्न व यंत्र विज्ञान (रत्न व यंत्र विज्ञान)</span>
             </div>
 
             <!-- Gemstones Grid -->
@@ -2836,8 +2836,8 @@ def index_ui():
           <!-- ========================================================= -->
           <div class="glass-card" id="sec_avkahada_science">
             <div class="card-header">
-              <span>🔬 અવકહડા ચક્ર, પંચાંગ અને ગ્રહ સંતુલન (अवकहड़ा चक्र व शुभ मुहूर्त विज्ञान)</span>
-              <span class="badge">બ્રહ્માંડ તત્વ સંતુલન (तत्व संतुलन)</span>
+              <span>🔬 अवकहडा चक्र, पंचांग आणि ग्रह संतुलन (अवकहड़ा चक्र व शुभ मुहूर्त विज्ञान)</span>
+              <span class="badge">ब्रह्मांड तत्त्व संतुलन (तत्व संतुलन)</span>
             </div>
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
@@ -2862,7 +2862,7 @@ def index_ui():
         <section class="view-pane" id="pane_milan">
           <div class="glass-card">
             <div class="card-header">
-              <span>💍 અષ્ટકૂટ ૩૬ ગુણ કુંડળી મિલન અને માંગલિક સામંજસ્ય (विवाह मिलान)</span>
+              <span>💍 अष्टकूट ३६ गुण विवाह मिलान आणि मांगलिक सामंजस्य (विवाह मिलान)</span>
               <button class="btn-primary-gradient" style="padding:5px 12px; font-size:11.5px;" onclick="calculateMilan()">⚡ अष्टकूट ३६ गुण मिलान गणना करा (विवाह मिलान)</button>
             </div>
 
@@ -2942,7 +2942,7 @@ def index_ui():
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1.5px solid #EADBC8;">
               <div>
                 <h3 style="font-family:'Cinzel', serif; font-size:15.5px; font-weight:900; color:#7C2D12; margin:0 0 2px 0;">
-                  📄 ૫૬-પેજ VIP કુંડળી મહા-ડોસિયર પ્રિવ્યુ (ગુજરાતી આવૃત્તિ)
+                  📄 ५६-पृष्ठीय VIP महा-जन्मपत्रिका पूर्वदृश्य (मराठी आवृत्ती)
                 </h3>
                 <span class="badge" id="reportNativeBadge" style="font-size:11px; background:#FEF3C7; color:#78350F; padding:2px 8px; border-radius:12px; font-weight:700;">Active Native: Harmanjot Singh</span>
               </div>
@@ -3064,11 +3064,11 @@ def index_ui():
               <table class="dash-table">
                 <thead>
                   <tr>
-                    <th>ગ્રાહક (Customer / ग्राहक)</th>
-                    <th>ડેમો ચાવી (Key Code / चाबी)</th>
-                    <th>સમાપ્તિ (Expires / समाप्ति)</th>
-                    <th>સ્થિતિ (Status / स्थिति)</th>
-                    <th>ક્રિયા (Action / कार्रवाई)</th>
+                    <th>ग्राहक (Customer / ग्राहक)</th>
+                    <th>डेमो चावी (Key Code / चाबी)</th>
+                    <th>मुदत समाप्ती (Expires / समाप्ति)</th>
+                    <th>स्थिती (Status / स्थिति)</th>
+                    <th>कृती (Action / कार्रवाई)</th>
                   </tr>
                 </thead>
                 <tbody id="demoKeysTableBody">
@@ -3081,7 +3081,7 @@ def index_ui():
 
           <div class="glass-card" style="max-width:760px; margin: 0 auto;">
             <div class="card-header">
-              <span>⚙️ જ્યોતિષ કેન્દ્ર બ્રાન્ડિંગ સેટિંગ્સ (ब्रांडिंग सेटिंग्स)</span>
+              <span>⚙️ ज्योतिष केंद्र ब्रँडिंग सेटिंग्ज (ब्रांडिंग सेटिंग्स)</span>
             </div>
             <p style="font-size:12px; color:#574032; margin-bottom:16px;">
               These credentials are saved to your offline SQLite database and automatically printed on the Cover Page, Headers, and Footers of all generated client reports.
@@ -3121,7 +3121,7 @@ def index_ui():
 
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <button class="btn-primary-gradient" onclick="saveBrandingSettings()">
-                💾 બ્રાન્ડિંગ અને સેટિંગ્સ સેવ કરો (सेव करें)
+                💾 ब्रँडिंग व सेटिंग्ज सेव्ह करा (सेव करें)
               </button>
               <span id="brandSaveStatus" style="font-size:12px; font-weight:700; color:#166534; display:none;">
                 ✓ Saved to SQLite Database!
@@ -3265,23 +3265,23 @@ def index_ui():
 
         const isMobScreen = window.innerWidth <= 768;
         const titles = isMobScreen ? {
-          'dashboard': '📊 ડેશબોર્ડ',
-          'new_kundli': '➕ નવી કુંડળી',
-          'clients': '👥 ગ્રાહક CRM',
-          'workspace': '🪐 કુંડળી વર્કસ્પેસ',
-          'milan': '💍 કુંડળી મિલન',
-          'reports': '📄 રિપોર્ટ સ્ટુડિયો',
-          'prashna': '⏱️ પ્રશ્ન કુંડળી',
-          'settings': '⚙️ સેટિંગ્સ'
+          'dashboard': '📊 डॅशबोर्ड',
+          'new_kundli': '➕ नवीन कुंडली',
+          'clients': '👥 ग्राहक CRM',
+          'workspace': '🪐 कुंडली वर्कस्पेस',
+          'milan': '💍 विवाह मिलान',
+          'reports': '📄 अहवाल स्टुडिओ',
+          'prashna': '⏱️ प्रश्न कुंडली',
+          'settings': '⚙️ सेटिंग्ज'
         } : {
-          'dashboard': '📊 એક્ઝિક્યુટિવ જ્યોતિષ डॅशबोर्ड (Dashboard)',
-          'new_kundli': '➕ નવી કુંડળી નોંધણી (New Kundli Registration)',
-          'clients': '👥 ગ્રાહક કન્સલ્ટેશન ડાયરેક્ટરી (Client CRM)',
-          'workspace': '🪐 ઇન્ટરેક્ટિવ કુંડળી વર્કસ્પેસ (Kundli Workspace)',
-          'milan': '💍 અષ્ટકૂટ ૩૬ ગુણ विवाह मिलान (Kundli Milan)',
-          'reports': '📄 એડિટોરિયલ PDF રિપોર્ટ સ્ટુડિયો (Report Studio)',
-          'prashna': '⏱️ તાત્કાલિક પ્રશ્ન કુંડળી (Horary Prashna)',
-          'settings': '⚙️ જ્યોતિષ કેન્દ્ર બ્રાન્ડિંગ સેટિંગ્સ'
+          'dashboard': '📊 एक्झिक्युटिव्ह ज्योतिष डॅशबोर्ड (Executive Dashboard)',
+          'new_kundli': '➕ नवीन कुंडली नोंदणी (New Kundli Registration)',
+          'clients': '👥 ग्राहक सल्लामसलत डिरेक्टरी (Client CRM)',
+          'workspace': '🪐 इंटरॅक्टिव्ह कुंडली वर्कस्पेस (Kundli Workspace)',
+          'milan': '💍 अष्टकूट ३६ गुण विवाह मिलान (Kundli Milan)',
+          'reports': '📄 ५६-पृष्ठीय VIP अहवाल स्टुडिओ (Report Studio)',
+          'prashna': '⏱️ तात्काळ प्रश्न कुंडली (Horary Prashna)',
+          'settings': '⚙️ ज्योतिष केंद्र ब्रँडिंग सेटिंग्ज (Settings)'
         };
         const titleEl = document.getElementById('topbarTitle');
         if (titleEl) titleEl.innerHTML = titles[viewId] || 'Vedas Kundli Predictions';
@@ -3327,8 +3327,8 @@ def index_ui():
                   <td>${c.place}</td>
                   <td><span class="badge">${c.category || 'General'}</span></td>
                   <td>
-                    <button class="btn-table-action" onclick="loadClientIntoKundli(${c.id})">🔮 કુંડળી જુઓ (Open)</button>
-                    <button class="btn-table-action" style="color:#DC2626; border-color:#FCA5A5;" onclick="deleteClientRecord(${c.id})">🗑️ કાઢી નાખો (Delete)</button>
+                    <button class="btn-table-action" onclick="loadClientIntoKundli(${c.id})">🔮 कुंडली पहा (Open)</button>
+                    <button class="btn-table-action" style="color:#DC2626; border-color:#FCA5A5;" onclick="deleteClientRecord(${c.id})">🗑️ हटवा (Delete)</button>
                   </td>
                 </tr>
               `).join('');
@@ -3362,7 +3362,7 @@ def index_ui():
                   <td>${r.size_mb} MB</td>
                   <td style="font-size:11.5px; color:#6B7280;">${r.modified}</td>
                   <td>
-                    <a href="${r.download_url}" target="_blank" class="btn-table-action" style="text-decoration:none; display:inline-block;">📥 PDF ડાઉનલોડ</a>
+                    <a href="${r.download_url}" target="_blank" class="btn-table-action" style="text-decoration:none; display:inline-block;">📥 PDF डाउनलोड</a>
                   </td>
                 </tr>
               `).join('');
@@ -3399,9 +3399,9 @@ def index_ui():
             <td><span class="badge">${c.category || 'General'}</span></td>
             <td style="font-size:11px; color:#78716C;">${c.created_at ? c.created_at.split(' ')[0] : '-'}</td>
             <td>
-              <button class="btn-table-action" onclick="openClientInWorkspace(${c.id})">🪐 કુંડળી (Open)</button>
-              <button class="btn-table-action" onclick="openClientInReports(${c.id})">📄 PDF રિપોર્ટ</button>
-              <button class="btn-table-action" onclick="editClientInForm(${c.id})">✏️ સંપાદિત (Edit)</button>
+              <button class="btn-table-action" onclick="openClientInWorkspace(${c.id})">🪐 कुंडली (Open)</button>
+              <button class="btn-table-action" onclick="openClientInReports(${c.id})">📄 PDF अहवाल</button>
+              <button class="btn-table-action" onclick="editClientInForm(${c.id})">✏️ संपादन (Edit)</button>
               <button class="btn-table-del" onclick="deleteClientRecord(${c.id})">🗑️</button>
             </td>
           </tr>
@@ -3928,21 +3928,21 @@ def index_ui():
         // Topbar Title
         const topTitle = document.getElementById('topNavTitle');
         if (topTitle) {
-          topTitle.innerHTML = isMr ? 'ઇન્ટરેક્ટિવ કુંડળી વર્કસ્પેસ (कुंडली वर्कस्पेस)' : (isHi ? 'इंटरैक्टिव कुंडली वर्कस्पेस (Kundli Workspace)' : 'Interactive Kundli Workspace');
+          topTitle.innerHTML = isMr ? 'इंटरॅक्टिव्ह कुंडली वर्कस्पेस (कुंडली वर्कस्पेस)' : (isHi ? 'इंटरैक्टिव कुंडली वर्कस्पेस (Kundli Workspace)' : 'Interactive Kundli Workspace');
         }
 
         // Form Action Buttons
         const btnCalc = document.getElementById('btnCalculateWorkspace');
         if (btnCalc) {
-          btnCalc.innerHTML = isMr ? '✨ ગણતરી કરો અને કુંડળી જુઓ (कुंडली देखें)' : (isHi ? '✨ गणना करें व कुंडली देखें' : '✨ Calculate & Open Workspace');
+          btnCalc.innerHTML = isMr ? '✨ गणना करा व कुंडली पहा (कुंडली पहा)' : (isHi ? '✨ गणना करें व कुंडली देखें' : '✨ Calculate & Open Workspace');
         }
         const btnSave = document.getElementById('btnSaveCrm');
         if (btnSave) {
-          btnSave.innerHTML = isMr ? '💾 માત્ર CRM માં સેવ કરો (सेव करें)' : (isHi ? '💾 केवल CRM में सेव करें' : '💾 Save to CRM Only');
+          btnSave.innerHTML = isMr ? '💾 केवळ CRM मध्ये सेव्ह करा (सेव्ह करा)' : (isHi ? '💾 केवल CRM में सेव करें' : '💾 Save to CRM Only');
         }
         const btnClear = document.getElementById('btnClearForm');
         if (btnClear) {
-          btnClear.innerHTML = isMr ? '🔄 ફોર્મ સાફ કરો (साफ करें)' : (isHi ? '🔄 फॉर्म साफ करें' : '🔄 Clear Form');
+          btnClear.innerHTML = isMr ? '🔄 फॉर्म साफ करा (साफ करा)' : (isHi ? '🔄 फॉर्म साफ करें' : '🔄 Clear Form');
         }
 
         // Safely re-trigger view title
@@ -3955,33 +3955,33 @@ def index_ui():
       }
     }
 
-    function renderPlanetsTable(planets) {
+        function renderPlanetsTable(planets) {
       const tbody = document.getElementById('planetTableBody');
-      const pKeysGu = {
-        "Ascendant": "લગ્ન (लग्न)", "ASC": "લગ્ન (लग्न)", "Lagna": "લગ્ન (लग्न)",
-        "Sun": "સૂર્ય (सूर्य)", "Moon": "ચંદ્ર (चंद्र)", "Mars": "મંગળ (मंगल)",
-        "Mercury": "બુધ (बुध)", "Jupiter": "ગુરુ (गुरु)", "Venus": "શુક્ર (शुक्र)",
-        "Saturn": "શનિ (शनि)", "Rahu": "રાહુ (राहु)", "Ketu": "કેતુ (केतु)",
-        "Uranus": "હર્ષલ (हर्षल)", "Neptune": "નેપ્ચ્યુન (नेपच्यून)", "Pluto": "પ્લુટો (प्लूटो)"
+      const pKeysMr = {
+        "Ascendant": "लग्न (लग्न)", "ASC": "लग्न (लग्न)", "Lagna": "लग्न (लग्न)",
+        "Sun": "सूर्य (सूर्य)", "Moon": "चंद्र (चंद्र)", "Mars": "मंगळ (मंगल)",
+        "Mercury": "बुध (बुध)", "Jupiter": "गुरु (बृहस्पति)", "Venus": "शुक्र (शुक्र)",
+        "Saturn": "शनी (शनि)", "Rahu": "राहू (राहु)", "Ketu": "केतू (केतु)",
+        "Uranus": "हर्षल (हर्षल)", "Neptune": "नेपच्यून (नेपच्यून)", "Pluto": "प्लूटो (प्लूटो)"
       };
-      const rashiGu = {
-        "Aries": "મેષ (मेष)", "Taurus": "વૃષભ (वृषभ)", "Gemini": "મિથુન (मिथुन)",
-        "Cancer": "કર્ક (कर्क)", "Leo": "સિંહ (सिंह)", "Virgo": "કન્યા (कन्या)",
-        "Libra": "તુલા (तुला)", "Scorpio": "વૃશ્ચિક (वृश्चिक)", "Sagittarius": "ધન (धनु)",
-        "Capricorn": "મકર (मकर)", "Aquarius": "કુંભ (कुंभ)", "Pisces": "મીન (मीन)"
+      const rashiMr = {
+        "Aries": "मेष (मेष)", "Taurus": "वृषभ (वृषभ)", "Gemini": "मिथुन (मिथुन)",
+        "Cancer": "कर्क (कर्क)", "Leo": "सिंह (सिंह)", "Virgo": "कन्या (कन्या)",
+        "Libra": "तूळ (तुला)", "Scorpio": "वृश्चिक (वृश्चिक)", "Sagittarius": "धनु (धनु)",
+        "Capricorn": "मकर (मकर)", "Aquarius": "कुंभ (कुंभ)", "Pisces": "मीन (मीन)"
       };
-      const dignityGu = {
-        "Exalted": "ઉચ્ચ (उच्च)", "Debilitated": "નીચ (नीच)", "Own Sign": "સ્વરાશિ (स्वराशि)",
-        "Moolatrikona": "મૂળત્રિકોણ (मूलत्रिकोण)", "Great Friend": "અધિમિત્ર (अधिमित्र)",
-        "Friend": "મિત્ર (मित्र)", "Neutral": "સમ (सम)", "Enemy": "શત્રુ (शत्रु)",
-        "Great Enemy": "અધિશત્રુ (अधिशत्रु)", "Combust": "અસ્ત (अस्त)", "Normal": "સામાન્ય (सामान्य)"
+      const dignityMr = {
+        "Exalted": "उच्च (उच्च)", "Debilitated": "नीच (नीच)", "Own Sign": "स्वराशी (स्वराशि)",
+        "Moolatrikona": "मूळत्रिकोण (मूलत्रिकोण)", "Great Friend": "अधिमित्र (अधिमित्र)",
+        "Friend": "मित्र (मित्र)", "Neutral": "सम (सम)", "Enemy": "शत्रू (शत्रु)",
+        "Great Enemy": "अधिशत्रू (अधिशत्रु)", "Combust": "अस्त (अस्त)", "Normal": "सामान्य (सामान्य)"
       };
 
       tbody.innerHTML = planets.map(p => {
         const retro = p.retrograde || p.is_retro;
         let isRetro = '';
-        if (currentLang === 'gu') {
-          isRetro = retro ? 'વક્રી (वक्र)' : 'માર્ગી (मार्गी)';
+        if (currentLang === 'mr') {
+          isRetro = retro ? 'वक्री (वक्र)' : 'मार्गी (मार्गी)';
         } else if (currentLang === 'hi') {
           isRetro = retro ? 'वक्र (Retro)' : 'मार्गी (Direct)';
         } else {
@@ -3994,22 +3994,22 @@ def index_ui():
         let nakWithPada = '';
         let dignity = '';
 
-        if (currentLang === 'gu') {
-          pName = pKeysGu[p.id] || pKeysGu[p.name_en] || toMrWithHi(p.name_hi || p.name_en);
-          if (retro && !pName.includes('[વક્રી]')) pName += ' <span style="color:#C2540A; font-weight:800;">[વક્રી / वक्र]</span>';
-          signName = rashiGu[p.sign_en] || toMrWithHi(p.sign_hi || p.sign_en);
+        if (currentLang === 'mr') {
+          pName = pKeysMr[p.id] || pKeysMr[p.name_en] || toMrWithHi(p.name_hi || p.name_en);
+          if (retro && !pName.includes('[वक्री]')) pName += ' <span style="color:#C2540A; font-weight:800;">[वक्री / वक्र]</span>';
+          signName = rashiMr[p.sign_en] || toMrWithHi(p.sign_hi || p.sign_en);
           const nakName = toMrWithHi(p.nakshatra_hi || p.nakshatra_en || p.nakshatra || '');
-          nakWithPada = `${nakName} (પદ ${p.pada || 1} / पद ${p.pada || 1})`;
-          dignity = dignityGu[p.dignity_en] || toMrWithHi(p.dignity_hi || p.dignity_en || 'સામાન્ય');
+          nakWithPada = `${nakName} (चरण ${p.pada || 1} / पद ${p.pada || 1})`;
+          dignity = dignityMr[p.dignity_en] || toMrWithHi(p.dignity_hi || p.dignity_en || 'सामान्य');
         } else if (currentLang === 'hi') {
           pName = p.name_hi || p.name_en;
-          if (retro) pName += ' [वक्र]';
+          if (retro && !pName.includes('[वक्र]')) pName += ' [वक्र]';
           signName = p.sign_hi || p.sign_en;
           nakWithPada = `${p.nakshatra_hi || p.nakshatra_en || ''} (पद ${p.pada || 1})`;
           dignity = p.dignity_hi || p.dignity_en || 'सामान्य';
         } else {
           pName = p.name_en || p.name_hi;
-          if (retro) pName += ' [R]';
+          if (retro && !pName.includes('[R]')) pName += ' [R]';
           signName = p.sign_en || p.sign_hi;
           nakWithPada = `${p.nakshatra_en || p.nakshatra_hi || ''} (Pada ${p.pada || 1})`;
           dignity = p.dignity_en || 'Normal';
@@ -4028,190 +4028,6 @@ def index_ui():
           </tr>
         `;
       }).join('');
-    }
-
-    function renderBhavas(bhavas) {
-      const container = document.getElementById('bhavasGrid');
-      container.innerHTML = bhavas.map(b => {
-        const houseNum = b.house || b.num || 1;
-        const title = b.title_gu && b.title_hi ? `${b.title_gu} (${b.title_hi})` : toMrWithHi(b.title_hi || b.title_en);
-        const sign = b.sign || toMrWithHi(b.sign_hi || '');
-        const planets = b.planets || 'ખાલી (रिक्त)';
-        const guSummary = b.summary_gu || toMr(b.summary_hi || b.prediction_hi || b.summary_en || '');
-        const hiSummary = b.summary_hi || b.prediction_hi || '';
-        return `
-        <div style="background:#FFFFFF; border:1.5px solid #EADBC8; border-radius:8px; padding:12px; border-left:4px solid #C2540A; margin-bottom:10px;">
-          <div style="font-size:13px; font-weight:900; color:#7C2D12; margin-bottom:4px;">${houseNum}. ${title}</div>
-          <div style="font-size:11.5px; color:#854D0E; font-weight:700; margin:3px 0;">રાશિ (Sign): ${sign} • ગ્રહ (Planets): ${planets}</div>
-          <div style="font-size:12px; color:#2E1C10; line-height:1.55; font-weight:600; margin-top:6px;">${guSummary}</div>
-          ${hiSummary ? `<div style="font-size:10.5px; color:#6B7280; font-style:italic; line-height:1.45; border-left:2.5px solid #D4AF37; padding-left:8px; margin-top:6px; background:#FEF9EE; border-radius:0 4px 4px 0; padding-top:3px; padding-bottom:3px;">(${hiSummary})</div>` : ''}
-        </div>
-      `;
-      }).join('');
-    }
-
-    function renderDashaAndGems(data) {
-      const v = data.vimshottari;
-      const dashas = v.mahadashas || [];
-      document.getElementById('dashaSummary').innerHTML = `
-        <div style="margin-bottom:10px; padding:8px 12px; background:#FEF3C7; border:1.5px solid #FDE68A; border-radius:8px; color:#78350F; font-size:12px; font-weight:700;">
-          <strong>જન્મ કાલીન દશા શેષ (जन्म कालीन दशा शेष):</strong> ${toMr(v.balance_hi || v.balance_str)}
-        </div>
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:10px; margin-top:10px;">
-          ${dashas.map(d => `
-            <div style="background:#FFFFFF; padding:8px 10px; border-radius:8px; font-size:11.5px; border:1.5px solid #EADBC8; box-shadow:0 1px 4px rgba(46,28,16,0.03);">
-              <strong style="color:#7C2D12; font-size:12px;">${toMrWithHi(d.name_hi || d.name_en)} (${d.years} વર્ષ / वर्ष)</strong><br/>
-              <span style="color:#4B5563; font-size:11px; font-weight:600;">${toMr(d.range_str)}</span>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    }
-
-    function renderDoshas(doshas) {
-      if (!doshas) return;
-      const container = document.getElementById('doshasList');
-      if (!container) return;
-      const mg = doshas.manglik || doshas.mangal_dosha || {};
-      const ks = doshas.kalsarpa || doshas.kaalsarp || {};
-      const ss = doshas.sadesati || {};
-      const pt = doshas.pitra_dosha || {};
-
-      container.innerHTML = `
-        <div class="dosha-card">
-          <div class="dosha-head">
-            <span>🔴 માંગલિક દોષ (मांगलिक दोष)</span>
-            <span class="badge" style="background:${mg.is_manglik ? '#FEE2E2':'#DCFCE7'}; color:${mg.is_manglik ? '#991B1B':'#166534'};">${mg.is_manglik ? 'દોષ ઉપસ્થિત (दोष उपस्थित)':'દોષ મુક્ત (दोष मुक्त)'}</span>
-          </div>
-          <div style="font-size:11.5px; color:#854D0E; font-weight:700; margin:4px 0;"><strong>સ્થિતિ (स्थिति):</strong> ${toMr(mg.status_hi || mg.status_en || '')}</div>
-          <div style="font-size:11.5px; color:#2E1C10; line-height:1.45;">${toMr(mg.desc_hi || mg.desc_en || '')}</div>
-          ${mg.remedy_hi ? `<div style="background:#FEF3C7; padding:6px 8px; border-radius:6px; margin-top:6px; font-size:11px; color:#78350F;"><strong>શાસ્ત્રીય ઉપાય (उपाय):</strong> ${toMr(mg.remedy_hi)}</div>` : ''}
-        </div>
-
-        <div class="dosha-card">
-          <div class="dosha-head">
-            <span>🐍 કાળસર્પ યોગ/દોષ (कालसर्प दोष)</span>
-            <span class="badge" style="background:${ks.is_kalsarpa ? '#FEE2E2':'#DCFCE7'}; color:${ks.is_kalsarpa ? '#991B1B':'#166534'};">${ks.is_kalsarpa ? 'દોષ ઉપસ્થિત (दोष उपस्थित)':'દોષ મુક્ત (दोष मुक्त)'}</span>
-          </div>
-          <div style="font-size:11.5px; color:#854D0E; font-weight:700; margin:4px 0;"><strong>પ્રકાર (प्रकार):</strong> ${toMrWithHi(ks.type_hi || ks.type_en || '')}</div>
-          <div style="font-size:11.5px; color:#2E1C10; line-height:1.45;">${toMr(ks.desc_hi || ks.desc_en || '')}</div>
-          ${ks.remedy_hi ? `<div style="background:#FEF3C7; padding:6px 8px; border-radius:6px; margin-top:6px; font-size:11px; color:#78350F;"><strong>શાસ્ત્રીય ઉપાય (उपाय):</strong> ${toMr(ks.remedy_hi)}</div>` : ''}
-        </div>
-
-        <div class="dosha-card">
-          <div class="dosha-head">
-            <span>🪐 શનિ સાડાસાતી અને ઢૈય્યા (शनि साढ़ेसाती)</span>
-            <span class="badge" style="background:${ss.is_sadesati ? '#FEF3C7':'#DCFCE7'}; color:${ss.is_sadesati ? '#78350F':'#166534'};">${ss.is_sadesati ? 'સાડાસાતી પ્રભાવ (साढ़ेसाती सक्रिय)':'પ્રભાવ મુક્ત'}</span>
-          </div>
-          <div style="font-size:11.5px; color:#854D0E; font-weight:700; margin:4px 0;"><strong>ચરણ (चरण):</strong> ${toMrWithHi(ss.phase_hi || ss.phase_en || '')}</div>
-          <div style="font-size:11.5px; color:#2E1C10; line-height:1.45;">${toMr(ss.desc_hi || ss.desc_en || '')}</div>
-          ${ss.remedy_hi ? `<div style="background:#FEF3C7; padding:6px 8px; border-radius:6px; margin-top:6px; font-size:11px; color:#78350F;"><strong>શાસ્ત્રીય ઉપાય (उपाय):</strong> ${toMr(ss.remedy_hi)}</div>` : ''}
-        </div>
-
-        <div class="dosha-card">
-          <div class="dosha-head">
-            <span>☀️ પિતૃ દોષ વિશ્લેષણ (पितृ दोष)</span>
-            <span class="badge" style="background:${pt.is_pitra ? '#FEE2E2':'#DCFCE7'}; color:${pt.is_pitra ? '#991B1B':'#166534'};">${pt.is_pitra ? 'દોષ ઉપસ્થિત':'દોષ મુક્ત'}</span>
-          </div>
-          <div style="font-size:11.5px; color:#2E1C10; line-height:1.45;">${toMr(pt.desc_hi || pt.desc_en || '')}</div>
-          ${pt.remedy_hi ? `<div style="background:#FEF3C7; padding:6px 8px; border-radius:6px; margin-top:6px; font-size:11px; color:#78350F;"><strong>શાસ્ત્રીય ઉપાય (उपाय):</strong> ${toMr(pt.remedy_hi)}</div>` : ''}
-        </div>
-      `;
-    }
-
-    function renderYogas(yogas) {
-      const container = document.getElementById('yogasList');
-      if (!container || !yogas) return;
-      container.innerHTML = yogas.map(y => `
-        <div style="background:#FFFDF9; border:1.5px solid #FDE68A; border-radius:8px; padding:10px 12px; margin-bottom:8px; border-left:4px solid #D97706;">
-          <strong style="color:#7C2D12; font-size:12.5px; font-weight:800;">🌟 ${toMrWithHi(y.name_hi || y.name_en)}</strong>
-          <p style="font-size:11.8px; color:#2E1C10; margin-top:4px; line-height:1.5; font-weight:500;">${toMr(y.desc_hi || y.desc_en)}</p>
-        </div>
-      `).join('');
-    }
-
-    function renderShadbalaAndSAV(data) {
-      if (!data.shadbala) return;
-      const sb = data.shadbala;
-      const rankMap = sb.shadbala_rank || {};
-      const rupasMap = sb.shadbala_in_rupas || {};
-      const minMap = sb.shadbala_min_req || {};
-      const ratioMap = sb.shadbala_ratio || {};
-      const totalVirupa = sb.shadbala_total || {};
-      const sthanMap = sb.sthana_bala_total || {};
-      const digMap = sb.dig_bala || {};
-      const kalaMap = sb.kaala_bala_total || {};
-      const chestaMap = sb.chesta_bala || {};
-      const naisMap = sb.naisargika_bala || {};
-      const drikMap = sb.drik_bala || {};
-
-      const pKeys = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"];
-      const pNamesHi = {"Sun":"सूर्य","Moon":"चन्द्र","Mars":"मंगल","Mercury":"बुध","Jupiter":"गुरु","Venus":"शुक्र","Saturn":"शनि"};
-
-      let sbHtml = "";
-      pKeys.forEach(p => {
-        const r = ratioMap[p] || 0;
-        const isStrong = r >= 1.0;
-        const statusBg = isStrong ? '#DCFCE7' : '#FEE2E2';
-        const statusFg = isStrong ? '#166534' : '#991B1B';
-        const badge = isStrong ? 'Strong' : 'Deficit';
-        const rank = rankMap[p] || '-';
-        sbHtml += "<tr style='border-bottom:1px solid #E5E7EB;'>" +
-          "<td style='text-align:left; font-weight:800; color:#7C2D12; padding-left:10px;'>" + (currentLang === 'hi' ? pNamesHi[p] : p) + "</td>" +
-          "<td style='color:#1F2937; font-weight:600;'>" + (sthanMap[p]||0).toFixed(1) + "</td>" +
-          "<td style='color:#1F2937; font-weight:600;'>" + (digMap[p]||0).toFixed(1) + "</td>" +
-          "<td style='color:#1F2937; font-weight:600;'>" + (kalaMap[p]||0).toFixed(1) + "</td>" +
-          "<td style='color:#1F2937; font-weight:600;'>" + (chestaMap[p]||0).toFixed(1) + "</td>" +
-          "<td style='color:#1F2937; font-weight:600;'>" + (naisMap[p]||0).toFixed(1) + "</td>" +
-          "<td style='color:#1F2937; font-weight:600;'>" + (drikMap[p]||0).toFixed(1) + "</td>" +
-          "<td style='font-weight:800; color:#9A3412;'>" + (totalVirupa[p]||0).toFixed(1) + "</td>" +
-          "<td style='font-weight:800; color:#7C2D12;'>" + (rupasMap[p]||0).toFixed(2) + " R</td>" +
-          "<td style='color:#6B7280; font-weight:600;'>" + (minMap[p]||0) + " R</td>" +
-          "<td><span style='background:" + statusBg + "; color:" + statusFg + "; padding:2px 8px; border-radius:4px; font-weight:800;'>" + (r*100).toFixed(0) + "% (" + badge + ")</span></td>" +
-          "<td><span style='background:#FEF3C7; color:#78350F; border:1px solid #FDE68A; padding:2px 8px; border-radius:4px; font-weight:800;'>#" + rank + "</span></td>" +
-        "</tr>";
-      });
-      document.getElementById('shadbalaTableBody').innerHTML = sbHtml;
-
-      // Ashtakavarga SAV Grid
-      if (data.ashtakavarga) {
-        const av = data.ashtakavarga;
-        let avHtml = "";
-        av.bhinna_rows.forEach(br => {
-          avHtml += "<tr style='border-bottom:1px solid #F3EDE4;'>" +
-            "<td style='text-align:left; font-weight:800; color:#7C2D12; padding-left:10px;'>" + (currentLang === 'hi' ? br.name_hi : br.name_en) + "</td>" +
-            br.values.map(v => "<td style='color:#1F2937; font-weight:600; padding:6px 4px;'>" + v + "</td>").join("") +
-            "<td style='font-weight:800; color:#9A3412; font-size:12px;'>" + br.total + "</td>" +
-          "</tr>";
-        });
-        if (av.sarva_totals) {
-          const totalSav = av.sarva_totals.reduce((a,b)=>a+b, 0);
-          avHtml += "<tr style='background:#FAF6F0; font-weight:800; border-top:2px solid #EADBC8;'>" +
-            "<td style='text-align:left; color:#7C2D12; font-weight:900; padding-left:10px;'>SAV Total</td>" +
-            av.sarva_totals.map(pts => {
-              const bg = pts >= 28 ? '#DCFCE7' : (pts >= 25 ? '#FEF3C7' : '#FEE2E2');
-              const fg = pts >= 28 ? '#166534' : (pts >= 25 ? '#854D0E' : '#991B1B');
-              return "<td style='background:" + bg + "; color:" + fg + "; font-weight:800; padding:6px 4px;'>" + pts + "</td>";
-            }).join("") +
-            "<td style='color:#7C2D12; font-size:12.5px; font-weight:900;'>" + totalSav + "</td>" +
-          "</tr>";
-        }
-        document.getElementById('savTableBody').innerHTML = avHtml;
-      }
-
-      // Bhavabala Cards
-      if (sb.bhavabala_in_rupas) {
-        let bhHtml = "";
-        sb.bhavabala_in_rupas.forEach((rupas, idx) => {
-          const val = (sb.bhavabala_total && sb.bhavabala_total[idx]) || 0;
-          bhHtml += "<div style='background:#FFFBEB; border:1.5px solid #FDE68A; padding:8px 6px; border-radius:8px; text-align:center; box-shadow:0 1px 3px rgba(46,28,16,0.03);'>" +
-            "<div style='font-size:10.5px; color:#78350F; font-weight:800;'>Bhava " + (idx+1) + "</div>" +
-            "<div style='font-size:14px; font-weight:900; color:#B45309; margin:2px 0;'>" + rupas + " R</div>" +
-            "<div style='font-size:9.5px; color:#6B7280; font-weight:600;'>" + val.toFixed(0) + " Virupas</div>" +
-          "</div>";
-        });
-        document.getElementById('bhavabalaSummaryGrid').innerHTML = bhHtml;
-      }
     }
 
     // Kundli Milan Calculation
@@ -4672,7 +4488,7 @@ def index_ui():
         if (rins.length === 0) {
           rinsBox.innerHTML = `
             <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:8px; padding:12px; color:#166534; font-size:12.5px; font-weight:700;">
-              ✨ <strong>ઋણ મુક્ત કુંડળી (ऋण मुक्त कुंडली):</strong> કુંડળીમાં કોઈ સક્રિય લાલ કિતાબ પિતૃ ઋણ નથી. જાતક માટે કુંડળી અત્યંત શુભ છે.
+              ✨ <strong>ऋण मुक्त कुंडली (ऋण मुक्त कुंडली):</strong> कुंडलीत कोणतेही सक्रिय लाल किताब पितृ ऋण नाही. जातकाचे जीवन पूर्वजांच्या आशीर्वादाने सुरक्षित आहे.
             </div>
           `;
         } else {
@@ -4680,11 +4496,11 @@ def index_ui():
             <div style="background:#FEF2F2; border:1.5px solid #FCA5A5; border-radius:10px; padding:14px; margin-bottom:10px;">
               <div style="display:flex; justify-content:space-between; align-items:center;">
                 <strong style="color:#991B1B; font-size:13.5px;">⚠️ ${toMrWithHi(r.name_hi || r.name_en)}</strong>
-                <span class="badge" style="background:#FEE2E2; color:#991B1B;">લાલ કિતાબ ઋણ સક્રિય</span>
+                <span class="badge" style="background:#FEE2E2; color:#991B1B;">लाल किताब ऋण सक्रिय</span>
               </div>
               <p style="font-size:12px; color:#4B5563; margin:6px 0;">${toMr(r.cause_hi || r.cause_en || '')}</p>
               <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:6px; padding:8px 10px; font-size:11.5px; color:#78350F;">
-                🪔 <strong>અચૂક લાલ કિતાબ ઉપાય (अचूक उपाय):</strong> ${toMr(r.remedy_hi || r.remedy_en || '')}
+                🪔 <strong>अचूक लाल किताब उपाय (अचूक उपाय):</strong> ${toMr(r.remedy_hi || r.remedy_en || '')}
               </div>
             </div>
           `).join('');
@@ -4710,14 +4526,14 @@ def index_ui():
             <div style="font-size:13px; font-weight:900; color:#7C2D12; margin-bottom:4px;">${roleTxt}</div>
             <div style="font-size:15px; font-weight:900; color:#C2540A; margin-bottom:8px;">💎 ${gemTxt}</div>
             <div style="font-size:11.8px; color:#4B5563; line-height:1.6;">
-              <div><strong>શાસક ગ્રહ (शासक ग्रह):</strong> ${planetTxt}</div>
-              <div><strong>શુભ ધાતુ (शुभ धातु):</strong> ${metalTxt}</div>
-              <div><strong>ધારણ આંગળી (अंगुली):</strong> ${fingerTxt}</div>
-              <div><strong>ધારણ વાર (वार):</strong> ${dayTxt}</div>
-              <div><strong>શુભ રુદ્રાક્ષ (रुद्राक्ष):</strong> <span style="color:#166534; font-weight:700;">${rudraTxt}</span></div>
+              <div><strong>शासक ग्रह (शासक ग्रह):</strong> ${planetTxt}</div>
+              <div><strong>शुभ धातू (शुभ धातु):</strong> ${metalTxt}</div>
+              <div><strong>धारण करण्याचे बोट (अंगुली):</strong> ${fingerTxt}</div>
+              <div><strong>धारण करण्याचा वार (वार):</strong> ${dayTxt}</div>
+              <div><strong>शुभ रुद्राक्ष (रुद्राक्ष):</strong> <span style="color:#166534; font-weight:700;">${rudraTxt}</span></div>
             </div>
             <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:6px; padding:8px 10px; margin-top:10px; font-size:11.2px; color:#78350F; font-weight:700;">
-              📿 <strong>બીજ મંત્ર (बीज मंत्र):</strong> ${mantraTxt}
+              📿 <strong>बीज मंत्र (बीज मंत्र):</strong> ${mantraTxt}
             </div>
           </div>
         `}).join('');
@@ -4727,16 +4543,16 @@ def index_ui():
       const yBox = document.getElementById('yantrasList');
       if (yBox) {
         const yantras = [
-          {name: 'શ્રી મંગળ યંત્ર (श्री मंगल यंत्र)', use: 'શારીરિક આરોગ્ય, ઊર્જા, ભૂમિ લાભ અને કષ્ટ નિવારણ માટે (आरोग्य, भूमि व कष्ट निवारण)', forP: 'મંગળ / લગ્નેશ (मंगल / लग्नेश)'},
-          {name: 'શ્રી ગુરુ / બૃહસ્પતિ યંત્ર (श्री गुरु यंत्र)', use: 'ઉચ્ચ જ્ઞાન, બુદ્ધિ, આર્થિક સમૃદ્ધિ અને પારિવારિક સુખ (ज्ञान, समृद्धि व सुख)', forP: 'ગુરુ / પંચમેશ (गुरु / पंचमेश)'},
-          {name: 'શ્રી ચંદ્ર યંત્ર (श्री चंद्र यंत्र)', use: 'માનસિક શાંતિ, ભાવનાત્મક સ્થિરતા અને ભાગ્યોદય વૃદ્ધિ (मानसिक शांति व भाग्योदय)', forP: 'ચંદ્ર / ભાગ્યેશ (चंद्र / भाग्येश)'},
-          {name: 'સંપૂર્ણ મહામૃત્યુંજય યંત્ર (महामृत्युंजय यंत्र)', use: 'દીર્ઘાયુષ્ય, અકાળ મૃત્યુ ભય નિવારણ અને સર્વ રક્ષા કવચ (दीर्घायु व सर्व रक्षा कवच)', forP: 'સાર્વત્રિક વૈદિક સુરક્ષા (सर्व रक्षा)'}
+          {name: 'श्री मंगळ यंत्र (श्री मंगल यंत्र)', use: 'शारीरिक आरोग्य, ऊर्जा, जमीन लाभ व संकटनिवारण (आरोग्य, भूमि व कष्ट निवारण)', forP: 'मंगळ / लग्नेश (मंगल / लग्नेश)'},
+          {name: 'श्री गुरु / बृहस्पती यंत्र (श्री गुरु यंत्र)', use: 'उच्च ज्ञान, बुद्धी, आर्थिक समृद्धी व कौटुंबिक सुख (ज्ञान, समृद्धि व सुख)', forP: 'गुरु / पंचमेश (गुरु / पंचमेश)'},
+          {name: 'श्री चंद्र यंत्र (श्री चंद्र यंत्र)', use: 'मानसिक शांतता, भावनिक स्थिरता व भाग्योदय वृद्धी (मानसिक शांति व भाग्योदय)', forP: 'चंद्र / भाग्येश (चंद्र / भाग्येश)'},
+          {name: 'संपूर्ण महामृत्युंजय यंत्र (महामृत्युंजय यंत्र)', use: 'दीर्घायुष्य, अकाल मृत्यू भय निवारण व सर्वतोपरी संरक्षण (दीर्घायु व सर्व रक्षा कवच)', forP: 'सार्वत्रिक वैदिक सुरक्षा (सर्व रक्षा)'}
         ];
         yBox.innerHTML = yantras.map(y => `
           <div style="background:#FFFFFF; border:1.5px solid #FDE68A; border-radius:8px; padding:10px;">
             <div style="font-weight:900; color:#7C2D12; font-size:12.5px;">ॐ ${y.name}</div>
             <div style="font-size:11.5px; color:#574032; margin-top:3px; line-height:1.4;">${y.use}</div>
-            <div style="font-size:11px; color:#C2540A; font-weight:800; margin-top:4px;">ભલામણ (फोकस): ${y.forP}</div>
+            <div style="font-size:11px; color:#C2540A; font-weight:800; margin-top:4px;">शिफारस (फोकस): ${y.forP}</div>
           </div>
         `).join('');
       }
@@ -4752,14 +4568,14 @@ def index_ui():
       const avGrid = document.getElementById('avkahadaGrid');
       if (avGrid) {
         avGrid.innerHTML = `
-          <div><strong>પાયો (पाया):</strong> <span style="color:#C2540A; font-weight:800;">${toMrWithHi(av.paya_hi || av.paya_en || '-')}</span></div>
-          <div><strong>વર્ણ (वर्ण):</strong> <span style="font-weight:700;">${toMrWithHi(av.varna_hi || av.varna_en || '-')}</span></div>
-          <div><strong>યોનિ (योनि):</strong> <span style="font-weight:700;">${toMrWithHi(av.yoni_hi || av.yoni_en || '-')}</span></div>
-          <div><strong>ગણ (गण):</strong> <span style="font-weight:700; color:#166534;">${toMrWithHi(av.gana_hi || av.gana_en || '-')}</span></div>
-          <div><strong>વશ્ય (वश्य):</strong> <span style="font-weight:700;">${toMrWithHi(av.vasya_hi || av.vasya_en || '-')}</span></div>
-          <div><strong>નાડી (नाड़ी):</strong> <span style="font-weight:700;">${toMrWithHi(av.nadi_hi || av.nadi_en || '-')}</span></div>
+          <div><strong>पाया (पाया):</strong> <span style="color:#C2540A; font-weight:800;">${toMrWithHi(av.paya_hi || av.paya_en || '-')}</span></div>
+          <div><strong>वर्ण (वर्ण):</strong> <span style="font-weight:700;">${toMrWithHi(av.varna_hi || av.varna_en || '-')}</span></div>
+          <div><strong>योनी (योनि):</strong> <span style="font-weight:700;">${toMrWithHi(av.yoni_hi || av.yoni_en || '-')}</span></div>
+          <div><strong>गण (गण):</strong> <span style="font-weight:700; color:#166534;">${toMrWithHi(av.gana_hi || av.gana_en || '-')}</span></div>
+          <div><strong>वश्य (वश्य):</strong> <span style="font-weight:700;">${toMrWithHi(av.vasya_hi || av.vasya_en || '-')}</span></div>
+          <div><strong>नाडी (नाड़ी):</strong> <span style="font-weight:700;">${toMrWithHi(av.nadi_hi || av.nadi_en || '-')}</span></div>
           <div style="grid-column: span 2; margin-top:4px; padding-top:4px; border-top:1px dashed #EADBC8;">
-            <strong>દશા શેષ (दशा शेष):</strong> <span style="color:#7C2D12; font-weight:800;">${toMr(av.dasa_balance || '-')}</span>
+            <strong>दशा शिल्लक (दशा शेष):</strong> <span style="color:#7C2D12; font-weight:800;">${toMr(av.dasa_balance || '-')}</span>
           </div>
         `;
       }
@@ -4767,14 +4583,14 @@ def index_ui():
       const favGrid = document.getElementById('favourableGrid');
       if (favGrid) {
         favGrid.innerHTML = `
-          <div><strong>શુભ અંક (शुभ अंक):</strong> <span style="color:#C2540A; font-weight:800; font-size:13px;">${fav.lucky_num || '-'}</span></div>
-          <div><strong>અનુકૂળ અંક (अनुकूल अंक):</strong> <span style="font-weight:700;">${fav.good_nums || '-'}</span></div>
-          <div><strong>શુભ વાર (शुभ वार):</strong> <span style="font-weight:700;">${toMrWithHi(fav.days || '-')}</span></div>
-          <div><strong>મિત્ર ગ્રહ (मित्र ग्रह):</strong> <span style="font-weight:700;">${toMrWithHi(fav.planets || '-')}</span></div>
-          <div><strong>શુભ ધાતુ (शुभ धातु):</strong> <span style="font-weight:700;">${toMrWithHi(fav.metal || '-')}</span></div>
-          <div><strong>શુભ રત્ન (शुभ रत्न):</strong> <span style="font-weight:700; color:#166534;">${toMrWithHi(fav.stone || '-')}</span></div>
+          <div><strong>शुभ अंक (शुभ अंक):</strong> <span style="color:#C2540A; font-weight:800; font-size:13px;">${fav.lucky_num || '-'}</span></div>
+          <div><strong>अनुकूल अंक (अनुकूल अंक):</strong> <span style="font-weight:700;">${fav.good_nums || '-'}</span></div>
+          <div><strong>शुभ वार (शुभ वार):</strong> <span style="font-weight:700;">${toMrWithHi(fav.days || '-')}</span></div>
+          <div><strong>मित्र ग्रह (मित्र ग्रह):</strong> <span style="font-weight:700;">${toMrWithHi(fav.planets || '-')}</span></div>
+          <div><strong>शुभ धातू (शुभ धातु):</strong> <span style="font-weight:700;">${toMrWithHi(fav.metal || '-')}</span></div>
+          <div><strong>शुभ रत्न (शुभ रत्न):</strong> <span style="font-weight:700; color:#166534;">${toMrWithHi(fav.stone || '-')}</span></div>
           <div style="grid-column: span 2; margin-top:4px; padding-top:4px; border-top:1px dashed #EADBC8;">
-            <strong>ભાગ્યોદય વર્ષ (भाग्योदय वर्ष):</strong> <span style="color:#7C2D12; font-weight:800;">${fav.good_years || '-'}</span>
+            <strong>भाग्योदय वर्ष (भाग्योदय वर्ष):</strong> <span style="color:#7C2D12; font-weight:800;">${fav.good_years || '-'}</span>
           </div>
         `;
       }

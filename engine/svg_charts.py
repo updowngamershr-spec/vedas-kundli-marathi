@@ -111,7 +111,10 @@ def render_north_indian_svg(
         labels = []
         for p in p_list:
             if is_kp:
-                if lang in ("gu", "gujarati"):
+                if lang in ("mr", "marathi"):
+                    from engine.marathi_engine import to_marathi
+                    lbl = to_marathi(p.get("label_hi") or p.get("label_en") or "")
+                elif lang in ("gu", "gujarati"):
                     from engine.gujarati_engine import to_gujarati
                     lbl = to_gujarati(p.get("label_hi") or p.get("label_en") or "")
                 elif lang == "hi":
@@ -119,7 +122,11 @@ def render_north_indian_svg(
                 else:
                     lbl = p.get("label_en")
             else:
-                if lang in ("gu", "gujarati"):
+                if lang in ("mr", "marathi"):
+                    mr_shorts = {"Uranus": "ह", "Neptune": "ने", "Pluto": "प्ल"}
+                    pid = p.get("id") or ""
+                    lbl = mr_shorts.get(pid) or p.get("short_hi") or p.get("short_en") or ""
+                elif lang in ("gu", "gujarati"):
                     from engine.gujarati_engine import to_gujarati
                     lbl = to_gujarati(p.get("short_hi") or p.get("short_en") or "")
                 elif lang == "hi":
@@ -299,7 +306,7 @@ def render_south_indian_svg(lagna_sign: int, house_planets: dict, size: int = 32
         is_lagna = (s_num == lagna_sign)
         if is_lagna:
             svg.append(f'  <line x1="{x0}" y1="{y0}" x2="{x0+cell_w}" y2="{y0+cell_h}" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="3,2"/>')
-            asc_lbl = "लग्न (ASC)" if lang == "hi" else "ASC"
+            asc_lbl = "लग्न (ASC)" if lang in ("hi", "mr", "marathi") else "ASC"
             svg.append(f'  <text x="{x0+4}" y="{y0+12}" font-size="9" font-weight="bold" fill="#DC2626">{asc_lbl}</text>')
 
         # Sign label in small gold
@@ -314,7 +321,7 @@ def render_south_indian_svg(lagna_sign: int, house_planets: dict, size: int = 32
             p_names = []
             for p in p_list:
                 if isinstance(p, dict):
-                    lbl = p.get("short_hi" if lang == "hi" else "short_en") or p.get("id", "")
+                    lbl = p.get("short_hi" if lang in ("hi", "mr", "marathi") else "short_en") or p.get("id", "")
                 else:
                     lbl = str(p)
                 p_names.append(lbl)
@@ -356,7 +363,7 @@ def render_east_indian_svg(lagna_sign: int, house_planets: dict, size: int = 320
         s_txt = str(s_num)
         is_lagna = (s_num == lagna_sign)
         if is_lagna:
-            lbl = "लग्न" if lang == "hi" else "ASC"
+            lbl = "लग्न" if lang in ("hi", "mr", "marathi") else "ASC"
             svg.append(f'  <text x="{sx}" y="{sy}" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#DC2626">{lbl} ({s_txt})</text>')
         else:
             svg.append(f'  <text x="{sx}" y="{sy}" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-size="11" font-weight="600" fill="#B45309">{s_txt}</text>')
@@ -369,7 +376,7 @@ def render_east_indian_svg(lagna_sign: int, house_planets: dict, size: int = 320
         labels = []
         for p in p_list:
             if isinstance(p, dict):
-                lbl = p.get("short_hi" if lang == "hi" else "short_en") or p.get("id", "")
+                lbl = p.get("short_hi" if lang in ("hi", "mr", "marathi") else "short_en") or p.get("id", "")
             else:
                 lbl = str(p)
             labels.append(lbl)
