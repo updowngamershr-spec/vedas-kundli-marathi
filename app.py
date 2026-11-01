@@ -3383,7 +3383,7 @@ def index_ui():
             Shivansh Astro-Vastu Suite
           </div>
           <div style="color: #F9FAFB; font-size: 13px; font-weight: 500;">
-            ${strMsg.replace(/\n/g, '<br/>')}
+            ${strMsg.split(String.fromCharCode(10)).join('<br/>')}
           </div>
         </div>
         <button onclick="dismissNativeToast()" style="background:none; border:none; color:#D1D5DB; cursor:pointer; font-size:16px; font-weight:bold; padding:0 4px; margin-left:6px;">✕</button>
