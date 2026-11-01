@@ -13,3 +13,6 @@ crm.db
 scratch/
 __pycache__/
 *.pyc
+
+build/
+dist/

@@ -158,7 +158,7 @@ def build_lal_kitab_corpus(txt_path: str = None, out_json_path: str = None):
     Paths are resolved locally so the application does not depend on a missing E: drive
     or another Windows user's Downloads folder.
     """
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+    project_root = getattr(sys, '_MEIPASS', os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
     data_dir = os.path.join(project_root, "data")
 
     if out_json_path is None:

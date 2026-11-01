@@ -32,8 +32,11 @@ import base64
 
 def get_image_base64(fname: str) -> str:
     """Return data URI for an optimized asset image."""
-    img_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "images")
+    base_dir = getattr(sys, '_MEIPASS', os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+    img_dir = os.path.join(base_dir, "assets", "images")
     img_path = os.path.join(img_dir, fname)
+    if not os.path.exists(img_path):
+        img_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "images", fname)
     if os.path.exists(img_path):
         with open(img_path, "rb") as f:
             b64 = base64.b64encode(f.read()).decode("ascii")
