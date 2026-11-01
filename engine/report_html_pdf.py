@@ -43,8 +43,31 @@ def get_image_base64(fname: str) -> str:
 
 def _page_wrapper(page_num: int, meta: dict, brand: dict, title_en: str, title_hi: str, inner_html: str, lang: str = "en") -> str:
     """Wrap content in a standard A4 Shivansh Astro-Vastu bordered page with header & footer."""
-    title_str = title_hi if lang == "hi" else (f"{title_en} / {title_hi}" if lang == "both" and title_hi else title_en)
-    header_right = "शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu) — बृहत् कुंडली" if lang == "hi" else "Shivansh Astro-Vastu — Brihat Kundli"
+    if lang in ("mr", "marathi"):
+        title_str = to_marathi(title_hi) if title_hi else to_marathi(title_en)
+        header_right = "शिवांश ॲस्ट्रो-वास्तू — बृहत् कुंडली"
+        footer_brand = brand.get("kendra_name") or "शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu)"
+        footer_tag = "वैदिक, कृष्णमूर्ती (के.पी.) व लाल किताब १९५२ संहिता"
+        footer_print = f"मुद्रण दिनांक: {brand.get('printed_at', '')} | पृष्ठ क्रमांक __PAGE_NUM__ of __TOTAL_PAGES__"
+    elif lang == "hi":
+        title_str = title_hi if title_hi else title_en
+        header_right = "शिवांश ॲस्ट्रो-वास्तू — बृहत् कुंडली"
+        footer_brand = brand.get("kendra_name") or "शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu)"
+        footer_tag = brand.get("tagline_hi", "वैदिक, कृष्णमूर्ति एवं लाल किताब संहिता")
+        footer_print = f"मुद्रण तिथि: {brand.get('printed_at', '')} | पृष्ठ संख्या __PAGE_NUM__ of __TOTAL_PAGES__"
+    elif lang in ("both", "bilingual"):
+        title_str = f"{title_en} / {to_marathi(title_hi)}" if title_hi else title_en
+        header_right = "शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu) — बृहत् कुंडली"
+        footer_brand = brand.get("kendra_name") or brand.get("name_en", "Shivansh Astro-Vastu")
+        footer_tag = brand.get("tagline_en", "Ancient Vedic, KP &amp; Lal Kitab Samhita")
+        footer_print = f"Printing Date: {brand.get('printed_at', '')} | Page No. __PAGE_NUM__ of __TOTAL_PAGES__"
+    else:
+        title_str = title_en
+        header_right = "Shivansh Astro-Vastu — Brihat Kundli"
+        footer_brand = brand.get("kendra_name") or brand.get("name_en", "Shivansh Astro-Vastu")
+        footer_tag = brand.get("tagline_en", "Ancient Vedic, KP &amp; Lal Kitab Samhita")
+        footer_print = f"Printing Date: {brand.get('printed_at', '')} | Page No. __PAGE_NUM__ of __TOTAL_PAGES__"
+
     title_banner = f'<div class="section-title">|| {title_str} ||</div>' if title_str else ""
 
     return f"""
@@ -58,8 +81,8 @@ def _page_wrapper(page_num: int, meta: dict, brand: dict, title_en: str, title_h
         {inner_html}
       </div>
       <div class="page-footer">
-        <span><strong>{brand.get("kendra_name") or brand.get("name_en", "Shivansh Astro-Vastu")}</strong> | {brand.get("tagline_en", "Ancient Vedic, KP &amp; Lal Kitab Samhita")}</span>
-        <span>Printing Date: {brand["printed_at"]} | Page No. __PAGE_NUM__ of __TOTAL_PAGES__</span>
+        <span><strong>{footer_brand}</strong> | {footer_tag}</span>
+        <span>{footer_print}</span>
       </div>
     </div>
     """
@@ -247,32 +270,36 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     is_mr = (lang in ("mr", "marathi"))
     is_hi = (lang == "hi")
     is_both = (lang in ("both", "bilingual"))
+    svg_lang = "mr" if is_mr else ("hi" if is_hi else "en")
 
     def T(en_txt: str, hi_txt: str) -> str:
         if is_mr:
-            mr_txt = to_marathi(hi_txt)
-            # Render Marathi as primary, with Hindi in bracket
-            if mr_txt and hi_txt and mr_txt != hi_txt:
-                return f"{mr_txt} ({hi_txt})"
-            return mr_txt or hi_txt
+            return to_marathi(hi_txt) if hi_txt else to_marathi(en_txt)
         elif is_hi:
-            return hi_txt
+            return hi_txt if hi_txt else en_txt
         elif is_both:
-            mr_sub = to_marathi(hi_txt)
-            return f"{en_txt} <span class='mr-sub'>({mr_sub})</span>" if en_txt != hi_txt else en_txt
+            return f"{en_txt} <span class='mr-sub'>({to_marathi(hi_txt)})</span>" if (en_txt and hi_txt and en_txt != hi_txt) else (en_txt or hi_txt)
         return en_txt
 
     def P(en_txt: str, hi_txt: str) -> str:
         if is_mr:
-            mr_p = to_marathi(hi_txt)
-            if hi_txt and mr_p != hi_txt:
-                return f"""<div class='para-mr' style="font-family:'Noto Sans Devanagari','Rasa',sans-serif; color:#2E1C10; margin-bottom:4px; line-height:1.65; font-size:12px; font-weight:600;">{mr_p}</div><div class='para-hi-sub' style="font-size:10.5px; color:#574032; font-style:italic; line-height:1.45; border-left:3px solid #D4AF37; padding-left:8px; margin-bottom:10px; background:rgba(254,243,199,0.35); border-radius:0 6px 6px 0; padding-top:3px; padding-bottom:3px;">({hi_txt})</div>"""
-            return f"""<div class='para-mr' style="font-family:'Noto Sans Devanagari','Rasa',sans-serif; color:#2E1C10; margin-bottom:6px; line-height:1.65;">{mr_p}</div>"""
+            mr_p = to_marathi(hi_txt) if hi_txt else to_marathi(en_txt)
+            return f"""<div class='para-mr' style="font-family:'Noto Sans Devanagari','Rasa',sans-serif; color:#2E1C10; margin-bottom:6px; line-height:1.65; font-size:11.5px;">{mr_p}</div>"""
         elif is_hi:
             return hi_txt
         elif is_both:
             return f"<div class='para-en'>{en_txt}</div><div class='para-mr'>{to_marathi(hi_txt)}</div>"
         return en_txt
+
+    def L(en_val: str, hi_val: str) -> str:
+        """Helper to return label or text in active language (pure Marathi when is_mr)."""
+        if is_mr:
+            return to_marathi(hi_val) if hi_val else to_marathi(en_val)
+        elif is_hi:
+            return hi_val if hi_val else en_val
+        elif is_both:
+            return f"{en_val} ({to_marathi(hi_val)})" if (en_val and hi_val and en_val != hi_val) else (en_val or hi_val)
+        return en_val or hi_val
 
     pages = []
 
@@ -305,10 +332,10 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
             <table class="cover-table">
               <tr>
                 <td class="lbl">{T("Name", "नाम")}</td><td class="val"><strong>{meta["name"]}</strong></td>
-                <td class="lbl">{T("Gender", "लिंग")}</td><td class="val">{meta["sex_hi"] if is_hi else meta["sex"]}</td>
+                <td class="lbl">{T("Gender", "लिंग")}</td><td class="val">{L(meta["sex"], meta["sex_hi"])}</td>
               </tr>
               <tr>
-                <td class="lbl">{T("Date of Birth", "जन्म तिथि")}</td><td class="val">{meta["dob_str"]} ({meta["day_hi"] if is_hi else meta["day_en"]})</td>
+                <td class="lbl">{T("Date of Birth", "जन्म तिथि")}</td><td class="val">{meta["dob_str"]} ({L(meta["day_en"], meta["day_hi"])})</td>
                 <td class="lbl">{T("Time of Birth", "जन्म समय")}</td><td class="val">{meta["tob_str"]} (IST)</td>
               </tr>
               <tr>
@@ -316,12 +343,12 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
                 <td class="lbl">{T("Coordinates", "अक्षांश / देशांतर")}</td><td class="val">{meta["lat_dms"]}, {meta["lon_dms"]}</td>
               </tr>
               <tr>
-                <td class="lbl">{T("Lagna (Ascendant)", "जन्म लग्न")}</td><td class="val">{meta["lagna_hi"] if is_hi else meta["lagna_en"]} ({meta["lagna_lord_hi"] if is_hi else meta["lagna_lord_en"]})</td>
-                <td class="lbl">{T("Moon Rashi", "जन्म राशि")}</td><td class="val">{meta["rasi_hi"] if is_hi else meta["rasi_en"]} ({meta["rasi_lord_hi"] if is_hi else meta["rasi_lord_en"]})</td>
+                <td class="lbl">{T("Lagna (Ascendant)", "जन्म लग्न")}</td><td class="val">{L(meta["lagna_en"], meta["lagna_hi"])} ({L(meta["lagna_lord_en"], meta["lagna_lord_hi"])})</td>
+                <td class="lbl">{T("Moon Rashi", "जन्म राशि")}</td><td class="val">{L(meta["rasi_en"], meta["rasi_hi"])} ({L(meta["rasi_lord_en"], meta["rasi_lord_hi"])})</td>
               </tr>
               <tr>
-                <td class="lbl">{T("Nakshatra-Pada", "नक्षत्र - चरण")}</td><td class="val">{meta["nakshatra_pada_hi"] if is_hi else meta["nakshatra_pada_en"]}</td>
-                <td class="lbl">{T("Dasha Balance", "दशा भोग्य काल")}</td><td class="val">{vim["balance_hi"] if is_hi else vim["balance_str"]}</td>
+                <td class="lbl">{T("Nakshatra-Pada", "नक्षत्र - चरण")}</td><td class="val">{L(meta["nakshatra_pada_en"], meta["nakshatra_pada_hi"])}</td>
+                <td class="lbl">{T("Dasha Balance", "दशा भोग्य काल")}</td><td class="val">{L(vim["balance_str"], vim["balance_hi"])}</td>
               </tr>
             </table>
           </div>
@@ -443,22 +470,22 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       <div>
         <div class="box-heading">{T("Avkahada Chakra", "अवकहड़ा चक्र")}</div>
         <table class="data-table compact">
-          <tr><td>{T("Paya (Nakshatra Based)", "पाया (नक्षत्र आधारित)")}</td><td>{avk["paya_hi"] if is_hi else avk["paya_en"]}</td></tr>
-          <tr><td>{T("Varna", "वर्ण")}</td><td>{avk["varna_hi"] if is_hi else avk["varna_en"]}</td></tr>
-          <tr><td>{T("Yoni", "योनि")}</td><td>{avk["yoni_hi"] if is_hi else avk["yoni_en"]}</td></tr>
-          <tr><td>{T("Gana", "गण")}</td><td>{avk["gana_hi"] if is_hi else avk["gana_en"]}</td></tr>
-          <tr><td>{T("Vasya", "वश्य")}</td><td>{avk["vasya_hi"] if is_hi else avk["vasya_en"]}</td></tr>
-          <tr><td>{T("Nadi", "नाड़ी")}</td><td>{avk["nadi_hi"] if is_hi else avk["nadi_en"]}</td></tr>
-          <tr><td>{T("Dasa Balance", "दशा शेष (भोग्य)")}</td><td>{vim["balance_hi"] if is_hi else vim["balance_str"]}</td></tr>
-          <tr><td>{T("Lagna", "लग्न")}</td><td>{meta["lagna_hi"] if is_hi else meta["lagna_en"]}</td></tr>
-          <tr><td>{T("Lagna Lord", "लग्नेश")}</td><td>{meta["lagna_lord_hi"] if is_hi else meta["lagna_lord_en"]}</td></tr>
-          <tr><td>{T("Rasi", "राशि")}</td><td>{meta["rasi_hi"] if is_hi else meta["rasi_en"]}</td></tr>
-          <tr><td>{T("Rasi Lord", "राशि स्वामी")}</td><td>{meta["rasi_lord_hi"] if is_hi else meta["rasi_lord_en"]}</td></tr>
-          <tr><td>{T("Nakshatra-Pada", "नक्षत्र - चरण")}</td><td>{meta["nakshatra_pada_hi"] if is_hi else meta["nakshatra_pada_en"]}</td></tr>
-          <tr><td>{T("Nakshatra Lord", "नक्षत्र स्वामी")}</td><td>{meta["nakshatra_lord_hi"] if is_hi else meta["nakshatra_lord_en"]}</td></tr>
+          <tr><td>{T("Paya (Nakshatra Based)", "पाया (नक्षत्र आधारित)")}</td><td>{L(avk["paya_en"], avk["paya_hi"])}</td></tr>
+          <tr><td>{T("Varna", "वर्ण")}</td><td>{L(avk["varna_en"], avk["varna_hi"])}</td></tr>
+          <tr><td>{T("Yoni", "योनि")}</td><td>{L(avk["yoni_en"], avk["yoni_hi"])}</td></tr>
+          <tr><td>{T("Gana", "गण")}</td><td>{L(avk["gana_en"], avk["gana_hi"])}</td></tr>
+          <tr><td>{T("Vasya", "वश्य")}</td><td>{L(avk["vasya_en"], avk["vasya_hi"])}</td></tr>
+          <tr><td>{T("Nadi", "नाड़ी")}</td><td>{L(avk["nadi_en"], avk["nadi_hi"])}</td></tr>
+          <tr><td>{T("Dasa Balance", "दशा शेष (भोग्य)")}</td><td>{L(vim["balance_str"], vim["balance_hi"])}</td></tr>
+          <tr><td>{T("Lagna", "लग्न")}</td><td>{L(meta["lagna_en"], meta["lagna_hi"])}</td></tr>
+          <tr><td>{T("Lagna Lord", "लग्नेश")}</td><td>{L(meta["lagna_lord_en"], meta["lagna_lord_hi"])}</td></tr>
+          <tr><td>{T("Rasi", "राशि")}</td><td>{L(meta["rasi_en"], meta["rasi_hi"])}</td></tr>
+          <tr><td>{T("Rasi Lord", "राशि स्वामी")}</td><td>{L(meta["rasi_lord_en"], meta["rasi_lord_hi"])}</td></tr>
+          <tr><td>{T("Nakshatra-Pada", "नक्षत्र - चरण")}</td><td>{L(meta["nakshatra_pada_en"], meta["nakshatra_pada_hi"])}</td></tr>
+          <tr><td>{T("Nakshatra Lord", "नक्षत्र स्वामी")}</td><td>{L(meta["nakshatra_lord_en"], meta["nakshatra_lord_hi"])}</td></tr>
           <tr><td>{T("Julian Day", "जूलियन दिन")}</td><td>{meta["julian_day"]}</td></tr>
-          <tr><td>{T("SunSign (Indian)", "सूर्य राशि (भारतीय)")}</td><td>{meta["sunsign_indian_hi"] if is_hi else meta["sunsign_indian_en"]}</td></tr>
-          <tr><td>{T("SunSign (Western)", "सूर्य राशि (पाश्चात्य)")}</td><td>{meta["sunsign_west_hi"] if is_hi else meta["sunsign_west_en"]}</td></tr>
+          <tr><td>{T("SunSign (Indian)", "सूर्य राशि (भारतीय)")}</td><td>{L(meta["sunsign_indian_en"], meta["sunsign_indian_hi"])}</td></tr>
+          <tr><td>{T("SunSign (Western)", "सूर्य राशि (पाश्चात्य)")}</td><td>{L(meta["sunsign_west_en"], meta["sunsign_west_hi"])}</td></tr>
           <tr><td>{T("Ayanamsa", "अयनांश")}</td><td>{meta["ayanamsa_dms"]}</td></tr>
           <tr><td>{T("Ayanamsa Name", "अयनांश नाम")}</td><td>Lahiri (Chitrapaksha)</td></tr>
           <tr><td>{T("Obliquity", "क्रांतिपातांश")}</td><td>{meta["obliquity_dms"]}</td></tr>
@@ -483,10 +510,10 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       <div>
         <div class="box-heading">{T("Basic Details", "पंचांग एवं जन्म विवरण")}</div>
         <table class="data-table compact">
-          <tr><td>{T("Sex", "लिंग")}</td><td>{meta["sex_hi"] if is_hi else meta["sex"]}</td></tr>
+          <tr><td>{T("Sex", "लिंग")}</td><td>{L(meta["sex"], meta["sex_hi"])}</td></tr>
           <tr><td>{T("Date of Birth", "जन्म तिथि")}</td><td>{meta["dob_str"]}</td></tr>
           <tr><td>{T("Time of Birth", "जन्म समय")}</td><td>{meta["tob_str"]}</td></tr>
-          <tr><td>{T("Day of Birth", "जन्म वार")}</td><td>{meta["day_hi"] if is_hi else meta["day_en"]}</td></tr>
+          <tr><td>{T("Day of Birth", "जन्म वार")}</td><td>{L(meta["day_en"], meta["day_hi"])}</td></tr>
           <tr><td>{T("Ishtkaal", "इष्टकाल (घटी-पल-विपल)")}</td><td>{meta["ishtkaal"]}</td></tr>
           <tr><td>{T("Place of Birth", "जन्म स्थान")}</td><td>{meta["place"]}</td></tr>
           <tr><td>{T("Time Zone", "समय क्षेत्र (Time Zone)")}</td><td>{meta["tz"]}</td></tr>
@@ -496,11 +523,11 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
           <tr><td>{T("War Time Correction", "युद्धकालीन समय संस्कार")}</td><td>{meta["wtc_str"]}</td></tr>
           <tr><td>{T("LMT at Birth", "स्थानीय मध्यम समय (LMT)")}</td><td>{meta["lmt_str"]}</td></tr>
           <tr><td>{T("GMT at Birth", "ग्रीनविच समय (GMT)")}</td><td>{meta["gmt_str"]}</td></tr>
-          <tr><td>{T("Tithi", "तिथि")}</td><td>{meta["tithi_hi"] if is_hi else meta["tithi_en"]}</td></tr>
-          <tr><td>{T("Hindu Week Day", "हिन्दू वार")}</td><td>{meta["hindu_day_hi"] if is_hi else meta["hindu_day_en"]}</td></tr>
-          <tr><td>{T("Paksha", "पक्ष")}</td><td>{meta["paksha_hi"] if is_hi else meta["paksha_en"]}</td></tr>
-          <tr><td>{T("Yoga", "योग")}</td><td>{meta["yoga_hi"] if is_hi else meta["yoga_en"]}</td></tr>
-          <tr><td>{T("Karan", "करण")}</td><td>{meta["karana_hi"] if is_hi else meta["karana_en"]}</td></tr>
+          <tr><td>{T("Tithi", "तिथि")}</td><td>{L(meta["tithi_en"], meta["tithi_hi"])}</td></tr>
+          <tr><td>{T("Hindu Week Day", "हिन्दू वार")}</td><td>{L(meta["hindu_day_en"], meta["hindu_day_hi"])}</td></tr>
+          <tr><td>{T("Paksha", "पक्ष")}</td><td>{L(meta["paksha_en"], meta["paksha_hi"])}</td></tr>
+          <tr><td>{T("Yoga", "योग")}</td><td>{L(meta["yoga_en"], meta["yoga_hi"])}</td></tr>
+          <tr><td>{T("Karan", "करण")}</td><td>{L(meta["karana_en"], meta["karana_hi"])}</td></tr>
           <tr><td>{T("Sunrise", "सूर्योदय")}</td><td>{meta["sunrise"]}</td></tr>
           <tr><td>{T("Sunset", "सूर्यास्त")}</td><td>{meta["sunset"]}</td></tr>
           <tr><td>{T("Day Duration", "दिनमान")}</td><td>{meta["day_duration"]}</td></tr>
@@ -528,19 +555,19 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # PAGE 3: TRADITIONAL KUNDLI OVERVIEW (LAGNA, NAVAMSHA & VIMSHOTTARI DASHA)
     # =========================================================================
     d9_chart = sv["charts"]["D9"]
-    svg_lagna = render_north_indian_svg(d1_chart["lagna_sign"], d1_chart["house_planets"], lang=("hi" if is_hi else "en"), size=260)
-    svg_navamsha = render_north_indian_svg(d9_chart["lagna_sign"], d9_chart["house_planets"], lang=("hi" if is_hi else "en"), size=260)
+    svg_lagna = render_north_indian_svg(d1_chart["lagna_sign"], d1_chart["house_planets"], lang=svg_lang, size=260)
+    svg_navamsha = render_north_indian_svg(d9_chart["lagna_sign"], d9_chart["house_planets"], lang=svg_lang, size=260)
 
     # 9 Vimshottari Mahadasha boxes in 3x3 grid
     vim_boxes_html = []
     for md in vim["mahadashas"]:
         ad_lines = "".join(
-            f"<tr><td>{ad['name_hi'] if is_hi else ad['code']}</td><td class='c'>{ad['end_str']}</td></tr>"
+            f"<tr><td>{L(ad['code'], ad['name_hi'])}</td><td class='c'>{ad['end_str']}</td></tr>"
             for ad in md["antardashas"]
         )
         vim_boxes_html.append(f"""
         <div class="mini-dasha-box">
-          <div class="mini-dasha-head">{md['header_hi'] if is_hi else md['header_en']}<br/><span>{md['range_str']}</span></div>
+          <div class="mini-dasha-head">{L(md['header_en'], md['header_hi'])}<br/><span>{md['range_str']}</span></div>
           <table class="mini-table">{ad_lines}</table>
         </div>
         """)
@@ -587,19 +614,19 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # PAGE 4: PLANETARY POSITIONS, ASHTAKAVARGA & COMPLETE CHALIT TABLE
     # =========================================================================
     planet_rows_html = "".join(
-        f"<tr><td><b>{p['name_hi'] if is_hi else p['name_en']}</b></td><td>{p['sign_hi'] if is_hi else p['sign_en']}</td><td>{p['dms']}</td><td>{p['nakshatra_hi'] if is_hi else p['nakshatra_en']}</td><td class='c'>{p['pada']}</td></tr>"
+        f"<tr><td><b>{L(p['name_en'], p['name_hi'])}</b></td><td>{L(p['sign_en'], p['sign_hi'])}</td><td>{p['dms']}</td><td>{L(p['nakshatra_en'], p['nakshatra_hi'])}</td><td class='c'>{p['pada']}</td></tr>"
         for p in data["planets"]
     )
 
     # Ashtakvarga full table
     av_rows_html = "".join(
-        f"<tr><td><b>{r['name_hi'] if is_hi else r['name_en']}</b></td>" + "".join(f"<td class='c'>{v}</td>" for v in r["values"]) + "</tr>"
+        f"<tr><td><b>{L(r['name_en'], r['name_hi'])}</b></td>" + "".join(f"<td class='c'>{v}</td>" for v in r["values"]) + "</tr>"
         for r in ash["bhinna_rows"]
     )
     av_tot_html = "<tr class='tot-row'><td><b>Total</b></td>" + "".join(f"<td class='c'><b>{v}</b></td>" for v in ash["sarva_totals"]) + "</tr>"
 
     chalit_rows_html = "".join(
-        f"<tr><td class='c'><b>{c['bhav']}</b></td><td>{c['begin_sign_hi'] if is_hi else c['begin_sign_en']}</td><td class='c'>{c['begin_dms']}</td><td>{c['mid_sign_hi'] if is_hi else c['mid_sign_en']}</td><td class='c'>{c['mid_dms']}</td></tr>"
+        f"<tr><td class='c'><b>{c['bhav']}</b></td><td>{L(c['begin_sign_en'], c['begin_sign_hi'])}</td><td class='c'>{c['begin_dms']}</td><td>{L(c['mid_sign_en'], c['mid_sign_hi'])}</td><td class='c'>{c['mid_dms']}</td></tr>"
         for c in data["chalit_table"]
     )
 
@@ -649,7 +676,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         "The ascendant house is considered very important in Vedic astrology. During the birth of a person, the sign which rises in the eastern sky is called the person's ascendant (Lagna). And, the sign which comes in this first house is called the ascendant sign. The ascendant helps in calculating the minutest events in a person's life through astrology, whereas daily, weekly, monthly, and yearly transit predictions are analyzed on the basis of Moon sign and Sun sign.",
         "वैदिक ज्योतिष में लग्न भाव को अत्यंत महत्वपूर्ण माना गया है। जातक के जन्म के समय पूर्वी क्षितिज में जो राशि उदित हो रही होती है, उसे 'जन्म लग्न' कहा जाता है। प्रथम भाव में आने वाली इस राशि के आधार पर व्यक्ति के शरीर, स्वभाव, स्वास्थ्य, आत्मबल और जीवन की सूक्ष्मतम घटनाओं का आकलन किया जाता है।"
       )}</p>
-      <div class="highlight-banner">{T("Your Ascendant is:", "आपका जन्म लग्न है:")} <strong>{meta["lagna_hi"] if is_hi else meta["lagna_en"]}</strong></div>
+      <div class="highlight-banner">{T("Your Ascendant is:", "आपका जन्म लग्न है:")} <strong>{L(meta["lagna_en"], meta["lagna_hi"])}</strong></div>
 
       <h3>{T(f"Health for {meta['lagna_en']} Ascendant", f"{meta['lagna_hi']} लग्न के लिए स्वास्थ्य विचार")}</h3>
       <p>{P(asc_r["health_en"], asc_r["health_hi"])}</p>
@@ -674,7 +701,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         "वैदिक ज्योतिष में क्रांतिवृत्त के 27 नक्षत्रों को चंद्र नक्षत्र मंडल कहा जाता है। प्रत्येक नक्षत्र 13 अंश 20 कला का होता है और इसके 4 चरण (प्रत्येक 3 अंश 20 कला) होते हैं। जन्म के समय चंद्रमा जिस नक्षत्र और चरण में स्थित होता है, उसी से विंशोत्तरी दशा और जातक के आंतरिक स्वभाव का निर्धारण होता है।"
       )}</p>
       <div class="highlight-banner">
-        {T("Your Nakshatra :", "आपका जन्म नक्षत्र :")} <strong>{nak_r["nakshatra_hi"] if is_hi else nak_r["nakshatra_en"]}</strong>
+        {T("Your Nakshatra :", "आपका जन्म नक्षत्र :")} <strong>{L(nak_r["nakshatra_en"], nak_r["nakshatra_hi"])}</strong>
         &nbsp;&nbsp;|&nbsp;&nbsp;
         {T("Your Nakshatra Pada :", "नक्षत्र चरण :")} <strong>{nak_r["pada"]}</strong>
       </div>
@@ -703,14 +730,14 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     ]
     for p_num, items in page_lp_slices:
         blocks_html = "".join(
-            f"<div class='prose-section'><h3>{item['title_hi'] if is_hi else item['title_en']}</h3><p>{P(item['text_en'], item['text_hi'])}</p></div>"
+            f"<div class='prose-section'><h3>{L(item['title_en'], item['title_hi'])}</h3><p>{P(item['text_en'], item['text_hi'])}</p></div>"
             for item in items
         )
         # On Page 9, also include Gurukulam Classical Yogas summary so the page is rich and informative!
         extra_p9 = ""
         if p_num == 9:
             yoga_cards = "".join(
-                f"<div class='yoga-card'><h4>✦ {y['name_hi'] if is_hi else y['name_en']}</h4><p>{P(y['desc_en'], y['desc_hi'])}</p></div>"
+                f"<div class='yoga-card'><h4>✦ {L(y['name_en'], y['name_hi'])}</h4><p>{P(y['desc_en'], y['desc_hi'])}</p></div>"
                 for y in yogas
             )
             extra_p9 = f"""
@@ -732,7 +759,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         f"In the birth chart, Mangal is placed in {mang['mars_house_lagna_word_en']} house from Lagna, while in the Moon chart Mangal is placed in {mang['mars_house_moon_word_en']} house.",
         f"जन्म कुंडली में मंगल लग्न से {mang['mars_house_lagna_word_hi']} भाव में स्थित है, जबकि चंद्र कुंडली से मंगल {mang['mars_house_moon_word_hi']} भाव में स्थित है।"
       )}</p>
-      <div class="highlight-banner"><strong>{mang["status_hi"] if is_hi else mang["status_en"]}</strong></div>
+      <div class="highlight-banner"><strong>{L(mang["status_en"], mang["status_hi"])}</strong></div>
       <p>{P(
         "Mangal Dosha is considered to create hurdles or temperamental friction in married life if unchecked. It is considered in classical texts that if a Manglik person marries another Manglik person, or when Mars is in its own/debilitated sign or aspected by benefic Jupiter, the Manglik Dosha gets cancelled and loses its malefic effect.",
         "शास्त्रीय मान्यता के अनुसार यदि दोनों वर-वधू की कुंडली में समान मांगलिक योग हो अथवा मंगल पर शुभ गुरु की दृष्टि या राशिगत परिहार हो, तो मंगल दोष स्वतः निरस्त हो जाता है।"
@@ -778,14 +805,14 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
               <tr><td><b>{T("Date", "जन्म तिथि")}</b></td><td>{meta["dob_slash"]}</td></tr>
               <tr><td><b>{T("Time of Birth", "जन्म समय")}</b></td><td>{meta["tob_str"].replace(' ', '')}</td></tr>
               <tr><td><b>{T("Place of Birth", "जन्म स्थान")}</b></td><td>{meta["place"]}</td></tr>
-              <tr><td><b>{T("Sex", "लिंग")}</b></td><td>{meta["sex_hi"] if is_hi else meta["sex"]}</td></tr>
-              <tr><td><b>{T("Rasi", "जन्म राशि")}</b></td><td>{meta["rasi_hi"] if is_hi else meta["rasi_en"]}</td></tr>
-              <tr><td><b>{T("Tithi", "तिथि")}</b></td><td>{meta["tithi_hi"] if is_hi else meta["tithi_en"]}</td></tr>
-              <tr><td><b>{T("Nakshatra", "नक्षत्र")}</b></td><td>{meta["nakshatra_hi"] if is_hi else meta["nakshatra_en"]}</td></tr>
+              <tr><td><b>{T("Sex", "लिंग")}</b></td><td>{L(meta["sex"], meta["sex_hi"])}</td></tr>
+              <tr><td><b>{T("Rasi", "जन्म राशि")}</b></td><td>{L(meta["rasi_en"], meta["rasi_hi"])}</td></tr>
+              <tr><td><b>{T("Tithi", "तिथि")}</b></td><td>{L(meta["tithi_en"], meta["tithi_hi"])}</td></tr>
+              <tr><td><b>{T("Nakshatra", "नक्षत्र")}</b></td><td>{L(meta["nakshatra_en"], meta["nakshatra_hi"])}</td></tr>
             </table>
             """
         s_rows = "".join(
-            f"<tr><td class='c'>{r['sn']}</td><td>{r['type_hi'] if is_hi else r['type_en']}</td><td>{r['rashi_hi'] if is_hi else r['rashi_en']}</td><td>{r['start_date_en']}</td><td>{r['end_date_en']}</td><td>{r['phase_hi'] if is_hi else r['phase_en']}</td></tr>"
+            f"<tr><td class='c'>{r['sn']}</td><td>{L(r['type_en'], r['type_hi'])}</td><td>{L(r['rashi_en'], r['rashi_hi'])}</td><td>{r['start_date_en']}</td><td>{r['end_date_en']}</td><td>{L(r['phase_en'], r['phase_hi'])}</td></tr>"
             for r in rows_slice
         )
         p_sade_html = f"""
@@ -843,7 +870,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # =========================================================================
     # PAGE 15: KALSARPA DOSH / YOG
     # =========================================================================
-    svg_ks = render_north_indian_svg(d1_chart["lagna_sign"], d1_chart["house_planets"], lang=("hi" if is_hi else "en"), size=270)
+    svg_ks = render_north_indian_svg(d1_chart["lagna_sign"], d1_chart["house_planets"], lang=svg_lang, size=270)
     p15_inner = f"""
     <div class="prose-block">
       <h3>{T("Kalsarpa Dosh / Yog", "कालसर्प दोष / योग विचार")}</h3>
@@ -851,7 +878,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         "As per classical definition, when all seven planets are situated within one hemisphere between Rahu and Ketu in the birth chart, astrologers call it Kalsarpa Yoga. However, if planets are well-posited in strong houses or form Raja Yogas, Kalsarpa Yoga does not obstruct success and instead grants extraordinary focus and rise.",
         "जब जन्म कुंडली में राहु और केतु के एक ही ओर सभी सातों ग्रह आ जाते हैं, तब कालसर्प योग का निर्माण होता है। यदि कुंडली में ग्रह शुभ भावों में बलवान हों, तो जातक अपने परिश्रम से उच्च शिखर प्राप्त करता है।"
       )}</p>
-      <div class="highlight-banner"><strong>{T("Result:", "निष्कर्ष:")} {kals["result_hi"] if is_hi else kals["result_en"]}</strong></div>
+      <div class="highlight-banner"><strong>{T("Result:", "निष्कर्ष:")} {L(kals.get("result_en", ""), kals.get("result_hi", ""))}</strong></div>
       <div class="chart-col mt-14">
         <div class="chart-title">{T("Lagna Chart:", "जन्म लग्न कुंडली:")}</div>
         {svg_ks}
@@ -864,7 +891,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # PAGE 16: VARSHAPHAL (ANNUAL PREDICTIONS) DETAILS & CHART
     # =========================================================================
     vm = vp["varsha_meta"]
-    svg_varsha = render_north_indian_svg(vp["varsha_chart"]["lagna_sign"], vp["varsha_chart"]["house_planets"], lang=("hi" if is_hi else "en"), size=265)
+    svg_varsha = render_north_indian_svg(vp["varsha_chart"]["lagna_sign"], vp["varsha_chart"]["house_planets"], lang=svg_lang, size=265)
     p16_inner = f"""
     <table class="data-table compact">
       <thead>
@@ -875,29 +902,29 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         </tr>
       </thead>
       <tbody>
-        <tr><td>{meta["sex"]}</td><td class="c"><b>Sex</b></td><td>{vm["sex"]}</td></tr>
-        <tr><td>{meta["dob_slash"]}</td><td class="c"><b>Date of Birth</b></td><td>{vm["dob_slash"]}</td></tr>
-        <tr><td>{meta["tob_str"].replace(' ', '')}</td><td class="c"><b>Time of Birth</b></td><td>{vm["tob_str"].replace(' ', '')}</td></tr>
-        <tr><td>{meta["day_en"]}</td><td class="c"><b>Day of Birth</b></td><td>{vm["day_en"]}</td></tr>
-        <tr><td>{meta["place"]}</td><td class="c"><b>Place of Birth</b></td><td>{vm["place"]}</td></tr>
-        <tr><td>{int(meta["lat"])}</td><td class="c"><b>Latitude</b></td><td>{int(vm["lat"])}</td></tr>
-        <tr><td>{int(meta["lon"])}</td><td class="c"><b>Longitude</b></td><td>{int(vm["lon"])}</td></tr>
-        <tr><td>{meta["ltc_str"]}</td><td class="c"><b>Local Time Correction</b></td><td>{vm["ltc_str"]}</td></tr>
-        <tr><td>{meta["wtc_str"]}</td><td class="c"><b>War Time Correction</b></td><td>{vm["wtc_str"]}</td></tr>
-        <tr><td>{meta["lmt_str"].replace(':', '.')}</td><td class="c"><b>LMT at Birth</b></td><td>{vm["lmt_str"].replace(':', '.')}</td></tr>
-        <tr><td>{meta["sunrise"]}</td><td class="c"><b>Sunrise</b></td><td>{vm["sunrise"]}</td></tr>
-        <tr><td>{meta["sunset"]}</td><td class="c"><b>Sunset</b></td><td>{vm["sunset"]}</td></tr>
-        <tr><td>{meta["lagna_en"]}</td><td class="c"><b>Lagna</b></td><td>{vm["lagna_en"]}</td></tr>
-        <tr><td>{meta["lagna_lord_short"]}</td><td class="c"><b>Lagna Lord</b></td><td>{vm["lagna_lord_short"]}</td></tr>
-        <tr><td>{meta["rasi_en"]}</td><td class="c"><b>Rasi</b></td><td>{vm["rasi_en"]}</td></tr>
-        <tr><td>{meta["rasi_lord_short"]}</td><td class="c"><b>Rasi Lord</b></td><td>{vm["rasi_lord_short"]}</td></tr>
-        <tr><td>{meta["nakshatra_en"]}</td><td class="c"><b>Nakshatra</b></td><td>{vm["nakshatra_en"]}</td></tr>
-        <tr><td>{meta["nakshatra_lord_short"]}</td><td class="c"><b>Nakshatra Lord</b></td><td>{vm["nakshatra_lord_short"]}</td></tr>
-        <tr><td>{meta["yoga_en"]}</td><td class="c"><b>Yoga</b></td><td>{vm["yoga_en"]}</td></tr>
-        <tr><td>{meta["karana_en"]}</td><td class="c"><b>Karan</b></td><td>{vm["karana_en"]}</td></tr>
-        <tr><td>{meta["sunsign_west_en"]}</td><td class="c"><b>Sun Sign (Western)</b></td><td>{vm["sunsign_west_en"]}</td></tr>
-        <tr><td>{meta["ayanamsa_dms"]}</td><td class="c"><b>Ayanamsa</b></td><td>{vm["ayanamsa_dms"]}</td></tr>
-        <tr><td>Lahiri</td><td class="c"><b>Ayanamsa Name</b></td><td>Lahiri</td></tr>
+        <tr><td>{L(meta["sex"], meta["sex_hi"])}</td><td class="c"><b>{T("Sex", "लिंग")}</b></td><td>{L(vm["sex"], meta["sex_hi"])}</td></tr>
+        <tr><td>{meta["dob_slash"]}</td><td class="c"><b>{T("Date of Birth", "जन्म तिथी")}</b></td><td>{vm["dob_slash"]}</td></tr>
+        <tr><td>{meta["tob_str"].replace(' ', '')}</td><td class="c"><b>{T("Time of Birth", "जन्म वेळ")}</b></td><td>{vm["tob_str"].replace(' ', '')}</td></tr>
+        <tr><td>{L(meta["day_en"], meta["day_hi"])}</td><td class="c"><b>{T("Day of Birth", "जन्म वार")}</b></td><td>{L(vm["day_en"], to_marathi(vm["day_en"]))}</td></tr>
+        <tr><td>{meta["place"]}</td><td class="c"><b>{T("Place of Birth", "जन्म ठिकाण")}</b></td><td>{vm["place"]}</td></tr>
+        <tr><td>{int(meta["lat"])}</td><td class="c"><b>{T("Latitude", "अक्षांश")}</b></td><td>{int(vm["lat"])}</td></tr>
+        <tr><td>{int(meta["lon"])}</td><td class="c"><b>{T("Longitude", "रेखांश")}</b></td><td>{int(vm["lon"])}</td></tr>
+        <tr><td>{meta["ltc_str"]}</td><td class="c"><b>{T("Local Time Correction", "स्थानिक वेळ दुरुस्ती")}</b></td><td>{vm["ltc_str"]}</td></tr>
+        <tr><td>{meta["wtc_str"]}</td><td class="c"><b>{T("War Time Correction", "वॉर टाईम दुरुस्ती")}</b></td><td>{vm["wtc_str"]}</td></tr>
+        <tr><td>{meta["lmt_str"].replace(':', '.')}</td><td class="c"><b>{T("LMT at Birth", "जन्मावेळी LMT")}</b></td><td>{vm["lmt_str"].replace(':', '.')}</td></tr>
+        <tr><td>{meta["sunrise"]}</td><td class="c"><b>{T("Sunrise", "सूर्योदय")}</b></td><td>{vm["sunrise"]}</td></tr>
+        <tr><td>{meta["sunset"]}</td><td class="c"><b>{T("Sunset", "सूर्यास्त")}</b></td><td>{vm["sunset"]}</td></tr>
+        <tr><td>{L(meta["lagna_en"], meta["lagna_hi"])}</td><td class="c"><b>{T("Lagna", "लग्न")}</b></td><td>{L(vm["lagna_en"], to_marathi(vm["lagna_en"]))}</td></tr>
+        <tr><td>{L(meta["lagna_lord_short"], meta["lagna_lord_hi"])}</td><td class="c"><b>{T("Lagna Lord", "लग्नेश")}</b></td><td>{L(vm["lagna_lord_short"], to_marathi(vm["lagna_lord_short"]))}</td></tr>
+        <tr><td>{L(meta["rasi_en"], meta["rasi_hi"])}</td><td class="c"><b>{T("Rasi", "राशी")}</b></td><td>{L(vm["rasi_en"], to_marathi(vm["rasi_en"]))}</td></tr>
+        <tr><td>{L(meta["rasi_lord_short"], meta["rasi_lord_hi"])}</td><td class="c"><b>{T("Rasi Lord", "राशी स्वामी")}</b></td><td>{L(vm["rasi_lord_short"], to_marathi(vm["rasi_lord_short"]))}</td></tr>
+        <tr><td>{L(meta["nakshatra_en"], meta["nakshatra_hi"])}</td><td class="c"><b>{T("Nakshatra", "नक्षत्र")}</b></td><td>{L(vm["nakshatra_en"], to_marathi(vm["nakshatra_en"]))}</td></tr>
+        <tr><td>{L(meta["nakshatra_lord_short"], meta["nakshatra_lord_hi"])}</td><td class="c"><b>{T("Nakshatra Lord", "नक्षत्र स्वामी")}</b></td><td>{L(vm["nakshatra_lord_short"], to_marathi(vm["nakshatra_lord_short"]))}</td></tr>
+        <tr><td>{L(meta["yoga_en"], meta["yoga_hi"])}</td><td class="c"><b>{T("Yoga", "योग")}</b></td><td>{L(vm["yoga_en"], to_marathi(vm["yoga_en"]))}</td></tr>
+        <tr><td>{L(meta["karana_en"], meta.get("karana_hi", ""))}</td><td class="c"><b>{T("Karan", "करण")}</b></td><td>{L(vm["karana_en"], to_marathi(vm["karana_en"]))}</td></tr>
+        <tr><td>{L(meta["sunsign_west_en"], meta["sunsign_west_hi"])}</td><td class="c"><b>{T("Sun Sign (Western)", "सूर्य राशी (पाश्चात्य)")}</b></td><td>{L(vm["sunsign_west_en"], to_marathi(vm["sunsign_west_en"]))}</td></tr>
+        <tr><td>{meta["ayanamsa_dms"]}</td><td class="c"><b>{T("Ayanamsa", "आयनांश")}</b></td><td>{vm["ayanamsa_dms"]}</td></tr>
+        <tr><td>Lahiri</td><td class="c"><b>{T("Ayanamsa Name", "आयनांश पद्धती")}</b></td><td>Lahiri</td></tr>
       </tbody>
     </table>
 
@@ -913,7 +940,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # =========================================================================
     vd_list = wrt["varsha_dasha_preds"]
     p17_items = "".join(
-        f"<div class='prose-section'><h4>{vd['header_hi'] if is_hi else vd['header_en']}<br/><span>{vd['sub_hi'] if is_hi else vd['sub_en']}</span></h4><p>{P(vd['text_en'], vd['text_hi'])}</p></div>"
+        f"<div class='prose-section'><h4>{L(vd['header_en'], vd['header_hi'])}<br/><span>{L(vd['sub_en'], vd['sub_hi'])}</span></h4><p>{P(vd['text_en'], vd['text_hi'])}</p></div>"
         for vd in vd_list[:4]
     )
     p17_inner = f"""
@@ -928,7 +955,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     pages.append(_page_wrapper(17, meta, brand, "Varshaphal (Annual Predictions) Details", "वर्षफल मुंथा एवं मुद्दा दशा फलादेश (1)", p17_inner, lang))
 
     p18_items = "".join(
-        f"<div class='prose-section'><h4>{vd['header_hi'] if is_hi else vd['header_en']}<br/><span>{vd['sub_hi'] if is_hi else vd['sub_en']}</span></h4><p>{P(vd['text_en'], vd['text_hi'])}</p></div>"
+        f"<div class='prose-section'><h4>{L(vd['header_en'], vd['header_hi'])}<br/><span>{L(vd['sub_en'], vd['sub_hi'])}</span></h4><p>{P(vd['text_en'], vd['text_hi'])}</p></div>"
         for vd in vd_list[4:9]
     )
     pages.append(_page_wrapper(18, meta, brand, "Varshaphal (Annual Predictions) Details", "वर्षफल मुद्दा दशा फलादेश (2)", f"<div class='prose-block'>{p18_items}</div>", lang))
@@ -939,7 +966,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     vmp = wrt["vim_maha_preds"]
     for p_num, sl in [(19, vmp[:5]), (20, vmp[5:9])]:
         html_blocks = "".join(
-            f"<div class='prose-section'><h4>{m['header_hi'] if is_hi else m['header_en']}<br/><span>{m['sub_hi'] if is_hi else m['sub_en']}</span></h4><p>{P(m['text_en'], m['text_hi'])}</p></div>"
+            f"<div class='prose-section'><h4>{L(m['header_en'], m['header_hi'])}<br/><span>{L(m['sub_en'], m['sub_hi'])}</span></h4><p>{P(m['text_en'], m['text_hi'])}</p></div>"
             for m in sl
         )
         pages.append(_page_wrapper(p_num, meta, brand, "Vimshottari Mahadasha Phal (Dasha Predictions)", "विंशोत्तरी महादशा फलादेश", f"<div class='prose-block'>{html_blocks}</div>", lang))
@@ -953,7 +980,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
             r_html = "".join(f"<tr><td>{r['name_hi'] if is_hi else r['code']}</td><td>{r['end_str']}</td></tr>" for r in b["rows"])
             boxes.append(f"""
             <div class="mini-dasha-box">
-              <div class="mini-dasha-head">{b['header_hi'] if is_hi else b['header_en']}</div>
+              <div class="mini-dasha-head">{L(b['header_en'], b['header_hi'])}</div>
               <table class="mini-table">
                 <tr class="sub-hd"><td>From</td><td>{b['from_str']}</td></tr>
                 <tr class="sub-hd"><td>To</td><td>{b['to_str']}</td></tr>
@@ -966,14 +993,14 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # =========================================================================
     # PAGE 23: JAIMINI SYSTEM - KARAKAMSA AND SWAMSA
     # =========================================================================
-    svg_kk = render_north_indian_svg(jm["karakamsa_chart"]["lagna_sign"], jm["karakamsa_chart"]["house_planets"], lang=("hi" if is_hi else "en"), size=255)
-    svg_sw = render_north_indian_svg(jm["swamsa_chart"]["lagna_sign"], jm["swamsa_chart"]["house_planets"], lang=("hi" if is_hi else "en"), size=255)
+    svg_kk = render_north_indian_svg(jm["karakamsa_chart"]["lagna_sign"], jm["karakamsa_chart"]["house_planets"], lang=svg_lang, size=255)
+    svg_sw = render_north_indian_svg(jm["swamsa_chart"]["lagna_sign"], jm["swamsa_chart"]["house_planets"], lang=svg_lang, size=255)
     kk_rows = "".join(
-        f"<tr><td>{r['karak_hi'] if is_hi else r['karak_en']}</td><td>{r['sthir_hi'] if is_hi else r['sthir_en']}</td><td>{r['chara_hi'] if is_hi else r['chara_en']}</td></tr>"
+        f"<tr><td>{L(r['karak_en'], r['karak_hi'])}</td><td>{L(r['sthir_en'], r['sthir_hi'])}</td><td>{L(r['chara_en'], r['chara_hi'])}</td></tr>"
         for r in jm["karaka_table"]
     )
     av_st_rows = "".join(
-        f"<tr><td>{r['planet_hi'] if is_hi else r['planet_en']}</td><td>{r['jagrat_hi'] if is_hi else r['jagrat_en']}</td><td>{r['baladi_hi'] if is_hi else r['baladi_en']}</td><td>{r['deeptadi_hi'] if is_hi else r['deeptadi_en']}</td></tr>"
+        f"<tr><td>{L(r['planet_en'], r['planet_hi'])}</td><td>{L(r['jagrat_en'], r['jagrat_hi'])}</td><td>{L(r['baladi_en'], r['baladi_hi'])}</td><td>{L(r['deeptadi_en'], r['deeptadi_hi'])}</td></tr>"
         for r in jm["avastha_table"]
     )
     p23_inner = f"""
@@ -1014,19 +1041,19 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
 
     def _render_char_ad_box(blk):
         r_html = "".join(
-            f"<tr><td>{r['sign_hi'] if is_hi else r['sign_short']}</td><td class='c'>{r['start_str']}</td><td class='c'>{r['end_str']}</td></tr>"
+            f"<tr><td>{L(r['sign_short'], r['sign_hi'])}</td><td class='c'>{r['start_str']}</td><td class='c'>{r['end_str']}</td></tr>"
             for r in blk["rows"]
         )
         return f"""
         <div class="mini-dasha-box">
-          <div class="mini-dasha-head">{blk['header_hi'] if is_hi else blk['header']}</div>
+          <div class="mini-dasha-head">{L(blk['header'], blk['header_hi'])}</div>
           <table class="mini-table">{r_html}</table>
         </div>
         """
 
     def _render_maha_slice(ms):
         return "".join(
-            f"<tr><td><b>{r['sign_hi'] if is_hi else r['sign_short']}</b> {r['years_str']}</td><td class='c'>{r['start_str']}</td><td class='c'>{r['end_str']}</td></tr>"
+            f"<tr><td><b>{L(r['sign_short'], r['sign_hi'])}</b> {r['years_str']}</td><td class='c'>{r['start_str']}</td><td class='c'>{r['end_str']}</td></tr>"
             for r in ms
         )
 
@@ -1056,7 +1083,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     tp_list = wrt["transit_preds"]
     for p_num, t_slice in [(26, tp_list[0:3]), (27, tp_list[3:6]), (28, tp_list[6:9])]:
         t_html = "".join(
-            f"<div class='prose-section'><h3>{t['header_hi'] if is_hi else t['header_en']}</h3><p>{P(t['text_en'], t['text_hi'])}</p></div>"
+            f"<div class='prose-section'><h3>{L(t['header_en'], t['header_hi'])}</h3><p>{P(t['text_en'], t['text_hi'])}</p></div>"
             for t in t_slice
         )
         pages.append(_page_wrapper(p_num, meta, brand, f"Transit Today ({vp['transit_date_str']})", f"वर्तमान गोचर फल ({vp['transit_date_str']})", f"<div class='prose-block'>{t_html}</div>", lang))
@@ -1075,13 +1102,20 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     for p_num, lk_slice in lk_page_slices:
         lk_blocks = []
         for item in lk_slice:
-            rems_html = "<br/>".join(
-                (item["remedies_hi"] if is_hi else (
-                    [f"{en} <span class='hi-sub'>({hi})</span>" for en, hi in zip(item["remedies_en"], item["remedies_hi"])]
-                    if is_both and len(item["remedies_en"]) == len(item["remedies_hi"])
-                    else item["remedies_en"]
-                ))
-            )
+            if is_mr:
+                rems_source = item.get("remedies_hi") or item.get("remedies_en") or []
+                rems_html = "<br/>".join([f"• {to_marathi(r)}" for r in rems_source])
+                title_disp = to_marathi(item.get("title_hi") or item.get("title_en") or "")
+            elif is_hi:
+                rems_html = "<br/>".join(item.get("remedies_hi") or [])
+                title_disp = item.get("title_hi") or item.get("title_en") or ""
+            elif is_both:
+                rems_html = "<br/>".join([f"{en} <span class='hi-sub'>({hi})</span>" for en, hi in zip(item.get("remedies_en", []), item.get("remedies_hi", []))])
+                title_disp = f"{item.get('title_en', '')} / {item.get('title_hi', '')}"
+            else:
+                rems_html = "<br/>".join(item.get("remedies_en") or [])
+                title_disp = item.get("title_en") or ""
+
             body_formatted_en = item["body_en"].replace("\n", "<br/>")
             lk_top_badge = ""
             if item.get("planet_en") == "Sun":
@@ -1092,7 +1126,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
             lk_blocks.append(f"""
             {lk_top_badge}
             <div class="prose-section lk-card">
-              <h3>{item['title_hi'] if is_hi else item['title_en']}</h3>
+              <h3>{title_disp}</h3>
               <div class="lk-body">{P(body_formatted_en, item['body_hi'])}</div>
               <div class="lk-remedies">
                 <strong>{T("Remedial Measures (Lal Kitab Upay / Totke):", "लाल किताब के प्रामाणिक उपाय (टोटके):")}</strong><br/>
@@ -1105,17 +1139,17 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # =========================================================================
     # PAGE 34: LAL KITAB CALCULATION, TEVA CHART & 35-YEAR DASHA
     # =========================================================================
-    svg_lk = render_north_indian_svg(1, lk["chart"]["house_planets"], lang=("hi" if is_hi else "en"), size=230)
+    svg_lk = render_north_indian_svg(1, lk["chart"]["house_planets"], lang=svg_lang, size=230)
     lk_p_rows = "".join(
-        f"<tr><td>{r['planet_hi'] if is_hi else r['planet_en']}</td><td>{r['sign_hi'] if is_hi else r['sign_en']}</td><td class='c'>{r['positions']}</td><td class='c'>{r['soya_hi'] if is_hi else r['soya_en']}</td><td class='c'>{r['kismat_hi'] if is_hi else r['kismat_en']}</td><td class='c'>{r['status_hi'] if is_hi else r['status_en']}</td></tr>"
+        f"<tr><td>{L(r['planet_en'], r['planet_hi'])}</td><td>{r['sign_hi'] if is_hi else r['sign_en']}</td><td class='c'>{r['positions']}</td><td class='c'>{L(r['soya_en'], r['soya_hi'])}</td><td class='c'>{L(r['kismat_en'], r['kismat_hi'])}</td><td class='c'>{L(r['status_en'], r['status_hi'])}</td></tr>"
         for r in lk["planet_rows"]
     )
     lk_d_boxes = []
     for db in lk["dasha_blocks"]:
-        sr = "".join(f"<tr><td>{r['planet_hi'] if is_hi else r['planet_en']}</td><td>{r['end_str']}</td></tr>" for r in db["rows"])
+        sr = "".join(f"<tr><td>{L(r['planet_en'], r['planet_hi'])}</td><td>{r['end_str']}</td></tr>" for r in db["rows"])
         lk_d_boxes.append(f"""
         <div class="mini-dasha-box">
-          <div class="mini-dasha-head">{db['header_hi'] if is_hi else db['header_en']}</div>
+          <div class="mini-dasha-head">{L(db['header_en'], db['header_hi'])}</div>
           <table class="mini-table">
             <tr class="sub-hd"><td>From</td><td>{db['from_str']}</td></tr>
             <tr class="sub-hd"><td>To</td><td>{db['to_str']}</td></tr>
@@ -1172,7 +1206,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     ]
     for p_num, pc_sl in pc_slices:
         pc_html = "".join(
-            f"<div class='prose-section'><h3>{item['title_hi'] if is_hi else item['title_en']}</h3><p class='intro-highlight'>{P(item['intro_en'], item['intro_hi'])}</p><p>{P(item['body_en'], item['body_hi'])}</p></div>"
+            f"<div class='prose-section'><h3>{L(item['title_en'], item['title_hi'])}</h3><p class='intro-highlight'>{P(item['intro_en'], item['intro_hi'])}</p><p>{P(item['body_en'], item['body_hi'])}</p></div>"
             for item in pc_sl
         )
         extra_p39 = ""
@@ -1188,7 +1222,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
                 for en_i, hi_i in zip(jp["job_dashas_en"], jp["job_dashas_hi"])
             )
             rins_html = "".join(
-                f"<div class='yoga-card'><h4>✦ {r['name_hi'] if is_hi else r['name_en']}</h4><p><b>{T('Cause:', 'कारण:')}</b> {P(r['cause_en'], r['cause_hi'])}<br/><b>{T('Remedy:', 'उपाय:')}</b> {P(r['remedy_en'], r['remedy_hi'])}</p></div>"
+                f"<div class='yoga-card'><h4>✦ {L(r['name_en'], r['name_hi'])}</h4><p><b>{T('Cause:', 'कारण:')}</b> {P(r['cause_en'], r['cause_hi'])}<br/><b>{T('Remedy:', 'उपाय:')}</b> {P(r['remedy_en'], r['remedy_hi'])}</p></div>"
                 for r in lk["rins"]
             )
             extra_p39 = f"""
@@ -1211,12 +1245,12 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     col_headers = ["Lagna", "Sun", "Moon", "Mars", "Mer", "Jup", "Ven", "Sat", "Rah", "Ket", "Ure", "Nep", "Plu"]
 
     sv_sign_rows_html = "".join(
-        f"<tr><td class='c'>{r['sn']}</td><td>{r['name_hi'] if is_hi else r['name_en']}</td>"
+        f"<tr><td class='c'>{r['sn']}</td><td>{L(r['name_en'], r['name_hi'])}</td>"
         + "".join(f"<td class='c'>{r['values'][k]}</td>" for k in col_keys) + "</tr>"
         for r in sv["sign_rows"]
     )
     sv_bhav_rows_html = "".join(
-        f"<tr><td class='c'>{r['sn']}</td><td>{r['name_hi'] if is_hi else r['name_en']}</td>"
+        f"<tr><td class='c'>{r['sn']}</td><td>{L(r['name_en'], r['name_hi'])}</td>"
         + "".join(f"<td class='c {'red-cell' if r['values'][k] in (6,8,12) else ''}'>{r['values'][k]}</td>" for k in col_keys) + "</tr>"
         for r in sv["bhav_rows"]
     )
@@ -1247,15 +1281,15 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         chart_cells = []
         for vc in codes:
             c_info = sv["charts"][vc]
-            svg_c = render_north_indian_svg(c_info["lagna_sign"], c_info["house_planets"], lang=("hi" if is_hi else "en"), size=220)
-            c_title = f"{c_info['name_hi']} ({vc})" if is_hi else c_info["chart_title_en"]
+            svg_c = render_north_indian_svg(c_info["lagna_sign"], c_info["house_planets"], lang=svg_lang, size=220)
+            c_title = L(c_info["chart_title_en"], f"{c_info['name_hi']} ({vc})")
             chart_cells.append(f"<div class='chart-col'><div class='chart-title'>{c_title}</div>{svg_c}</div>")
 
         extra_p43 = ""
         if p_num == 43:
             # On Page 43 bottom (where AstroSage put a shop ad!), we put the authentic Gurukulam Vedic Gemstone, Rudraksha & Mantra Table!
             gem_rows = "".join(
-                f"<tr><td><b>{g['role_hi'] if is_hi else g['role_en']}</b></td><td>{g['planet_hi'] if is_hi else g['planet_en']}</td><td><b>{g['gem_hi'] if is_hi else g['gem_en']}</b></td><td>{g['metal_hi'] if is_hi else g['metal_en']} ({g['finger_hi'] if is_hi else g['finger_en']})</td><td>{g['rudra_hi'] if is_hi else g['rudra_en']}</td><td><small>{g['mantra']}</small></td></tr>"
+                f"<tr><td><b>{L(g['role_en'], g['role_hi'])}</b></td><td>{L(g['planet_en'], g['planet_hi'])}</td><td><b>{L(g['gem_en'], g['gem_hi'])}</b></td><td>{L(g['metal_en'], g['metal_hi'])} ({L(g['finger_en'], g['finger_hi'])})</td><td>{L(g['rudra_en'], g['rudra_hi'])}</td><td><small>{g['mantra']}</small></td></tr>"
                 for g in gems
             )
             extra_p43 = f"""
@@ -1270,7 +1304,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # =========================================================================
     # PAGE 44: KP SYSTEM / NAKSHATRA NADI
     # =========================================================================
-    svg_kp = render_north_indian_svg(meta["lagna_sign_num"], kp["kp_chart_houses"], lang=("hi" if is_hi else "en"), size=250, is_kp=True)
+    svg_kp = render_north_indian_svg(meta["lagna_sign_num"], kp["kp_chart_houses"], lang=svg_lang, size=250, is_kp=True)
     cusp_rows = "".join(
         f"<tr><td class='c'>{c['cusp']}</td><td class='c'>{c['dms']}</td><td class='c'>{c['rasi']}</td><td class='c'>{c['nak']}</td><td class='c'>{c['sub']}</td><td class='c'>{c['ss']}</td></tr>"
         for c in kp["cuspal_positions"]
@@ -1382,7 +1416,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     def _render_friend_grid(matrix_dict):
         rows = []
         for k1 in f_keys:
-            cells = "".join(f"<td class='c'>{fr['hi_map'][matrix_dict[k1][k2]] if is_hi else matrix_dict[k1][k2]}</td>" for k2 in f_keys)
+            cells = "".join(f"<td class='c'>{to_marathi(fr['hi_map'][matrix_dict[k1][k2]]) if is_mr else (fr['hi_map'][matrix_dict[k1][k2]] if is_hi else matrix_dict[k1][k2])}</td>" for k2 in f_keys)
             rows.append(f"<tr><td class='c'><b>{k1}</b></td>{cells}</tr>")
         return f"""
         <table class="data-table compact">
@@ -1406,12 +1440,12 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # =========================================================================
     sb_p_keys = shad["planets"]
     sb_rows_html = "".join(
-        f"<tr class='{'tot-row' if 'Total' in en_lbl or 'Rupas' in en_lbl or 'Rank' in en_lbl else ''}'><td><b>{hi_lbl if is_hi else en_lbl}</b></td>"
+        f"<tr class='{'tot-row' if 'Total' in en_lbl or 'Rupas' in en_lbl or 'Rank' in en_lbl else ''}'><td><b>{L(en_lbl, hi_lbl)}</b></td>"
         + "".join(f"<td class='c'>{vals[k]}</td>" for k in sb_p_keys) + "</tr>"
         for en_lbl, hi_lbl, vals in shad["rows"]
     )
     bb_rows_html = "".join(
-        f"<tr class='{'tot-row' if 'Total' in en_lbl or 'Rank' in en_lbl else ''}'><td><b>{hi_lbl if is_hi else en_lbl}</b></td>"
+        f"<tr class='{'tot-row' if 'Total' in en_lbl or 'Rank' in en_lbl else ''}'><td><b>{L(en_lbl, hi_lbl)}</b></td>"
         + "".join(f"<td class='c'>{v}</td>" for v in vals) + "</tr>"
         for en_lbl, hi_lbl, vals in shad["bhav_rows"]
     )
@@ -1483,7 +1517,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # =========================================================================
     svg_av = render_ashtakavarga_svg(ash["chart_houses"], size=310)
     av_full_rows = "".join(
-        f"<tr><td><b>{r['name_hi'] if is_hi else r['name_4']}</b></td>" + "".join(f"<td class='c'>{v}</td>" for v in r["values"]) + "</tr>"
+        f"<tr><td><b>{L(r['name_4'], r['name_hi'])}</b></td>" + "".join(f"<td class='c'>{v}</td>" for v in r["values"]) + "</tr>"
         for r in ash["bhinna_rows"]
     )
     p54_inner = f"""
@@ -1512,7 +1546,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         t_row = "<tr class='tot-row'><td><b>Total</b></td>" + "".join(f"<td class='c'>{v}</td>" for v in pt["totals"]) + f"<td class='c'>{pt['grand_total']}</td></tr>"
         prasthara_boxes.append(f"""
         <div>
-          <div class="box-heading">{pt['planet_hi'] if is_hi else pt['planet_en']}</div>
+          <div class="box-heading">{L(pt['planet_en'], pt['planet_hi'])}</div>
           <table class="data-table ultra-compact">
             <thead><tr><th></th>{"".join(f"<th class='c'>{h}</th>" for h in r_hdrs)}</tr></thead>
             <tbody>{p_rows}{t_row}</tbody>
@@ -1539,24 +1573,24 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       <div class="two-col-grid mt-6">
         <div class="lk-card">
           <h4 style="color:#7C2D12; font-size:11.5px;">🌟 {T("1. Lagna vs Moon Rashi (लग्न और राशि का सरल अर्थ)", "लग्न और जन्म राशि में क्या अंतर है?")}</h4>
-          <p style="margin:4px 0;"><strong>• {T("Ascendant (Lagna):", "जन्म लग्न:")}</strong> {meta['lagna_hi'] if is_hi else meta['lagna_en']} ({T('Lord: ' + meta['lagna_lord_en'], 'स्वामी: ' + meta['lagna_lord_hi'])})<br/>
+          <p style="margin:4px 0;"><strong>• {T("Ascendant (Lagna):", "जन्म लग्न:")}</strong> {L(meta['lagna_en'], meta['lagna_hi'])} ({T('Lord: ' + meta['lagna_lord_en'], 'स्वामी: ' + meta['lagna_lord_hi'])})<br/>
           <small style="color:#57534E;">{T("Represents your physical body, vitality, health, and how the outside world perceives you.", "आपके शरीर, स्वास्थ्य, जीवन शक्ति और समाज में आपकी पहचान व प्रतिष्ठा का प्रतिनिधित्व करता है।")}</small></p>
 
-          <p style="margin:4px 0;"><strong>• {T("Moon Sign (Rashi):", "जन्म राशि:")}</strong> {meta['rasi_hi'] if is_hi else meta['rasi_en']} ({T('Lord: ' + meta['rasi_lord_en'], 'स्वामी: ' + meta['rasi_lord_hi'])})<br/>
+          <p style="margin:4px 0;"><strong>• {T("Moon Sign (Rashi):", "जन्म राशि:")}</strong> {L(meta['rasi_en'], meta['rasi_hi'])} ({T('Lord: ' + meta['rasi_lord_en'], 'स्वामी: ' + meta['rasi_lord_hi'])})<br/>
           <small style="color:#57534E;">{T("Represents your subconscious mind, emotional core, inner peace, and natural instincts.", "आपके मन, आंतरिक भावनाओं, विचारों, मानसिक शांति व स्वाभाविक प्रवृत्तियों का दर्पण है।")}</small></p>
 
-          <p style="margin:4px 0;"><strong>• {T("Birth Nakshatra:", "जन्म नक्षत्र:")}</strong> {meta['nakshatra_pada_hi'] if is_hi else meta['nakshatra_pada_en']}<br/>
+          <p style="margin:4px 0;"><strong>• {T("Birth Nakshatra:", "जन्म नक्षत्र:")}</strong> {L(meta['nakshatra_pada_en'], meta['nakshatra_pada_hi'])}<br/>
           <small style="color:#57534E;">{T("The cosmic frequency that shapes your life impulses and karmic blueprint.", "वह सूक्ष्म खगोलीय नक्षत्र जो आपके प्रारब्ध कर्मों और स्वाभाविक प्रतिभा को दिशा देता है।")}</small></p>
         </div>
 
         <div class="lk-card">
           <h4 style="color:#991B1B; font-size:11.5px;">⚡ {T("2. Core Superpowers of Your Rashi (आपकी राशि के श्रेष्ठ गुण)", "आपकी राशि के सबसे श्रेष्ठ गुण एवं अद्भुत विशेषताएं")}</h4>
           <div style="background:rgba(254, 243, 199, 0.7); padding:5px 8px; border-radius:6px; font-weight:700; color:#7C2D12; margin-bottom:5px; font-size:10.5px;">
-            {r_guide['superpower_hi'] if is_hi else (r_guide['superpower_en'] + " (" + r_guide['superpower_hi'] + ")")}
+            {L(r_guide['superpower_en'], r_guide['superpower_hi'])}
           </div>
           <p style="margin:0; font-size:10.4px;">
             <strong>{T("Mindset & Temperament:", "स्वभाव व कार्यशैली:")}</strong><br/>
-            {r_guide['mindset_hi'] if is_hi else r_guide['mindset_en']}
+            {L(r_guide['mindset_en'], r_guide['mindset_hi'])}
           </p>
         </div>
       </div>
@@ -1573,7 +1607,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         <tbody>
           <tr>
             <td><b>{T("Element & Direction", "तत्व एवं शुभ दिशा")}</b></td>
-            <td><strong style="color:#7C2D12;">{r_guide['element_hi'] if is_hi else r_guide['element_en']}</strong> • {r_guide['direction_hi'] if is_hi else r_guide['direction_en']}</td>
+            <td><strong style="color:#7C2D12;">{L(r_guide['element_en'], r_guide['element_hi'])}</strong> • {L(r_guide['direction_en'], r_guide['direction_hi'])}</td>
             <td>{T("Face this direction during study, worship, or important negotiations for enhanced clarity.", "अध्ययन, पूजा अथवा महत्वपूर्ण वार्ता के समय इस दिशा की ओर मुख करना अत्यंत शुभकारी होता है।")}</td>
           </tr>
           <tr>
@@ -1593,7 +1627,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
           </tr>
           <tr>
             <td><b>{T("Ideal Wealth Careers", "अनुकूल आजीविका क्षेत्र")}</b></td>
-            <td colspan="2"><strong>{r_guide['careers_hi'] if is_hi else r_guide['careers_en']}</strong></td>
+            <td colspan="2"><strong>{L(r_guide['careers_en'], r_guide['careers_hi'])}</strong></td>
           </tr>
         </tbody>
       </table>
@@ -1601,7 +1635,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       <div class="yoga-card mt-6" style="border:1.2px solid #F59E0B; background:rgba(255, 251, 235, 0.95); padding:8px 12px;">
         <h4 style="color:#9A3412; font-size:11px; margin:0 0 3px 0;">⚠️ {T("Pitfalls & Weaknesses to Guard Against (सावधानियां एवं कमजोरियों से बचाव):", "किन सावधानियों व कमजोरियों से सतर्क रहें:")}</h4>
         <p style="margin:0; font-size:10.2px; line-height:1.5;">
-          {r_guide['pitfalls_hi'] if is_hi else r_guide['pitfalls_en']} {T("Practicing daily mindfulness, calm breathing, and avoiding hasty emotional reactions will transform these inclinations into remarkable inner strengths.", "दैनिक प्राणायाम, धैर्यपूर्ण चिंतन और बिना सोचे-समझे प्रतिक्रिया न देने से ये कमजोरियां स्थायी शक्ति में बदल जाती हैं।")}
+          {L(r_guide['pitfalls_en'], r_guide['pitfalls_hi'])} {T("Practicing daily mindfulness, calm breathing, and avoiding hasty emotional reactions will transform these inclinations into remarkable inner strengths.", "दैनिक प्राणायाम, धैर्यपूर्ण चिंतन और बिना सोचे-समझे प्रतिक्रिया न देने से ये कमजोरियां स्थायी शक्ति में बदल जाती हैं।")}
         </p>
       </div>
     </div>
@@ -1618,7 +1652,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     for p in p_in_7:
         if isinstance(p, dict):
             pid = p.get("id", "")
-            p_lbl = (p.get("short_hi") or pid) if is_hi else (pid or p.get("short_en"))
+            p_lbl = L((pid or p.get("short_en")), (p.get("short_hi") or pid))
         else:
             p_lbl = str(p)
         p_in_7_names.append(p_lbl)
@@ -1642,7 +1676,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       <div class="two-col-grid mt-6">
         <div class="lk-card">
           <h4 style="color:#7C2D12; font-size:11.5px;">💍 {T("1. 7th House & Marital Significations (सप्तम भाव व जीवनसाथी)", "सप्तम भाव एवं जीवनसाथी का स्वरूप")}</h4>
-          <p style="margin:3px 0;"><strong>• {T("7th House Rashi & Lord:", "सप्तम भाव राशि व स्वामी:")}</strong> {seventh_sign_hi if is_hi else seventh_sign_en} ({T('Lord: ' + seventh_lord_en, 'सप्तमेश: ' + seventh_lord_hi)})</p>
+          <p style="margin:3px 0;"><strong>• {T("7th House Rashi & Lord:", "सप्तम भाव राशि व स्वामी:")}</strong> {L(seventh_sign_en, seventh_sign_hi)} ({T('Lord: ' + seventh_lord_en, 'सप्तमेश: ' + seventh_lord_hi)})</p>
           <p style="margin:3px 0;"><strong>• {T("Planets in 7th House:", "सप्तम भाव में स्थित ग्रह:")}</strong> {p_in_7_str}</p>
           <p style="margin:3px 0;"><strong>• {T("Natural Karakas:", "विवाह के नैसर्गिक कारक:")}</strong> {T("Jupiter (Husband) & Venus (Wife)", "गुरु (पति सुख कारक) एवं शुक्र (पत्नी व दांपत्य सुख कारक)")}</p>
           <p style="margin:3px 0; font-size:10px; color:#57534E;">{T(
@@ -1800,31 +1834,31 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         <tbody>
           <tr>
             <td><b>1. {T("Vaar (Weekday)", "वार (दिन)")}</b></td>
-            <td><strong>{meta['day_hi'] if is_hi else meta['day_en']}</strong></td>
+            <td><strong>{L(meta['day_en'], meta['day_hi'])}</strong></td>
             <td>{T("Physical Vitality & Drive", "शारीरिक बल, ऊर्जा व आरोग्यता")}</td>
             <td>{T("Governs your active physical stamina, willpower, and immune recovery rate.", "जातक के शारीरिक स्वास्थ्य, सक्रियता, पुरुषार्थ और रोगों से लड़ने की प्रतिरोधक क्षमता का निर्धारण करता है।")}</td>
           </tr>
           <tr>
             <td><b>2. {T("Tithi (Lunar Day)", "तिथि")}</b></td>
-            <td><strong>{meta['tithi_hi'] if is_hi else meta['tithi_en']}</strong></td>
+            <td><strong>{L(meta['tithi_en'], meta['tithi_hi'])}</strong></td>
             <td>{T("Emotional Core & Wealth", "मानसिक सुख, भाव व लक्ष्मी कृपा")}</td>
             <td>{T("Dictates inner contentment, psychological stability, and relationship with material wealth.", "जातक की मानसिक शांति, पारिवारिक सुख, आंतरिक संतोष और धन संचय की स्वाभाविक प्रवृत्ति को दर्शाता है।")}</td>
           </tr>
           <tr>
             <td><b>3. {T("Nakshatra", "नक्षत्र")}</b></td>
-            <td><strong>{meta['nakshatra_pada_hi'] if is_hi else meta['nakshatra_pada_en']}</strong></td>
+            <td><strong>{L(meta['nakshatra_pada_en'], meta['nakshatra_pada_hi'])}</strong></td>
             <td>{T("Karmic Instincts & Skills", "प्रारब्ध संस्कार, प्रतिभा व स्वभाव")}</td>
             <td>{T("The foundational cosmic imprint shaping your innate talents, mindset, and lifetime dasha sequence.", "जातक की अंतर्निहित प्रतिभा, सोचने के तरीके और जीवन में महादशाओं के आरंभिक क्रम का आधार है।")}</td>
           </tr>
           <tr>
             <td><b>4. {T("Yoga (Nithya)", "नित्य योग")}</b></td>
-            <td><strong>{meta['yoga_hi'] if is_hi else meta['yoga_en']}</strong></td>
+            <td><strong>{L(meta['yoga_en'], meta['yoga_hi'])}</strong></td>
             <td>{T("Virtue, Character & Dik-Bala", "चरित्र शुद्धि, सामाजिक प्रतिष्ठा व यश")}</td>
             <td>{T("Fosters noble virtues, righteousness, ethical reputation, and social goodwill.", "जातक के आचरण, नैतिक मूल्यों, समाज में मान-सम्मान और धर्मपरायणता को दिशा प्रदान करता है।")}</td>
           </tr>
           <tr>
             <td><b>5. {T("Karana", "करण (आधा तिथि)")}</b></td>
-            <td><strong>{meta.get('karana_hi', '') if is_hi else meta.get('karana_en', '')}</strong></td>
+            <td><strong>{L(meta.get('karana_en', ''), meta.get('karana_hi', ''))}</strong></td>
             <td>{T("Work Stamina & Execution", "कार्यकुशलता, व्यापार व सफलता")}</td>
             <td>{T("Determines professional tenacity, practical execution skills, and tangible career achievements.", "जातक की कार्यकुशलता, व्यावसायिक क्षमता और किसी भी योजना को पूर्ण सफलता तक पहुंचाने की शक्ति तय करता है।")}</td>
           </tr>
@@ -1848,7 +1882,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # PAGE 59: SPECIAL GURUKULAM TEACHER — EASILY UNDERSTAND YOUR KUNDLI & DOSHA DECODER
     # (कुंडली सरल मार्गदर्शन — क्या दोष हैं, जीवन कैसे बीतेगा, लाल किताब जीवन सूत्र)
     # =========================================================================
-    kalsarpa_status = kals.get("result_hi", "कालसर्प दोष नहीं है") if is_hi else kals.get("result_en", "No Kalsarpa Dosha")
+    kalsarpa_status = L(kals.get("result_en", "No Kalsarpa Dosha"), kals.get("result_hi", "कालसर्प दोष नाही"))
     
     # Check Sade Sati for Year 2026
     sadesati_phase = T("Peaceful Phase (वर्तमान में कोई तीव्र साढ़े साती नहीं)", "वर्तमान में कोई तीव्र साढ़े साती नहीं है")
@@ -1857,7 +1891,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
             if "2026" in str(s_row.get("start_date_en", "")) or "2026" in str(s_row.get("end_date_en", "")):
                 p_hi = s_row.get("phase_hi", "प्रभावित")
                 p_en = s_row.get("phase_en", "Active Phase")
-                sadesati_phase = f"{p_en} ({p_hi})" if is_both else (p_hi if is_hi else p_en)
+                sadesati_phase = L(p_en, p_hi)
                 break
 
     p56_inner = f"""
