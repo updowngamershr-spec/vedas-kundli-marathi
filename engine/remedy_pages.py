@@ -1,3 +1,17 @@
+
+import base64
+
+def get_image_base64(fname: str) -> str:
+    """Return data URI for an optimized asset image."""
+    img_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "images")
+    img_path = os.path.join(img_dir, fname)
+    if os.path.exists(img_path):
+        with open(img_path, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode("ascii")
+            ext = "jpeg" if fname.endswith(".jpg") or fname.endswith(".jpeg") else "png"
+            return f"data:image/{ext};base64,{b64}"
+    return ""
+
 # -*- coding: utf-8 -*-
 """
 Vedas Kundli Predictions - Ultra-VIP High-Ticket Remedies & KP Dossier Module

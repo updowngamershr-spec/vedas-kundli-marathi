@@ -3019,7 +3019,8 @@ def index_ui():
                 <h4 style="font-size:12.5px; font-weight:800; color:#7C2D12; margin-bottom:8px;">Select Dossier Package</h4>
                 <div class="form-group" style="margin-bottom:12px;">
                   <select id="reportPackageSelect" style="width:100%; height:40px; font-size:12.5px; font-weight:700; color:#7C2D12;" onchange="loadInAppPdfPreview()">
-                    <option value="maha">👑 संपूर्ण ५६-पृष्ठीय वैदिक महा-जन्मपत्रिका (56-Page VIP Dossier)</option>
+                    <option value="maha">👑 संपूर्ण ८२-पृष्ठीय VIP महा-जन्मपत्रिका (82-Page Master Dossier)</option>
+                    <option value="kp_remedies">🔮 के.पी. अचूक उपाय विशेषांक (KP Remedies Special Report - 7 Pages)</option>
                     <option value="laghu">📜 ४-पृष्ठीय लघु कुंडली सारांश (4-Page Summary)</option>
                     <option value="varshaphal">🪐 १०-पृष्ठीय वार्षिक वर्षफळ व लाल किताब (10-Page Varshaphal)</option>
                   </select>
@@ -4578,7 +4579,7 @@ def index_ui():
       // 3. Switch to Report Studio with VIP Dossier including KP Remedies
       switchNav('reports');
       const pkgSelect = document.getElementById('reportPackageSelect');
-      if (pkgSelect) pkgSelect.value = 'maha';
+      if (pkgSelect) pkgSelect.value = 'kp_remedies';
       await loadInAppPdfPreview();
     }
 
