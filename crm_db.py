@@ -132,23 +132,23 @@ def init_crm_db():
             updated_at TEXT NOT NULL
         )
     """)
-    # 1. Seed Sample VIP Client (Harmanjot Singh) if clients table is empty
+    # 1. Seed Sample VIP Client (Rajesh Joshi, Pune) if clients table is empty
     cur.execute("SELECT COUNT(*) FROM clients")
     if cur.fetchone()[0] == 0:
         cur.execute("""
             INSERT INTO clients (name, sex, year, month, day, hour, minute, second, place, lat, lon, tz, phone, email, category, notes, created_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            "राजेश जोशी (नमुना कुंडली / Sample)",
+            "राजेश जोशी (Sample Kundli)",
             "Male",
-            2005, 10, 3,
-            10, 2, 6,
-            "Ludhiana",
-            30.9010, 75.8573, 5.5,
-            "+91 98765 43210",
-            "client@vedaskundli.com",
-            "VIP Kundli Analysis",
-            "Sample Pre-Loaded Kundli — Parashari Shodashvarga, KP Cuspal, Lal Kitab & Planetary Dashas loaded.",
+            1995, 8, 15,
+            14, 30, 0,
+            "पुणे, महाराष्ट्र (Pune, Maharashtra)",
+            18.5204, 73.8567, 5.5,
+            "9876543210",
+            "rajesh.joshi@example.com",
+            "VIP Kundli Consultation",
+            "नमुना संपूर्ण जीवन पत्रिका — बृहत् पाराशरी, के.पी. नक्षत्र नाडी, लाल किताब १९५२ फर्मानानुसार अचूक तोडगे व वर्षफळ संपूर्ण फलादेश.",
             datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         ))
 

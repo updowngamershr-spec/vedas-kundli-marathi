@@ -3,6 +3,7 @@
 block_cipher = None
 
 added_files = [
+    ('reports', 'reports'),
     ('data/world_cities.db', 'data'),
     ('data/lal_kitab_hindi_cleaned.json', 'data'),
     ('app_icon.ico', '.'),
