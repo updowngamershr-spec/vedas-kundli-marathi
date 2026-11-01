@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Gurukulam Kundli CRM - Master Kundli Orchestrator
-Combines all astronomical, Parashari, Jaimini, KP, Tajika Varshaphal, Sade Sati,
-Ashtakavarga, Shadbala, Lal Kitab (with 167329767-Lal-Kitab-Hindi.txt), and SVG Charts
+Combines all astronomical, Parashari, Jaimini, KP (Reader III & Gautam Verma), Tajika Varshaphal, Sade Sati,
+Ashtakavarga, Shadbala, Lal Kitab (with 1952 Farman), and SVG Charts
 into a single unified data payload.
 """
 
@@ -21,6 +21,11 @@ from engine.varshaphal_sadesati_yogas import (
     compute_varshaphal_and_transit, compute_yogas_and_gemstones
 )
 from engine.knowledge_predictions import compute_all_written_reports
+from engine.kp_authentic_engine import (
+    compute_four_fold_significators, evaluate_kp_gemstones,
+    evaluate_kp_debts_and_loans, evaluate_kp_disease_and_cure,
+    KP_EVENT_RULES
+)
 
 
 def generate_complete_kundli(
@@ -39,7 +44,7 @@ def generate_complete_kundli(
     varsha_year: int | None = None,
 ):
     """
-    Generate the complete 56-page Gurukulam Kundli dataset for any person.
+    Generate the complete Gurukulam Kundli dataset for any person.
     Works 100% Offline. All parameters are REQUIRED (name, sex, year, month, day, hour, minute).
     No hardcoded fallbacks for individual client data.
     """
@@ -76,12 +81,26 @@ def generate_complete_kundli(
     yogas_gems = compute_yogas_and_gemstones(core)
     written_reports = compute_all_written_reports(core, vimshottari, varshaphal_transit)
 
+    # Authentic Mathematical KP Engine (Reader III + Gautam Verma Groupings)
+    kp_cusps_list = kp.get("kp_cusps", [])
+    four_fold = compute_four_fold_significators(core["planets"], kp_cusps_list)
+    
+    asc_csl = kp_cusps_list[0].get("sub", "Jupiter") if kp_cusps_list else "Jupiter"
+    eleventh_csl = kp_cusps_list[10].get("sub", "Jupiter") if len(kp_cusps_list) >= 11 else "Jupiter"
+    sixth_csl = kp_cusps_list[5].get("sub", "Mercury") if len(kp_cusps_list) >= 6 else "Mercury"
+
+    kp_gems = evaluate_kp_gemstones(asc_csl, eleventh_csl, four_fold["planet_significations"])
+    kp_debts = evaluate_kp_debts_and_loans(four_fold["planet_significations"])
+    kp_disease = evaluate_kp_disease_and_cure(sixth_csl, eleventh_csl, four_fold["planet_significations"])
+
     return {
         "brand": {
             "name_en": "Vedas Kundli Predictions",
             "name_hi": "वेदास कुंडली प्रेडिक्शन्स",
+            "name_mr": "वेदास कुंडली प्रेडिक्शन्स",
             "tagline_en": "Ancient Vedic, KP & Lal Kitab Predictions",
             "tagline_hi": "प्राचीन वैदिक, कृष्णमूर्ति पद्धति एवं लाल किताब फलादेश",
+            "tagline_mr": "अचूक वैदिक, कृष्णमूर्ती पद्धती आणि लाल किताब भविष्यवाणी",
             "printed_at": datetime.now().strftime("%d/%m/%Y %I:%M:%S %p"),
         },
         "meta": core["meta"],
@@ -100,6 +119,11 @@ def generate_complete_kundli(
         "friendship": friendship,
         "shadbala": shadbala,
         "kp": kp,
+        "kp_four_fold": four_fold,
+        "kp_gems": kp_gems,
+        "kp_debts": kp_debts,
+        "kp_disease": kp_disease,
+        "kp_event_rules": KP_EVENT_RULES,
         "aspects": aspects,
         "lal_kitab": lal_kitab,
         "manglik": manglik_kalsarpa["manglik"],

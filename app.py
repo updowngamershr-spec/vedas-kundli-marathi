@@ -2360,7 +2360,7 @@ def index_ui():
             <div class="form-grid">
               <div class="form-group" style="grid-column: span 2;">
                 <label>जातकाचे संपूर्ण नाव (Client Full Name) *</label>
-                <input type="text" id="name" value="Harmanjot Singh" placeholder="e.g. Aarav Sharma" required/>
+                <input type="text" id="name" value="" placeholder="उदा. राहुल जोशी / Aarav Sharma" required/>
               </div>
               <div class="form-group">
                 <label>लिंग (Gender)</label>
@@ -2944,7 +2944,7 @@ def index_ui():
                 <h3 style="font-family:'Cinzel', serif; font-size:15.5px; font-weight:900; color:#7C2D12; margin:0 0 2px 0;">
                   📄 ५६-पृष्ठीय VIP महा-जन्मपत्रिका पूर्वदृश्य (मराठी आवृत्ती)
                 </h3>
-                <span class="badge" id="reportNativeBadge" style="font-size:11px; background:#FEF3C7; color:#78350F; padding:2px 8px; border-radius:12px; font-weight:700;">Active Native: Harmanjot Singh</span>
+                <span class="badge" id="reportNativeBadge" style="font-size:11px; background:#FEF3C7; color:#78350F; padding:2px 8px; border-radius:12px; font-weight:700;">Active Native: नवीन जातक (New Client)</span>
               </div>
               <div style="display:flex; gap:6px; flex-wrap:wrap;">
                 <button class="btn-primary-gradient" onclick="exportPDF()" style="padding:8px 12px; font-size:12px; font-weight:800; display:inline-flex; align-items:center; gap:4px;">
@@ -3978,7 +3978,7 @@ def index_ui():
       };
 
       tbody.innerHTML = planets.map(p => {
-        const retro = p.retrograde || p.is_retro;
+        const retro = !!(p.retrograde || p.is_retro);
         let isRetro = '';
         if (currentLang === 'mr') {
           isRetro = retro ? 'वक्री (वक्र)' : 'मार्गी (मार्गी)';
@@ -3994,22 +3994,26 @@ def index_ui():
         let nakWithPada = '';
         let dignity = '';
 
+        // Clean raw planet name of any existing retrograde markers to prevent duplicate [R] [R]
+        const cleanNameEn = (p.name_en || p.planet || p.id || '').replace(/\[R\]|\(R\)|\[वक्री\]/gi, '').trim();
+        const cleanNameHi = (p.name_hi || '').replace(/\[R\]|\(R\)|\[वक्र\]/gi, '').trim();
+
         if (currentLang === 'mr') {
-          pName = pKeysMr[p.id] || pKeysMr[p.name_en] || toMrWithHi(p.name_hi || p.name_en);
-          if (retro && !pName.includes('[वक्री]')) pName += ' <span style="color:#C2540A; font-weight:800;">[वक्री / वक्र]</span>';
+          pName = pKeysMr[cleanNameEn] || pKeysMr[p.id] || toMrWithHi(cleanNameHi || cleanNameEn);
+          if (retro) pName += ' <span style="color:#C2540A; font-weight:800;">[वक्री / वक्र]</span>';
           signName = rashiMr[p.sign_en] || toMrWithHi(p.sign_hi || p.sign_en);
           const nakName = toMrWithHi(p.nakshatra_hi || p.nakshatra_en || p.nakshatra || '');
           nakWithPada = `${nakName} (चरण ${p.pada || 1} / पद ${p.pada || 1})`;
           dignity = dignityMr[p.dignity_en] || toMrWithHi(p.dignity_hi || p.dignity_en || 'सामान्य');
         } else if (currentLang === 'hi') {
-          pName = p.name_hi || p.name_en;
-          if (retro && !pName.includes('[वक्र]')) pName += ' [वक्र]';
+          pName = cleanNameHi || cleanNameEn;
+          if (retro) pName += ' [वक्र]';
           signName = p.sign_hi || p.sign_en;
           nakWithPada = `${p.nakshatra_hi || p.nakshatra_en || ''} (पद ${p.pada || 1})`;
           dignity = p.dignity_hi || p.dignity_en || 'सामान्य';
         } else {
-          pName = p.name_en || p.name_hi;
-          if (retro && !pName.includes('[R]')) pName += ' [R]';
+          pName = cleanNameEn || cleanNameHi;
+          if (retro) pName += ' [R]';
           signName = p.sign_en || p.sign_hi;
           nakWithPada = `${p.nakshatra_en || p.nakshatra_hi || ''} (Pada ${p.pada || 1})`;
           dignity = p.dignity_en || 'Normal';
@@ -4069,19 +4073,25 @@ def index_ui():
           const m = data.milan;
           document.getElementById('milanResultBox').style.display = 'block';
           document.getElementById('milanTotalScore').innerText = m.total_score + ' / 36';
-          document.getElementById('milanVerdict').innerText = currentLang === 'hi' ? m.verdict_hi : m.verdict_en;
-          document.getElementById('milanManglikHarmony').innerText = currentLang === 'hi' ? m.manglik_harmony.verdict_hi : m.manglik_harmony.verdict_en;
+          const isMr = (currentLang === 'mr');
+          const isHi = (currentLang === 'hi');
+          const verdictTxt = isMr ? (toMrWithHi(m.verdict_hi) || m.verdict_hi) : (isHi ? m.verdict_hi : m.verdict_en);
+          document.getElementById('milanVerdict').innerText = verdictTxt;
+          const manglikTxt = isMr ? (toMrWithHi(m.manglik_harmony ? m.manglik_harmony.verdict_hi : '') || m.manglik_harmony.verdict_hi) : (isHi ? m.manglik_harmony.verdict_hi : m.manglik_harmony.verdict_en);
+          document.getElementById('milanManglikHarmony').innerText = manglikTxt;
 
           const koots = m.koots || [];
           document.getElementById('milanKootsBody').innerHTML = koots.map(k => {
             const maxPts = k.max !== undefined ? k.max : (k.max_points || 0);
             const obtPts = k.obtained !== undefined ? k.obtained : (k.obtained_points || 0);
-            const area = currentLang === 'hi' ? (k.desc_hi || k.area_hi || '') : (k.desc_en || k.area_en || '');
+            const rawArea = k.desc_hi || k.area_hi || '';
+            const area = isMr ? (toMrWithHi(rawArea) || rawArea) : (isHi ? rawArea : (k.desc_en || k.area_en || ''));
             const isFavorable = obtPts > 0;
-            const verdict = isFavorable ? (currentLang === 'hi' ? 'अनुकूल' : 'Auspicious') : (currentLang === 'hi' ? 'दोष / न्यून' : 'Low / Dosha');
+            const verdict = isFavorable ? (isMr ? 'अनुकूल (शुभ)' : (isHi ? 'अनुकूल' : 'Auspicious')) : (isMr ? 'दोष / कमी गुण' : (isHi ? 'दोष / न्यून' : 'Low / Dosha'));
+            const kName = isMr ? (toMrWithHi(k.koot_hi) || k.koot_hi) : (isHi ? k.koot_hi : k.koot_en);
             return `
             <tr>
-              <td style="font-weight:800; color:#7C2D12;">${currentLang === 'hi' ? k.koot_hi : k.koot_en}</td>
+              <td style="font-weight:800; color:#7C2D12;">${kName}</td>
               <td style="font-weight:700;">${maxPts}</td>
               <td style="font-weight:800; color:${isFavorable ? '#166534':'#991B1B'};">${obtPts}</td>
               <td style="font-size:11.5px; color:#4B5563;">${area}</td>
@@ -4238,23 +4248,9 @@ def index_ui():
 
     async function loadInAppPdfPreview() {
       let p = getFormPayload();
-      if (!p.name) {
-        p = {
-          name: 'Harmanjot Singh',
-          sex: 'male',
-          day: 3,
-          month: 10,
-          year: 2005,
-          hour: 14,
-          minute: 30,
-          second: 0,
-          place: 'Ludhiana, Punjab, India',
-          lat: 30.9010,
-          lon: 75.8573,
-          tz: 5.5,
-          lang: 'hi',
-          report_package: 'maha'
-        };
+      if (!p.name || !p.year || !p.day) {
+        // If form is empty, don't auto-fetch empty report
+        return;
       }
       const pkgSelect = document.getElementById('reportPackageSelect');
       if (pkgSelect && pkgSelect.value) p.report_package = pkgSelect.value;
@@ -4287,8 +4283,9 @@ def index_ui():
     async function exportPDF() {
       const p = getFormPayload();
       if (!p.name) {
-        // If native details are not entered yet, open the VIP 56-page full sample PDF immediately
-        window.open('/api/download-pdf/Vedas_Kundli_Harmanjot_Singh_VIP_Sample.pdf', '_blank');
+        alert('कृपया प्रथम जातकाचे नाव आणि जन्म माहिती भरा (Please enter native name and birth details before generating PDF)');
+        const nameInput = document.getElementById('name');
+        if (nameInput) nameInput.focus();
         return;
       }
       if (!validateInputs(p)) return;
@@ -4453,10 +4450,10 @@ def index_ui():
           <tr>
             <td style="font-weight:800; color:#7C2D12;">Cusp ${c.cusp}</td>
             <td style="font-family:monospace; font-weight:700;">${c.dms || ''}</td>
-            <td style="font-weight:600;">${currentLang === 'hi' ? c.rasi_hi : c.rasi}</td>
-            <td style="font-weight:600;">${currentLang === 'hi' ? c.nak_hi : c.nak}</td>
-            <td style="font-weight:800; color:#C2540A; background:#FEF3C7;">${currentLang === 'hi' ? c.sub_hi : c.sub}</td>
-            <td style="color:#574032;">${currentLang === 'hi' ? c.ss_hi : c.ss}</td>
+            <td style="font-weight:600;">${(currentLang === 'mr' || currentLang === 'hi') ? (toMrWithHi(c.rasi_hi) || c.rasi_hi) : c.rasi}</td>
+            <td style="font-weight:600;">${(currentLang === 'mr' || currentLang === 'hi') ? (toMrWithHi(c.nak_hi) || c.nak_hi) : c.nak}</td>
+            <td style="font-weight:800; color:#C2540A; background:#FEF3C7;">${(currentLang === 'mr' || currentLang === 'hi') ? (toMrWithHi(c.sub_hi) || c.sub_hi) : c.sub}</td>
+            <td style="color:#574032;">${(currentLang === 'mr' || currentLang === 'hi') ? (toMrWithHi(c.ss_hi) || c.ss_hi) : c.ss}</td>
           </tr>
         `).join('');
       }
@@ -4467,10 +4464,10 @@ def index_ui():
       if (planTbody && planets.length > 0) {
         planTbody.innerHTML = planets.map(p => `
           <tr>
-            <td style="font-weight:800; color:#7C2D12;">${currentLang === 'hi' ? p.planet_hi : p.planet_en}</td>
+            <td style="font-weight:800; color:#7C2D12;">${(currentLang === 'mr' || currentLang === 'hi') ? (toMrWithHi(p.planet_hi) || p.planet_hi) : p.planet_en}</td>
             <td style="font-family:monospace; font-weight:700;">${p.dms || ''}</td>
-            <td style="font-weight:600;">${currentLang === 'hi' ? p.nak_hi : p.nak}</td>
-            <td style="font-weight:800; color:#166534; background:#DCFCE7;">${currentLang === 'hi' ? p.sub_hi : p.sub}</td>
+            <td style="font-weight:600;">${(currentLang === 'mr' || currentLang === 'hi') ? (toMrWithHi(p.nak_hi) || p.nak_hi) : p.nak}</td>
+            <td style="font-weight:800; color:#166534; background:#DCFCE7;">${(currentLang === 'mr' || currentLang === 'hi') ? (toMrWithHi(p.sub_hi) || p.sub_hi) : p.sub}</td>
             <td style="font-weight:800; color:#7C2D12;">House ${p.kp_house || '-'}</td>
           </tr>
         `).join('');

@@ -1,3 +1,4 @@
+from engine.remedy_pages import generate_vip_remedy_pages
 # -*- coding: utf-8 -*-
 """
 Gurukulam Kundli CRM - Complete 56-Page Royal Colour HTML & PDF Report Generator
@@ -1854,6 +1855,21 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     pages.append(_page_wrapper(60, meta, brand, "Karma Code — What To Do & What To Avoid", "जीवन आचरण संहिता — क्या अवश्य करें एवं क्या न करें", p57_inner, lang))
 
     # =========================================================================
+    # ULTRA-VIP HIGH-TICKET REMEDIES & AUTHENTIC KP DOSSIER (PAGES 61-75+)
+    # Trained from Prof. K. S. Krishnamurti (Reader III) & Gautam Verma KP Formulas
+    # =========================================================================
+    try:
+        vip_remedy_pages = generate_vip_remedy_pages(data, T, P)
+        for vrp in vip_remedy_pages:
+            pages.append(_page_wrapper(
+                len(pages) + 1, meta, brand,
+                vrp["title_en"], vrp["title_hi"],
+                vrp["html"], lang
+            ))
+    except Exception as e_rem:
+        print("Warning: Could not append VIP remedy pages:", e_rem)
+
+    # =========================================================================
     # PAGE 61: EXCLUSIVE DEDICATED MASTER LEGAL DISCLAIMER & COPYRIGHT STATEMENT
     # (सम्पूर्ण वैधानिक कानूनी उद्घोषणा, प्राचीन विद्या प्रकटीकरण एवं सर्वाधिकार सुरक्षित)
     # =========================================================================
@@ -1944,7 +1960,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
 
     # Assemble complete HTML with Modern Royal Vedic Glassmorphism Theme
     css = """
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700;800&family=Rasa:wght@500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Rasa:wght@500;600;700&display=swap');
 
     @page {
       size: A4 portrait;
@@ -1956,7 +1972,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       padding: 0;
       background: radial-gradient(circle at 10% 20%, #F5EFEB 0%, #E8DFD8 90%);
       color: #1F1B16;
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Gujarati', 'Rasa', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Shruti', 'Gujarati Sangam MN', sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', 'Rasa', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Mangal', 'Kokila', sans-serif;
       font-size: 10.6px;
       line-height: 1.48;
       -webkit-font-smoothing: antialiased;

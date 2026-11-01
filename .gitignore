@@ -9,3 +9,7 @@ venv/
 .pytest_cache/
 crm.db
 *.log
+
+scratch/
+__pycache__/
+*.pyc
