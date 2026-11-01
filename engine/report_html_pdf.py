@@ -42,9 +42,9 @@ def get_image_base64(fname: str) -> str:
     return ""
 
 def _page_wrapper(page_num: int, meta: dict, brand: dict, title_en: str, title_hi: str, inner_html: str, lang: str = "en") -> str:
-    """Wrap content in a standard A4 Vedas Kundli Predictions bordered page with header & footer."""
+    """Wrap content in a standard A4 Shivansh Astro-Vastu bordered page with header & footer."""
     title_str = title_hi if lang == "hi" else (f"{title_en} / {title_hi}" if lang == "both" and title_hi else title_en)
-    header_right = "वेदास कुंडली प्रेडिक्शन्स — बृहत् कुंडली" if lang == "hi" else "Vedas Kundli Predictions — Brihat Kundli"
+    header_right = "शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu) — बृहत् कुंडली" if lang == "hi" else "Shivansh Astro-Vastu — Brihat Kundli"
     title_banner = f'<div class="section-title">|| {title_str} ||</div>' if title_str else ""
 
     return f"""
@@ -58,7 +58,7 @@ def _page_wrapper(page_num: int, meta: dict, brand: dict, title_en: str, title_h
         {inner_html}
       </div>
       <div class="page-footer">
-        <span><strong>{brand.get("kendra_name") or brand.get("name_en", "Vedas Kundli Predictions")}</strong> | {brand.get("tagline_en", "Ancient Vedic, KP &amp; Lal Kitab Samhita")}</span>
+        <span><strong>{brand.get("kendra_name") or brand.get("name_en", "Shivansh Astro-Vastu")}</strong> | {brand.get("tagline_en", "Ancient Vedic, KP &amp; Lal Kitab Samhita")}</span>
         <span>Printing Date: {brand["printed_at"]} | Page No. __PAGE_NUM__ of __TOTAL_PAGES__</span>
       </div>
     </div>
@@ -283,7 +283,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     cover_svg = render_gurukulam_cover_svg(d1_chart["lagna_sign"], d1_chart["house_planets"])
     shloka_text = T("॥ SRI GANESHAYA NAMAHA ॥", "॥ श्री गणेशाय नमः ॥ &nbsp;•&nbsp; ॥ श्री स्वामी समर्थ प्रसन्न ॥ &nbsp;•&nbsp; ॥ ॐ नमो भगवते वासुदेवाय ॥") if is_mr else T("॥ SRI GANESHAYA NAMAHA ॥", "॥ श्री गणेशाय नमः ॥ &nbsp;•&nbsp; ॥ ॐ नमो भगवते वासुदेवाय ॥")
     verse_text = """आदित्यचन्द्रावनिलोऽनलश्च द्यौर्भूमिरापो हृदयं यमश्च ।<br/>अहश्च रात्रिश्च उभे च सन्ध्ये धर्मोअपि जानाति नरस्य वृत्तम् ॥"""
-    brand_sub_name = "वेदास कुंडली प्रेडिक्शन्स (महाराष्ट्रियन मराठी आवृत्ती)" if is_mr else brand.get("name_hi", "वेदास कुंडली प्रेडिक्शन्स")
+    brand_sub_name = "शिवांश ॲस्ट्रो-वास्तू (महाराष्ट्रियन मराठी आवृत्ती)" if is_mr else brand.get("name_hi", "शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu)")
     p1_html = f"""
     <div class="kundli-page cover-page">
       <div class="cover-border-outer">
@@ -292,8 +292,10 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
           <div class="cover-sanskrit-verse">
             {verse_text}
           </div>
-          <div class="cover-emblem">{cover_svg}</div>
-          <div class="cover-brand-title" style="font-size:32px; letter-spacing:3px;">{(brand.get("kendra_name") or brand.get("name_en", "VEDAS KUNDLI PREDICTIONS")).upper()}</div>
+          <div class="cover-emblem" style="text-align:center; margin:14px 0 10px 0;">
+            <img src="{get_image_base64('opt_shivansh_logo.jpg')}" style="width:215px; height:215px; border-radius:50%; box-shadow:0 6px 25px rgba(124,45,18,0.35); border:3px solid #D4AF37; object-fit:cover;" alt="Shivansh Astro-Vastu Logo"/>
+          </div>
+          <div class="cover-brand-title" style="font-size:32px; letter-spacing:3px;">{(brand.get("kendra_name") or brand.get("name_en", "SHIVANSH ASTRO-VASTU")).upper()}</div>
           <div class="cover-brand-hindi">{brand_sub_name}</div>
           {f'<div class="cover-astrologer-meta" style="font-size:15px; color:#c59b27; margin: 5px 0 2px; font-weight:bold;">Consulting Astrologer: {brand.get("astrologer_name")} &nbsp;&bull;&nbsp; {brand.get("phone")}</div>' if brand.get("astrologer_name") else ''}
           <div class="cover-tagline">{brand.get("tagline_en", "Brihat Parashari • KP Nakshatra Nadi • Asli Lal Kitab • Tajika Varshaphal")}</div>
@@ -335,7 +337,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # =========================================================================
     # PAGE 2: TABLE OF CONTENTS / INDEX (अनुक्रमणिका व संपूर्ण विषय सूची)
     # =========================================================================
-    toc_img = get_image_base64("opt_vip_emblem.jpg")
+    toc_img = get_image_base64("opt_shivansh_logo.jpg")
     img_tag = f'<img src="{toc_img}" style="width:75px; height:auto; margin-bottom:4px; border-radius:50%; box-shadow:0 3px 10px rgba(124,45,18,0.25); border:2px solid #D4AF37;">' if toc_img else ''
 
     p_toc_inner = f"""
@@ -427,7 +429,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     </div>
 
     <div style="margin-top:9px; padding:6px 12px; background:linear-gradient(90deg, #FFFBEB 0%, #FEF3C7 100%); border:1px solid #D4AF37; border-radius:6px; display:flex; justify-content:space-between; align-items:center; font-size:9.5px; color:#78350F; font-weight:700;">
-      <span>🔱 श्री वेद प्रतिष्ठान • १००% शास्त्रीय व गणितीय परिपूर्णता</span>
+      <span>🔱 श्री शिवांश ॲस्ट्रो-वास्तू प्रतिष्ठान • १००% शास्त्रीय व गणितीय परिपूर्णता</span>
       <span>{meta["name"]} — {meta["place"]} ({meta["dob_str"]})</span>
     </div>
     """
@@ -1778,8 +1780,8 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
           </p>
           <p style="margin:0; font-size:10.2px;">
             {T(
-              "Vedas Kundli Predictions computes planetary positions using high-precision astronomical algorithms (Swiss Ephemeris / Lahiri Chitrapaksha Ayanamsa) down to fractions of an arc-second. This eliminates all manual calculation defects, guaranteeing 100% authentic, tamper-proof ephemeris charts.",
-              "वेदास कुंडली प्रेडिक्शन्स आधुनिक खगोलीय गणित व प्रामाणिक लाहिड़ी अयनांश के आधार पर सेकंड के सूक्ष्म भाग तक ग्रह स्थितियों की गणना करता है, जिससे मानवीय गणना की सभी त्रुटियां समाप्त हो जाती हैं और शत-प्रतिशत प्रामाणिक चक्र निर्मित होते हैं।"
+              "Shivansh Astro-Vastu computes planetary positions using high-precision astronomical algorithms (Swiss Ephemeris / Lahiri Chitrapaksha Ayanamsa) down to fractions of an arc-second. This eliminates all manual calculation defects, guaranteeing 100% authentic, tamper-proof ephemeris charts.",
+              "शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu) आधुनिक खगोलीय गणित व प्रामाणिक लाहिड़ी अयनांश के आधार पर सेकंड के सूक्ष्म भाग तक ग्रह स्थितियों की गणना करता है, जिससे मानवीय गणना की सभी त्रुटियां समाप्त हो जाती हैं और शत-प्रतिशत प्रामाणिक चक्र निर्मित होते हैं।"
             )}
           </p>
         </div>
@@ -1923,15 +1925,15 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     pages.append(_page_wrapper(59, meta, brand, "Easily Understand Your Kundli — Lal Kitab Teacher", "कुंडली सरल मार्गदर्शन — दोष, भविष्य एवं लाल किताब सूत्र", p56_inner, lang))
 
     # =========================================================================
-    # PAGE 60: VEDAS KUNDLI PREDICTIONS — WHAT TO DO & WHAT NOT TO DO (KARMA CODE)
+    # PAGE 60: SHIVANSH ASTRO-VASTU — WHAT TO DO & WHAT NOT TO DO (KARMA CODE)
     # (वैदिक एवं लाल किताब जीवन आचरण संहिता — क्या अवश्य करें एवं क्या न करें)
     # =========================================================================
     p57_inner = f"""
     <div class="prose-block">
       <div class="intro-highlight" style="font-size:11px; margin-bottom:10px;">
         {T(
-          "Vedas Kundli Predictions presents the sacred behavioral and karmic roadmap derived from Maharishi Parashara and Lal Kitab Farman. Practicing noble karma mitigates malefic planetary vibrations, while violating karmic codes severely triggers Rahu, Ketu, and Saturn doshas.",
-          "वेदास कुंडली प्रेडिक्शन्स द्वारा प्रस्तुत महर्षि पराशर एवं लाल किताब पर आधारित आचरण संहिता। सात्विक कर्म एवं अनुशासित आचरण से अशुभ ग्रहों का दुष्प्रभाव शांत होता है, जबकि वर्जित कार्यों से शनि, राहु एवं केतु के तीव्र दोष उत्पन्न होते हैं।"
+          "Shivansh Astro-Vastu presents the sacred behavioral and karmic roadmap derived from Maharishi Parashara and Lal Kitab Farman. Practicing noble karma mitigates malefic planetary vibrations, while violating karmic codes severely triggers Rahu, Ketu, and Saturn doshas.",
+          "शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu) द्वारा प्रस्तुत महर्षि पराशर एवं लाल किताब पर आधारित आचरण संहिता। सात्विक कर्म एवं अनुशासित आचरण से अशुभ ग्रहों का दुष्प्रभाव शांत होता है, जबकि वर्जित कार्यों से शनि, राहु एवं केतु के तीव्र दोष उत्पन्न होते हैं।"
         )}
       </div>
 
@@ -1966,7 +1968,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       </div>
 
       <div class="highlight-banner" style="margin-top:12px; font-size:11.2px; line-height:1.55;">
-        <strong>{T("Vedas Karmic Principle:", "वेदास कर्म सिद्धांत:")}</strong>
+        <strong>{T("Shivansh Astro-Vastu Principle:", "शिवांश ॲस्ट्रो-वास्तू कर्म सिद्धांत:")}</strong>
         {T(
           '"Yadrisham Kriyate Karma Tadrisham Bhujyate Phalam" — Planetary transits only deliver the harvest of your seeds. When noble conduct, righteous livelihood, and charity are practiced, even debilitated planets convert into protective shields.', 
           '"यादृशं क्रियते कर्म तादृशं भुज्यते फलम्" — ग्रह केवल आपके द्वारा बोए गए बीजों का फल प्रदान करते हैं। जब आचरण सात्विक, आजीविका धर्मसम्मत और सेवा निःस्वार्थ होती है, तो नीच ग्रह भी जीवन रक्षक कवच बन जाते हैं।', 
@@ -1978,7 +1980,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
 
     # =========================================================================
     # ULTRA-VIP HIGH-TICKET REMEDIES & AUTHENTIC KP DOSSIER (PAGES 61-75+)
-    # Trained from Prof. K. S. Krishnamurti (Reader III) & Gautam Verma KP Formulas
+    # Trained from Prof. K. S. Krishnamurti (Reader III) & KP Cuspal Event Groupings
     # =========================================================================
     try:
         vip_remedy_pages = generate_vip_remedy_pages(data, T, P)
@@ -1999,7 +2001,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     <div class="prose-block" style="font-size:9.4px; line-height:1.52; color:#1E293B;">
       <div style="text-align:center; margin-bottom:8px; padding-bottom:6px; border-bottom:1.5px solid #D97706;">
         <div style="font-size:13.5px; font-weight:900; color:#7C2D12; letter-spacing:1px; font-family:'Cinzel', serif;">
-          VEDAS KUNDLI PREDICTIONS — LEGAL PROTOCOL &amp; STATUTORY COPYRIGHT
+          SHIVANSH ASTRO-VASTU — LEGAL PROTOCOL &amp; STATUTORY COPYRIGHT
         </div>
         <div style="font-size:11px; font-weight:700; color:#B45309; margin-top:2px;">
           ॥ वैधानिक कानूनी उद्घोषणा, प्राचीन विद्या प्रकटीकरण एवं सर्वाधिकार सुरक्षित ॥
@@ -2036,8 +2038,8 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         </h4>
         <p style="margin:0 0 4px 0;">
           {T(
-            "Under no circumstances shall Vedas Kundli Predictions, its computational algorithm creators, developers, publishers, consulting astrologers, authors, or corporate distributors be blamed, held liable, or legally answerable for any direct, indirect, consequential, punitive, or financial losses, mental distress, domestic disputes, business failures, or personal consequences arising out of the interpretation, belief, or application of this document. Possession or reading of this report constitutes an absolute, irrevocable agreement to hold Vedas Kundli Predictions completely harmless from all legal actions, police complaints, civil claims, or consumer litigations worldwide.",
-            "किसी भी परिस्थिति में 'वेदास कुंडली प्रेडिक्शन्स' (Vedas Kundli Predictions), इसके सॉफ्टवेयर डेवलपर, प्रकाशक, परामर्शदाता ज्योतिषी अथवा संबंधित संस्थाओं को इस प्रतिवेदन में उल्लिखित किसी भी गणना, फलादेश अथवा उपाय के कारण उत्पन्न किसी भी आर्थिक हानि, मानसिक तनाव, पारिवारिक विवाद, व्यापारिक घाटे अथवा निर्णय के लिए उत्तरदायी या जिम्मेदार (Blame) नहीं ठहराया जा सकेगा। इस दस्तावेज को प्राप्त करना इस बात की बिना शर्त कानूनी सहमति है कि इसके आधार पर किसी भी न्यायालय, उपभोक्ता मंच या पुलिस प्राधिकरण में कोई दावा अथवा अभियोग स्वीकार्य नहीं होगा।"
+            "Under no circumstances shall Shivansh Astro-Vastu, its computational algorithm creators, developers, publishers, consulting astrologers, authors, or corporate distributors be blamed, held liable, or legally answerable for any direct, indirect, consequential, punitive, or financial losses, mental distress, domestic disputes, business failures, or personal consequences arising out of the interpretation, belief, or application of this document. Possession or reading of this report constitutes an absolute, irrevocable agreement to hold Shivansh Astro-Vastu completely harmless from all legal actions, police complaints, civil claims, or consumer litigations worldwide.",
+            "किसी भी परिस्थिति में 'शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu)' (Shivansh Astro-Vastu), इसके सॉफ्टवेयर डेवलपर, प्रकाशक, परामर्शदाता ज्योतिषी अथवा संबंधित संस्थाओं को इस प्रतिवेदन में उल्लिखित किसी भी गणना, फलादेश अथवा उपाय के कारण उत्पन्न किसी भी आर्थिक हानि, मानसिक तनाव, पारिवारिक विवाद, व्यापारिक घाटे अथवा निर्णय के लिए उत्तरदायी या जिम्मेदार (Blame) नहीं ठहराया जा सकेगा। इस दस्तावेज को प्राप्त करना इस बात की बिना शर्त कानूनी सहमति है कि इसके आधार पर किसी भी न्यायालय, उपभोक्ता मंच या पुलिस प्राधिकरण में कोई दावा अथवा अभियोग स्वीकार्य नहीं होगा।"
           )}
         </p>
       </div>
@@ -2060,8 +2062,8 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         </h4>
         <p style="margin:0 0 4px 0;">
           {T(
-            "© 2026 Vedas Kundli Predictions. All Rights Reserved. The layout, astrological logic synthesis, report architecture, and algorithmic design of this publication are protected under the Indian Copyright Act 1957, International Berne Convention, and universal Intellectual Property Treaties. Unauthorized reproduction, digital copying, automated extraction, commercial syndication, reselling, or reverse engineering of this software or PDF report without prior written consent is strictly prohibited by law. Any dispute or arbitration shall be strictly and exclusively subject to the courts of local jurisdiction at the publisher's registered city.",
-            "© 2026 वेदास कुंडली प्रेडिक्शन्स (Vedas Kundli Predictions) — सर्वाधिकार सुरक्षित। इस प्रतिवेदन का प्रारूप, ज्योतिषीय एल्गोरिदम, संरचना एवं विश्लेषणात्मक प्रस्तुति भारतीय कॉपीराइट अधिनियम 1957 एवं अंतरराष्ट्रीय बौद्धिक संपदा संधियों के तहत सुरक्षित है। प्रकाशक की पूर्व लिखित अनुमति के बिना इस दस्तावेज अथवा इसके अंशों की प्रतिलिपि बनाना, पुनः प्रकाशन, डिजिटल पुनर्विक्रय अथवा व्यावसायिक उपयोग विधि विरुद्ध है। किसी भी कानूनी विवाद की स्थिति में न्यायिक क्षेत्राधिकार केवल प्रकाशक के पंजीकृत स्थानीय न्यायालय तक सीमित रहेगा।"
+            "© 2026 Shivansh Astro-Vastu. All Rights Reserved. The layout, astrological logic synthesis, report architecture, and algorithmic design of this publication are protected under the Indian Copyright Act 1957, International Berne Convention, and universal Intellectual Property Treaties. Unauthorized reproduction, digital copying, automated extraction, commercial syndication, reselling, or reverse engineering of this software or PDF report without prior written consent is strictly prohibited by law. Any dispute or arbitration shall be strictly and exclusively subject to the courts of local jurisdiction at the publisher's registered city.",
+            "© 2026 शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu) (Shivansh Astro-Vastu) — सर्वाधिकार सुरक्षित। इस प्रतिवेदन का प्रारूप, ज्योतिषीय एल्गोरिदम, संरचना एवं विश्लेषणात्मक प्रस्तुति भारतीय कॉपीराइट अधिनियम 1957 एवं अंतरराष्ट्रीय बौद्धिक संपदा संधियों के तहत सुरक्षित है। प्रकाशक की पूर्व लिखित अनुमति के बिना इस दस्तावेज अथवा इसके अंशों की प्रतिलिपि बनाना, पुनः प्रकाशन, डिजिटल पुनर्विक्रय अथवा व्यावसायिक उपयोग विधि विरुद्ध है। किसी भी कानूनी विवाद की स्थिति में न्यायिक क्षेत्राधिकार केवल प्रकाशक के पंजीकृत स्थानीय न्यायालय तक सीमित रहेगा।"
           )}
         </p>
       </div>
@@ -2073,7 +2075,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         )}
       </div>
       <div style="text-align:center; margin-top:2px; font-size:9px; color:#64748B;">
-        Verified Authentic Astrological Document • Vedas Kundli Predictions • 100% Offline Edition
+        Verified Authentic Astrological Document • Shivansh Astro-Vastu • 100% Offline Edition
       </div>
     </div>
     """
@@ -2581,7 +2583,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes"/>
-  <title>Vedas Kundli Predictions - {meta["name"]}</title>
+  <title>Shivansh Astro-Vastu - {meta["name"]}</title>
   <style>{css}</style>
 </head>
 <body>

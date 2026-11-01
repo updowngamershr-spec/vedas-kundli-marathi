@@ -13,9 +13,9 @@ from datetime import datetime
 def get_user_data_root() -> str:
     """Return standard writable user data directory with graceful fallbacks."""
     candidates = [
-        os.path.join(os.environ.get("LOCALAPPDATA", ""), "VedasKundli"),
+        os.path.join(os.environ.get("LOCALAPPDATA", ""), "ShivanshAstroVastu"),
         os.path.join(os.path.expanduser("~"), ".vedaskundli"),
-        os.path.join(tempfile.gettempdir(), "VedasKundli"),
+        os.path.join(tempfile.gettempdir(), "ShivanshAstroVastu"),
     ]
     for c in candidates:
         if not c:
@@ -60,7 +60,7 @@ def _get_db_path() -> str:
 
     # 2. Try Temp fallback
     candidates = [
-        os.path.join(tempfile.gettempdir(), "VedasKundli", "gurukulam_crm.db"),
+        os.path.join(tempfile.gettempdir(), "ShivanshAstroVastu", "gurukulam_crm.db"),
         ":memory:"
     ]
     for c in candidates:
@@ -123,7 +123,7 @@ def init_crm_db():
         CREATE TABLE IF NOT EXISTS branding (
             id INTEGER PRIMARY KEY,
             astrologer_name TEXT DEFAULT '',
-            kendra_name TEXT DEFAULT 'Vedas Jyotish Kendra',
+            kendra_name TEXT DEFAULT 'Shivansh Astro-Vastu',
             phone TEXT DEFAULT '',
             email TEXT DEFAULT '',
             address TEXT DEFAULT '',
@@ -139,7 +139,7 @@ def init_crm_db():
             INSERT INTO clients (name, sex, year, month, day, hour, minute, second, place, lat, lon, tz, phone, email, category, notes, created_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            "Harmanjot Singh (Sample Kundli)",
+            "राजेश जोशी (नमुना कुंडली / Sample)",
             "Male",
             2005, 10, 3,
             10, 2, 6,
@@ -172,7 +172,7 @@ def init_crm_db():
     if cur.fetchone()[0] == 0:
         cur.execute("""
             INSERT INTO branding (id, astrologer_name, kendra_name, phone, email, address, tagline, updated_at)
-            VALUES (1, 'Vedic Astrologer', 'Vedas Kundli Predictions', '', '', 'India', 'Ancient Vedic, KP & Lal Kitab Predictions', ?)
+            VALUES (1, 'Vedic Astrologer', 'Shivansh Astro-Vastu', '', '', 'India', 'Ancient Vedic, KP & Lal Kitab Predictions', ?)
         """, (datetime.now().strftime("%Y-%m-%d %H:%M:%S"),))
     conn.commit()
     conn.close()
@@ -188,7 +188,7 @@ def get_branding():
     conn.close()
     return dict(row) if row else {
         "astrologer_name": "Vedic Astrologer",
-        "kendra_name": "Vedas Kundli Predictions",
+        "kendra_name": "Shivansh Astro-Vastu",
         "phone": "",
         "email": "",
         "address": "India",
@@ -216,7 +216,7 @@ def save_branding(data: dict):
             updated_at=excluded.updated_at
     """, (
         data.get("astrologer_name", ""),
-        data.get("kendra_name", "Vedas Kundli Predictions"),
+        data.get("kendra_name", "Shivansh Astro-Vastu"),
         data.get("phone", ""),
         data.get("email", ""),
         data.get("address", ""),

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Gurukulam Kundli CRM - Master Kundli Orchestrator
-Combines all astronomical, Parashari, Jaimini, KP (Reader III & Gautam Verma), Tajika Varshaphal, Sade Sati,
+Combines all astronomical, Parashari, Jaimini, KP (Reader III & KP House Groupings), Tajika Varshaphal, Sade Sati,
 Ashtakavarga, Shadbala, Lal Kitab (with 1952 Farman), and SVG Charts
 into a single unified data payload.
 """
@@ -81,7 +81,7 @@ def generate_complete_kundli(
     yogas_gems = compute_yogas_and_gemstones(core)
     written_reports = compute_all_written_reports(core, vimshottari, varshaphal_transit)
 
-    # Authentic Mathematical KP Engine (Reader III + Gautam Verma Groupings)
+    # Authentic Mathematical KP Engine (Reader III + KP House Groupings)
     kp_cusps_list = kp.get("kp_cusps", [])
     four_fold = compute_four_fold_significators(core["planets"], kp_cusps_list)
     
@@ -95,9 +95,9 @@ def generate_complete_kundli(
 
     return {
         "brand": {
-            "name_en": "Vedas Kundli Predictions",
-            "name_hi": "वेदास कुंडली प्रेडिक्शन्स",
-            "name_mr": "वेदास कुंडली प्रेडिक्शन्स",
+            "name_en": "Shivansh Astro-Vastu",
+            "name_hi": "शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu)",
+            "name_mr": "शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu)",
             "tagline_en": "Ancient Vedic, KP & Lal Kitab Predictions",
             "tagline_hi": "प्राचीन वैदिक, कृष्णमूर्ति पद्धति एवं लाल किताब फलादेश",
             "tagline_mr": "अचूक वैदिक, कृष्णमूर्ती पद्धती आणि लाल किताब भविष्यवाणी",

@@ -251,7 +251,7 @@ def render_gurukulam_cover_svg(lagna_sign: int, house_planets: dict) -> str:
   <circle cx="180" cy="155" r="56" fill="#991B1B" stroke="#FDE047" stroke-width="1.5" stroke-dasharray="4,3"/>
   <text x="180" y="146" text-anchor="middle" font-family="'Noto Serif Devanagari', Georgia, serif" font-size="42" font-weight="bold" fill="#FEF08A">ॐ</text>
   <text x="180" y="178" text-anchor="middle" font-family="'Noto Serif Devanagari', Georgia, serif" font-size="13" font-weight="bold" fill="#FDE68A">श्री गणेशाय नमः</text>
-  <text x="180" y="196" text-anchor="middle" font-family="Georgia, serif" font-size="9.5" letter-spacing="1.5" fill="#FED7AA">GURUKULAM JYOTISH</text>
+  <text x="180" y="196" text-anchor="middle" font-family="Georgia, serif" font-size="9.5" letter-spacing="1.5" fill="#FED7AA">SHIVANSH ASTRO-VASTU</text>
 </svg>
 """
 
@@ -286,7 +286,7 @@ def render_south_indian_svg(lagna_sign: int, house_planets: dict, size: int = 32
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}" width="{size}" height="{size}">',
         '  <rect x="2" y="2" width="' + str(size-4) + '" height="' + str(size-4) + '" fill="#FFFDF8" stroke="#7C2D12" stroke-width="2.5"/>',
         f'  <rect x="{cell_w}" y="{cell_h}" width="{cell_w*2}" height="{cell_h*2}" fill="#FEF3C7" fill-opacity="0.65" stroke="#7C2D12" stroke-width="1.5"/>',
-        f'  <text x="{size/2}" y="{size/2 - 6}" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="12" font-weight="bold" fill="#7C2D12">VEDAS KUNDLI</text>',
+        f'  <text x="{size/2}" y="{size/2 - 6}" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="12" font-weight="bold" fill="#7C2D12">SHIVANSH ASTRO-VASTU</text>',
         f'  <text x="{size/2}" y="{size/2 + 10}" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#B45309">South Indian Style</text>',
     ]
     

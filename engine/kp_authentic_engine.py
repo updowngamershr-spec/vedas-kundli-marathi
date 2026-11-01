@@ -3,7 +3,7 @@
 Authentic KP Stellar Astrology & Mathematical Remedy Calculation Engine
 Trained directly from:
 1. Prof. K. S. Krishnamurti - 'Predictive Stellar Astrology' (KP Reader III, 553 pages)
-2. Astrologer Gautam Verma - 'KP Astrology House Groupings (Formulas)'
+2. Authentic KP Astrology House Groupings & Cuspal Sub-Lord Formulas
 
 Key Mathematical Principles Implemented:
 - 4-Fold Significators (Level A: In star of occupant, Level B: Occupant, Level C: In star of cusp lord, Level D: Cusp lord)
@@ -113,7 +113,7 @@ KP_PLANET_METALS_GEMS = {
     }
 }
 
-# Gautam Verma 1st to 12th House Groupings Database
+# Authentic KP 1st to 12th House Groupings Database
 KP_EVENT_RULES = {
     1: [
         {"event_mr": "दीर्घायुष्य (Long Life)", "houses": [1, 3, 5, 8, 10], "fav": True, "desc_mr": "१ल्या भावाचा उपस्वामी १, ३, ५, ८, १० शी जोडला असता उत्तम दीर्घायुष्य लाभते."},

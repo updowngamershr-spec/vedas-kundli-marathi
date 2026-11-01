@@ -17,7 +17,7 @@ def get_image_base64(fname: str) -> str:
 Vedas Kundli Predictions - Ultra-VIP High-Ticket Remedies & KP Dossier Module
 Contains 15 dedicated, sellable pages directly formulated from:
 1. Prof. K. S. Krishnamurti - 'Predictive Stellar Astrology' (KP Reader III)
-2. Astrologer Gautam Verma - 'KP Astrology House Groupings'
+2. Authentic KP Astrology Cuspal House Groupings (1st to 12th House Sub-Lord Formulas)
 3. Authentic Parashari, Ayurveda & Lal Kitab 1952 Samhita
 Formatted in Royal Gurukulam Gold/Maroon luxury cards with 100% Marathi Primary & Hindi Subtitles.
 """
@@ -89,7 +89,7 @@ def generate_vip_remedy_pages(data: dict, T, P) -> list[dict]:
     })
 
     # -------------------------------------------------------------------------
-    # PAGE 2: KP CUSPAL SUB-LORD LIFE EVENT GROUPINGS (GAUTAM VERMA)
+    # PAGE 2: KP CUSPAL SUB-LORD LIFE EVENT GROUPINGS (HOUSES 1-12)
     # -------------------------------------------------------------------------
     p2_html = f"""
     <div class="prose-block" style="font-size:10px; line-height:1.52;">
@@ -98,7 +98,7 @@ def generate_vip_remedy_pages(data: dict, T, P) -> list[dict]:
           १२ भाव उपस्वामी व अचूक घटना विश्लेषण (KP Cuspal Sub-Lord Event Groupings)
         </h4>
         <p style="margin:0; font-size:10px; color:#78350F;">
-          गौतम वर्मा यांच्या 'KP Astrology House Groupings' ग्रंथानुसार प्रत्येक भावाचा उपस्वामी कोणत्या भाव समूहाला जोडला आहे यावरून निश्चित होणारे फलादेश:
+          कृष्णमूर्ती पद्धती (के.पी.) च्या प्रामाणिक 'कस्पल भाव समूह' (KP House Groupings) सिद्धांतानुसार प्रत्येक भावाचा उपस्वामी कोणत्या भाव समूहाला जोडला आहे यावरून निश्चित होणारे शास्त्रीय फलादेश:
         </p>
       </div>
 

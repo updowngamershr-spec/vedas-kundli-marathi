@@ -1,7 +1,7 @@
 from datetime import datetime
 # -*- coding: utf-8 -*-
 """
-Vedas Kundli Predictions - Complete Desktop Astrological Suite & High-Resolution Vector PDF Server
+Shivansh Astro-Vastu - Complete Desktop Astrological Suite & High-Resolution Vector PDF Server
 Features:
 - Master Security Access / Login Gateway (User: Admin, Pass: Harman)
 - High-Performance Offline Desktop Suite
@@ -34,7 +34,12 @@ from engine.kundli_milan import calculate_ashtakoot_milan
 from engine.milan_dossier import build_milan_dossier_html
 from crm_db import init_crm_db, list_clients, get_client, save_client, delete_client, get_branding, save_branding, get_user_data_root, create_demo_key, list_demo_keys, toggle_demo_key_status, validate_access_key
 
-app = FastAPI(title="Vedas Kundli Predictions")
+app = FastAPI(title="Shivansh Astro-Vastu")
+
+from fastapi.staticfiles import StaticFiles
+assets_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
+if os.path.exists(assets_dir):
+    app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
 
 @app.get("/presentation", response_class=HTMLResponse)
 @app.get("/pitch", response_class=HTMLResponse)
@@ -89,7 +94,7 @@ class KundliRequest(BaseModel):
 
 class BrandingRequest(BaseModel):
     astrologer_name: str = ""
-    kendra_name: str = "Vedas Kundli Predictions"
+    kendra_name: str = "Shivansh Astro-Vastu"
     phone: str = ""
     email: str = ""
     address: str = ""
@@ -639,7 +644,7 @@ def api_export_milan_person_pdf(person: MilanPerson, lang: str = "hi"):
     )
     html_str = build_full_56_page_html(data, lang=lang)
     safe_name = "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in person.name).strip("_") or "Kundli"
-    pdf_filename = f"Vedas_Kundli_{safe_name}_{lang.upper()}.pdf"
+    pdf_filename = f"Shivansh_Astro_Vastu_{safe_name}_{lang.upper()}.pdf"
     pdf_path = os.path.join(REPORTS_DIR, pdf_filename)
     res = export_html_to_pdf(html_str, pdf_path, split_single_pages=False)
     if res["success"]:
@@ -700,7 +705,7 @@ def api_export_pdf(req: KundliRequest):
     html_str = build_full_56_page_html(data, lang=req.lang, package=req.report_package)
     safe_name = "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in req.name).strip("_") or "Kundli"
     pkg_suffix = f"_{req.report_package.upper()}" if req.report_package != "maha" else ""
-    pdf_filename = f"Vedas_Kundli_{safe_name}{pkg_suffix}_{req.lang.upper()}.pdf"
+    pdf_filename = f"Shivansh_Astro_Vastu_{safe_name}{pkg_suffix}_{req.lang.upper()}.pdf"
     pdf_path = os.path.join(REPORTS_DIR, pdf_filename)
 
     res = export_html_to_pdf(html_str, pdf_path, split_single_pages=(req.report_package == "maha"))
@@ -799,7 +804,7 @@ def index_ui():
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>वेदास कुंडली प्रोफेशनल - महाराष्ट्रियन मराठी (Vedas Kundli)</title>
+  <title>शिवांश ॲस्ट्रो-वास्तू प्रोफेशनल - महाराष्ट्रियन मराठी (Vedas Kundli)</title>
   <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1923,7 +1928,7 @@ def index_ui():
       background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 30%, #D4AF37 70%, #92400E 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 20px rgba(212,175,55,0.3); text-align: center;
     ">
-      VEDAS KUNDLI PROFESSIONAL
+      SHIVANSH ASTRO-VASTU PROFESSIONAL
     </h1>
     <div style="font-size: 12px; color: #D1D5DB; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 24px; text-align: center;">
       Vedic Astrology • Krishnamurti Paddhati (KP) • Lal Kitab 1952 Suite
@@ -2009,7 +2014,7 @@ def index_ui():
         ॥ श्री गणेशाय नमः ॥
       </div>
       <h2 style="font-family: 'Cinzel', serif; font-size: 20px; font-weight: 900; color: #7C2D12; margin: 0 0 4px 0; letter-spacing: 1px;">
-        VEDAS KUNDLI PROFESSIONAL
+        SHIVANSH ASTRO-VASTU PROFESSIONAL
       </h2>
       <div style="font-size: 11.5px; color: #6B7280; font-weight: 600; margin-bottom: 18px;">
         Master Security Access • Astrologer Login
@@ -2104,7 +2109,7 @@ def index_ui():
       </div>
 
       <div style="font-size: 10.5px; color: #9CA3AF; margin-top: 14px;">
-        Vedas Kundli Professional • 100% Offline Standalone Protection
+        Shivansh Astro-Vastu Professional • 100% Offline Standalone Protection
       </div>
     </div>
   </div>
@@ -2115,11 +2120,11 @@ def index_ui():
     <!-- Left Navigation Sidebar -->
     <aside class="desktop-sidebar">
       <div>
-        <div class="sidebar-brand">
-          <div class="brand-om">ॐ</div>
+        <div class="sidebar-brand" style="display:flex; align-items:center; gap:8px;">
+          <img src="/assets/images/opt_shivansh_logo.jpg" style="width:42px; height:42px; border-radius:50%; border:2px solid #D4AF37; box-shadow:0 2px 6px rgba(124,45,18,0.3); object-fit:cover;" alt="Shivansh Logo"/>
           <div class="brand-text">
-            <div class="title">VEDAS KUNDLI</div>
-            <div class="sub">Desktop Astrological Suite</div>
+            <div class="title" style="font-size:14px; font-weight:900; letter-spacing:0.5px;">SHIVANSH</div>
+            <div class="sub" style="font-size:10px; color:#FDE68A;">Astro-Vastu &amp; Kundli Suite</div>
           </div>
           <button class="mobile-sidebar-close" onclick="toggleMobileSidebar(false)" aria-label="Close Menu">✕</button>
         </div>
@@ -2735,7 +2740,7 @@ def index_ui():
             <div style="background:linear-gradient(135deg, #7C2D12 0%, #451A03 100%); color:#FDE68A; padding:12px 16px; border-radius:8px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; border:1.5px solid #D4AF37; box-shadow:0 2px 8px rgba(124,45,18,0.25);">
               <div>
                 <div style="font-weight:900; font-size:14px; color:#FFFFFF;">🔮 कृष्णमूर्ती पद्धती (के.पी.) अचूक वैज्ञानिक उपाय व ग्रह कार्येश</div>
-                <div style="font-size:11px; color:#FDE68A; opacity:0.9;">Prof. K. S. Krishnamurti Reader III Zero-Damage Gemstones, 4-Fold Significators &amp; Gautam Verma 12-Bhava Formulas</div>
+                <div style="font-size:11px; color:#FDE68A; opacity:0.9;">Prof. K. S. Krishnamurti Reader III Zero-Damage Gemstones, 4-Fold Significators &amp; KP 12-Cuspal House Grouping Formulas</div>
               </div>
               <button type="button" class="btn-time-step" style="background:#FDE68A; color:#7C2D12; font-weight:900; font-size:12px; padding:6px 14px; border:none; border-radius:6px; cursor:pointer;" onclick="openKPRemediesDirectPDF()">
                 📄 थेट उपाय PDF पहा / प्रिंट करा
@@ -2786,7 +2791,7 @@ def index_ui():
               </div>
             </div>
 
-            <!-- KP Reader III & Gautam Verma Authentic Remedies Section -->
+            <!-- KP Stellar & Cuspal Sub-Lord Authentic Remedies Section -->
             <div style="margin-top:16px; border-top:1.5px solid #FED7AA; padding-top:14px;">
               <h3 style="font-size:14px; font-weight:800; color:#7C2D12; margin-bottom:10px;">
                 🔮 कृष्णमूर्ती पद्धती अचूक उपाय, ४-स्तरीय कार्येश आणि फलकथन (KP Authentic Remedies &amp; Significators)
@@ -2818,10 +2823,10 @@ def index_ui():
                 </div>
               </div>
 
-              <!-- Gautam Verma 12 Cuspal Sublord Predictions -->
+              <!-- KP Cuspal Sub-Lord 12 House Predictions -->
               <div>
                 <h4 style="font-size:12.5px; font-weight:800; color:#7C2D12; margin-bottom:6px;">
-                  📜 गौतम वर्मा १२ भाव उपस्वामी अचूक घटना सूत्रे (Cuspal Sub-Lord Event Predictions)
+                  📜 कृष्णमूर्ती पद्धती १२ भाव उपस्वामी अचूक घटना सूत्रे (KP Cuspal Sub-Lord Event Predictions)
                 </h4>
                 <div id="kpEventsContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;"></div>
               </div>
@@ -3137,7 +3142,7 @@ def index_ui():
               </div>
               <div class="form-group" style="grid-column: span 2;">
                 <label>Jyotish Kendra / Firm Name (संस्थान का नाम)</label>
-                <input type="text" id="brand_kendra_name" placeholder="e.g. Vedas Jyotish Kendra"/>
+                <input type="text" id="brand_kendra_name" placeholder="e.g. Shivansh Astro-Vastu Kendra"/>
               </div>
             </div>
 
@@ -3148,7 +3153,7 @@ def index_ui():
               </div>
               <div class="form-group">
                 <label>ईमेल पत्ता (Email Address)</label>
-                <input type="email" id="brand_email" placeholder="e.g. consult@vedasjyotish.com"/>
+                <input type="email" id="brand_email" placeholder="e.g. consult@shivanshastrovastu.com"/>
               </div>
             </div>
 
@@ -3327,7 +3332,7 @@ def index_ui():
           'settings': '⚙️ ज्योतिष केंद्र ब्रँडिंग सेटिंग्ज (Settings)'
         };
         const titleEl = document.getElementById('topbarTitle');
-        if (titleEl) titleEl.innerHTML = titles[viewId] || 'Vedas Kundli Predictions';
+        if (titleEl) titleEl.innerHTML = titles[viewId] || 'Shivansh Astro-Vastu';
 
         if (viewId === 'dashboard') loadDashboard();
         if (viewId === 'new_kundli') resetNewKundliForm();
@@ -3340,7 +3345,7 @@ def index_ui():
     }
 
     function closeDesktopApp() {
-      if (confirm('Are you sure you want to exit Vedas Kundli Predictions?')) {
+      if (confirm('Are you sure you want to exit Shivansh Astro-Vastu?')) {
         fetch('/api/shutdown', {method: 'POST'}).catch(()=>{});
         window.close();
       }
@@ -4702,7 +4707,7 @@ def index_ui():
 
     function shareOnWhatsApp() {
       const p = getFormPayload();
-      const txt = `*VEDAS KUNDLI REPORT*\nName: ${p.name}\nDOB: ${p.day}/${p.month}/${p.year}\nTime: ${p.hour}:${p.minute}\nPlace: ${p.place}\nConsultation Category: ${p.category}\n-- Generated via Vedas Kundli Predictions Suite`;
+      const txt = `*SHIVANSH ASTRO-VASTU REPORT*\nName: ${p.name}\nDOB: ${p.day}/${p.month}/${p.year}\nTime: ${p.hour}:${p.minute}\nPlace: ${p.place}\nConsultation Category: ${p.category}\n-- Generated via Shivansh Astro-Vastu Suite`;
       window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(txt), '_blank');
     }
 
@@ -4891,7 +4896,7 @@ def index_ui():
           ffBody.innerHTML = rows;
         }
 
-        // 5. Gautam Verma 12 Cuspal Events
+        // 5. KP Cuspal Sub-Lord 12 House Events
         const evBox = document.getElementById('kpEventsContainer');
         const evRules = allData.kp_event_rules || {};
         if (evBox && Object.keys(evRules).length > 0) {
@@ -5105,7 +5110,7 @@ def index_ui():
         { p: 55, t: '🪐 Loading Classical Parashari Shodashvarga & KP Cuspal Engine...' },
         { p: 80, t: '📖 Loading Lal Kitab 1952 Remedial & Ancestral Knowledgebase...' },
         { p: 95, t: '👥 Connecting Client CRM & VIP Vector Report Studio...' },
-        { p: 100, t: '✨ Ready • Welcome to Vedas Kundli Professional!' }
+        { p: 100, t: '✨ Ready • Welcome to Shivansh Astro-Vastu Professional!' }
       ];
 
       let i = 0;
@@ -5391,7 +5396,7 @@ def index_ui():
     }
 
     function initApp() {
-      console.log('[Init] Vedas Kundli Professional starting...');
+      console.log('[Init] Shivansh Astro-Vastu Professional starting...');
       runSplashScreen();
       checkAuthStatus();
       loadDashboard();
@@ -5422,7 +5427,7 @@ def index_ui():
           🔥 LIMITED TIME LAUNCH DEAL
         </span>
         <h2 style="font-family:'Cinzel', serif; font-size:22px; font-weight:900; color:#FEF08A; margin:8px 0 2px 0;">
-          VEDAS KUNDLI PRO
+          SHIVANSH ASTRO-VASTU PRO
         </h2>
         <p style="font-size:12.5px; color:#D1C7BD; margin:0 0 14px 0;">
           आजीवन वीआईपी लाइसेंस (One-Time Payment • No Monthly Fees)
@@ -5447,7 +5452,7 @@ def index_ui():
 
         <!-- UPI QR Code Simulator -->
         <div style="background:#FFFFFF; border-radius:12px; padding:12px; display:inline-block; margin-bottom:10px; box-shadow:0 4px 15px rgba(0,0,0,0.3);">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=harmanjotsingh0310@okaxis&pn=Vedas%20Kundli%20Pro&am=699&cu=INR" alt="Scan & Pay ₹699 via PhonePe/GPay/Paytm" style="width:145px; height:145px; display:block;"/>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=harmanjotsingh0310@okaxis&pn=Shivansh%20Astro%20Vastu&am=699&cu=INR" alt="Scan & Pay ₹699 via PhonePe/GPay/Paytm" style="width:145px; height:145px; display:block;"/>
           <div style="font-size:11px; font-weight:800; color:#1F2937; margin-top:4px;">GPay • PhonePe • Paytm • UPI</div>
         </div>
 
@@ -5458,7 +5463,7 @@ def index_ui():
         </div>
 
         <!-- Direct WhatsApp Activation CTA -->
-        <a href="https://wa.me/?text=Hello!%20I%20have%20paid%20Rs.699%20for%20Vedas%20Kundli%20Pro%20Lifetime%20License.%20Attached%20is%20my%20screenshot.%20Please%20send%20my%20activation%20key!" target="_blank" style="display:block; width:100%; background:linear-gradient(135deg, #25D366 0%, #128C7E 100%); color:#FFF; font-weight:900; font-size:14.5px; padding:12px; border-radius:10px; text-decoration:none; text-align:center; box-shadow:0 4px 16px rgba(37,211,102,0.4); margin-bottom:8px;">
+        <a href="https://wa.me/?text=Hello!%20I%20have%20paid%20Rs.699%20for%20Shivansh%20Astro%20Vastu%20Lifetime%20License.%20Attached%20is%20my%20screenshot.%20Please%20send%20my%20activation%20key!" target="_blank" style="display:block; width:100%; background:linear-gradient(135deg, #25D366 0%, #128C7E 100%); color:#FFF; font-weight:900; font-size:14.5px; padding:12px; border-radius:10px; text-decoration:none; text-align:center; box-shadow:0 4px 16px rgba(37,211,102,0.4); margin-bottom:8px;">
           💬 WhatsApp पर स्क्रीनशॉट भेजें (Instant Key)
         </a>
         <div style="font-size:11px; color:#9CA3AF;">
@@ -5490,7 +5495,7 @@ if __name__ == "__main__":
     port = find_open_port(8088)
     app_url = f"http://127.0.0.1:{port}"
     print("==================================================================")
-    print(f"  Vedas Kundli Predictions Suite running at: {app_url}")
+    print(f"  Shivansh Astro-Vastu Suite running at: {app_url}")
     print("  Login ID: Admin | Password: Harman")
     print("==================================================================")
     Timer(1.2, lambda: webbrowser.open(app_url)).start()
