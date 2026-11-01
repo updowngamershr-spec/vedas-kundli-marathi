@@ -496,6 +496,18 @@ def api_get_branding():
 
 @app.post("/api/branding")
 def api_save_branding(req: BrandingRequest):
+    if req.logo_data and req.logo_data.startswith("data:image"):
+        try:
+            import base64, io
+            from PIL import Image
+            header, b64str = req.logo_data.split(",", 1)
+            img_bytes = base64.b64decode(b64str)
+            im = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+            im_resized = im.resize((800, 800), Image.Resampling.LANCZOS)
+            dest_path = os.path.join(os.path.dirname(__file__), "assets", "images", "opt_shivansh_logo.jpg")
+            im_resized.save(dest_path, "JPEG", quality=92, optimize=True)
+        except Exception as e_logo:
+            print("Warning saving logo to disk:", e_logo)
     updated = save_branding(req.model_dump())
     return {"success": True, "branding": updated}
 
@@ -3135,14 +3147,38 @@ def index_ui():
               These credentials are saved to your offline SQLite database and automatically printed on the Cover Page, Headers, and Footers of all generated client reports.
             </p>
 
+            <!-- LOGO CUSTOMIZER BOX -->
+            <div style="display:flex; align-items:center; gap:20px; background:#FEF3C7; border:1.5px solid #FDE68A; padding:14px; border-radius:10px; margin-bottom:18px;">
+              <div style="text-align:center;">
+                <img id="brand_logo_preview" src="/assets/images/opt_shivansh_logo.jpg" style="width:110px; height:110px; border-radius:50%; border:3px solid #D4AF37; object-fit:cover; box-shadow:0 4px 14px rgba(124,45,18,0.25); background:#fff;"/>
+                <div style="font-size:10px; color:#78350F; font-weight:700; margin-top:4px;">सध्याचा लोगो (Current Logo)</div>
+              </div>
+              <div style="flex:1;">
+                <h4 style="margin:0 0 4px 0; color:#7C2D12; font-size:13px;">📷 ज्योतिष केंद्र अधिकृत लोगो (Official Logo)</h4>
+                <p style="font-size:11px; color:#574032; margin:0 0 10px 0; line-height:1.4;">
+                  येथून तुम्ही आपल्या ज्योतिष केंद्राचा नवीन लोगो अपलोड करू शकता. हा लोगो पीडीएफ मुखपृष्ठ (Cover Page) आणि अनुक्रमणिकेवर लगेच आपोआप मुद्रित होईल.
+                </p>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <input type="file" id="brand_logo_file" accept="image/*" onchange="previewAndEncodeLogo(event)" style="display:none;"/>
+                  <button type="button" class="btn-primary-gradient" onclick="document.getElementById('brand_logo_file').click()" style="padding:6px 14px; font-size:11.5px;">
+                    📸 नवीन लोगो निवडा (Change Logo)
+                  </button>
+                  <button type="button" class="btn-table-action" onclick="resetDefaultLogo()" style="padding:6px 14px; font-size:11.5px;">
+                    ↺ मूळ लोगो (Reset Default)
+                  </button>
+                </div>
+                <input type="hidden" id="brand_logo_data" value=""/>
+              </div>
+            </div>
+
             <div class="form-grid">
               <div class="form-group" style="grid-column: span 2;">
-                <label>Astrologer Name (ज्योतिषाचार्य का नाम)</label>
-                <input type="text" id="brand_astro_name" placeholder="e.g. Acharya Rajesh Sharma"/>
+                <label>Astrologer Name (ज्योतिषाचार्य नाव)</label>
+                <input type="text" id="brand_astro_name" placeholder="e.g. Mayur Mandhare (BE.E&TC)"/>
               </div>
               <div class="form-group" style="grid-column: span 2;">
-                <label>Jyotish Kendra / Firm Name (संस्थान का नाम)</label>
-                <input type="text" id="brand_kendra_name" placeholder="e.g. Shivansh Astro-Vastu Kendra"/>
+                <label>Jyotish Kendra / Firm Name (संस्थान / ब्रँड नाव)</label>
+                <input type="text" id="brand_kendra_name" placeholder="e.g. Shivansh Astro-Vastu"/>
               </div>
             </div>
 
@@ -4711,7 +4747,7 @@ def index_ui():
       window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(txt), '_blank');
     }
 
-    // Astrologer Branding
+    // Astrologer Branding & Dynamic Logo Settings
     async function loadBrandingSettings() {
       try {
         const res = await fetch('/api/branding');
@@ -4722,14 +4758,54 @@ def index_ui():
             const el = document.getElementById(id);
             if (el) el.value = val || '';
           };
-          setField('brand_astro_name', b.astrologer_name);
-          setField('brand_kendra_name', b.kendra_name);
-          setField('brand_phone', b.phone);
-          setField('brand_email', b.email);
-          setField('brand_address', b.address);
-          setField('brand_tagline', b.tagline);
+          setField('brand_astro_name', b.astrologer_name || 'Mayur Mandhare (BE.E&TC)');
+          setField('brand_kendra_name', b.kendra_name || 'Shivansh Astro-Vastu');
+          setField('brand_phone', b.phone || '9373058052');
+          setField('brand_email', b.email || '');
+          setField('brand_address', b.address || '');
+          setField('brand_tagline', b.tagline || 'Ancient Vedic, KP & Lal Kitab Predictions');
+          const preview = document.getElementById('brand_logo_preview');
+          const logoInput = document.getElementById('brand_logo_data');
+          if (b.logo_data && b.logo_data.startsWith('data:image')) {
+            if (preview) preview.src = b.logo_data;
+            if (logoInput) logoInput.value = b.logo_data;
+          } else {
+            if (preview) preview.src = '/assets/images/opt_shivansh_logo.jpg?t=' + Date.now();
+            if (logoInput) logoInput.value = '';
+          }
         }
       } catch (e) {}
+    }
+
+    function previewAndEncodeLogo(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          canvas.width = 800;
+          canvas.height = 800;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, 800, 800);
+          const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          const preview = document.getElementById('brand_logo_preview');
+          const logoInput = document.getElementById('brand_logo_data');
+          if (preview) preview.src = optimizedDataUrl;
+          if (logoInput) logoInput.value = optimizedDataUrl;
+        };
+        img.src = dataUrl;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetDefaultLogo() {
+      const preview = document.getElementById('brand_logo_preview');
+      const logoInput = document.getElementById('brand_logo_data');
+      if (preview) preview.src = '/assets/images/opt_shivansh_logo.jpg?t=' + Date.now();
+      if (logoInput) logoInput.value = '';
     }
 
     async function saveBrandingSettings() {
@@ -4739,7 +4815,8 @@ def index_ui():
         phone: document.getElementById('brand_phone').value.trim(),
         email: document.getElementById('brand_email').value.trim(),
         address: document.getElementById('brand_address').value.trim(),
-        tagline: document.getElementById('brand_tagline').value.trim()
+        tagline: document.getElementById('brand_tagline').value.trim(),
+        logo_data: document.getElementById('brand_logo_data').value.trim()
       };
       const res = await fetch('/api/branding', {
         method: 'POST',
@@ -4749,8 +4826,9 @@ def index_ui():
       const data = await res.json();
       if (data.success) {
         const s = document.getElementById('brandSaveStatus');
+        s.innerHTML = '✓ ब्रँडिंग व नवीन लोगो सेव्ह झाला! (Saved to SQLite Database!)';
         s.style.display = 'inline';
-        setTimeout(() => { s.style.display = 'none'; }, 3000);
+        setTimeout(() => { s.style.display = 'none'; }, 3500);
       }
     }
 

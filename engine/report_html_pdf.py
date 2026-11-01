@@ -69,11 +69,15 @@ def _page_wrapper(page_num: int, meta: dict, brand: dict, title_en: str, title_h
         footer_print = f"Printing Date: {brand.get('printed_at', '')} | Page No. __PAGE_NUM__ of __TOTAL_PAGES__"
 
     title_banner = f'<div class="section-title">|| {title_str} ||</div>' if title_str else ""
+    astro_name = brand.get("astrologer_name") or "Mayur Mandhare (BE.E&TC)"
+    astro_phone = brand.get("phone") or "9373058052"
+    contact_chip = f"📞 {astro_phone} &nbsp;&bull;&nbsp; {astro_name}" if astro_phone else astro_name
 
     return f"""
     <div class="kundli-page">
       <div class="page-header">
         <span class="header-name">{meta["name"]}</span>
+        <span class="header-contact" style="font-size:10.5px; color:#9A3412; font-weight:800; letter-spacing:0.3px;">{contact_chip}</span>
         <span class="header-brand">{header_right}</span>
       </div>
       <div class="page-body">
@@ -81,7 +85,7 @@ def _page_wrapper(page_num: int, meta: dict, brand: dict, title_en: str, title_h
         {inner_html}
       </div>
       <div class="page-footer">
-        <span><strong>{footer_brand}</strong> | {footer_tag}</span>
+        <span><strong>{footer_brand}</strong> &nbsp;&bull;&nbsp; {contact_chip} &nbsp;&bull;&nbsp; {footer_tag}</span>
         <span>{footer_print}</span>
       </div>
     </div>
@@ -320,11 +324,13 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
             {verse_text}
           </div>
           <div class="cover-emblem" style="text-align:center; margin:14px 0 10px 0;">
-            <img src="{get_image_base64('opt_shivansh_logo.jpg')}" style="width:215px; height:215px; border-radius:50%; box-shadow:0 6px 25px rgba(124,45,18,0.35); border:3px solid #D4AF37; object-fit:cover;" alt="Shivansh Astro-Vastu Logo"/>
+            <img src="{brand.get('logo_data') or get_image_base64('opt_shivansh_logo.jpg')}" style="width:215px; height:215px; border-radius:50%; box-shadow:0 6px 25px rgba(124,45,18,0.35); border:3px solid #D4AF37; object-fit:cover;" alt="Shivansh Astro-Vastu Logo"/>
           </div>
           <div class="cover-brand-title" style="font-size:32px; letter-spacing:3px;">{(brand.get("kendra_name") or brand.get("name_en", "SHIVANSH ASTRO-VASTU")).upper()}</div>
           <div class="cover-brand-hindi">{brand_sub_name}</div>
-          {f'<div class="cover-astrologer-meta" style="font-size:15px; color:#c59b27; margin: 5px 0 2px; font-weight:bold;">Consulting Astrologer: {brand.get("astrologer_name")} &nbsp;&bull;&nbsp; {brand.get("phone")}</div>' if brand.get("astrologer_name") else ''}
+          <div class="cover-astrologer-meta" style="font-size:15px; color:#c59b27; margin: 6px 0 3px; font-weight:bold;">
+            Consulting Astrologer: {brand.get("astrologer_name") or "Mayur Mandhare (BE.E&TC)"} &nbsp;&bull;&nbsp; 📞 {brand.get("phone") or "9373058052"}
+          </div>
           <div class="cover-tagline">{brand.get("tagline_en", "Brihat Parashari • KP Nakshatra Nadi • Asli Lal Kitab • Tajika Varshaphal")}</div>
 
           <div class="cover-client-card">
@@ -364,7 +370,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # =========================================================================
     # PAGE 2: TABLE OF CONTENTS / INDEX (अनुक्रमणिका व संपूर्ण विषय सूची)
     # =========================================================================
-    toc_img = get_image_base64("opt_shivansh_logo.jpg")
+    toc_img = brand.get("logo_data") or get_image_base64("opt_shivansh_logo.jpg")
     img_tag = f'<img src="{toc_img}" style="width:75px; height:auto; margin-bottom:4px; border-radius:50%; box-shadow:0 3px 10px rgba(124,45,18,0.25); border:2px solid #D4AF37;">' if toc_img else ''
 
     p_toc_inner = f"""
@@ -456,7 +462,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     </div>
 
     <div style="margin-top:9px; padding:6px 12px; background:linear-gradient(90deg, #FFFBEB 0%, #FEF3C7 100%); border:1px solid #D4AF37; border-radius:6px; display:flex; justify-content:space-between; align-items:center; font-size:9.5px; color:#78350F; font-weight:700;">
-      <span>🔱 श्री शिवांश ॲस्ट्रो-वास्तू प्रतिष्ठान • १००% शास्त्रीय व गणितीय परिपूर्णता</span>
+      <span>🔱 {brand.get("kendra_name", "शिवांश ॲस्ट्रो-वास्तू")} • {brand.get("astrologer_name") or "Mayur Mandhare (BE.E&TC)"} &nbsp;&bull;&nbsp; 📞 {brand.get("phone") or "9373058052"}</span>
       <span>{meta["name"]} — {meta["place"]} ({meta["dob_str"]})</span>
     </div>
     """
