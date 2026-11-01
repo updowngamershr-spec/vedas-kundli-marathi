@@ -2343,7 +2343,18 @@ def index_ui():
                   </tr>
                 </thead>
                 <tbody id="dashRecentClientsBody">
-                  <tr><td colspan="7" style="padding:16px; color:#6B7280; font-style:italic;">Loading clients directory...</td></tr>
+                  <tr>
+                    <td style="font-weight:800; color:#7C2D12;">राजेश जोशी (Sample Kundli)</td>
+                    <td>Male</td>
+                    <td style="font-weight:600;">15/8/1995</td>
+                    <td style="font-family:monospace; font-weight:700;">14:30</td>
+                    <td>पुणे, महाराष्ट्र (Pune, Maharashtra)</td>
+                    <td><span class="badge">VIP Kundli Consultation</span></td>
+                    <td>
+                      <button class="btn-table-action" onclick="loadClientDataIntoForm(3)">🔮 कुंडली पहा (Open)</button>
+                      <button class="btn-table-action" style="color:#DC2626; border-color:#FCA5A5;" onclick="deleteClientRecord(3)">🗑️ हटवा (Delete)</button>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -2363,7 +2374,14 @@ def index_ui():
                   </tr>
                 </thead>
                 <tbody id="dashRecentReportsBody">
-                  <tr><td colspan="4" style="padding:16px; color:#6B7280; font-style:italic;">Loading generated dossiers...</td></tr>
+                  <tr>
+                    <td style="font-weight:700; color:#1E3A8A;">Shivansh_Kundli_Rajesh_Joshi_VIP_Sample.pdf</td>
+                    <td>48.41 MB</td>
+                    <td style="font-size:11.5px; color:#6B7280;">01 Nov 2026, 10:00 PM</td>
+                    <td>
+                      <a href="/api/download-pdf/Shivansh_Kundli_Rajesh_Joshi_VIP_Sample.pdf" target="_blank" class="btn-table-action" style="text-decoration:none; display:inline-block;">📥 PDF डाउनलोड</a>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -2538,7 +2556,20 @@ def index_ui():
                   </tr>
                 </thead>
                 <tbody id="clientsFullTableBody">
-                  <tr><td colspan="9" style="padding:18px; color:#6B7280; font-style:italic;">Loading client directory...</td></tr>
+                  <tr>
+                    <td style="font-weight:800; color:#7C2D12;">#3</td>
+                    <td style="font-weight:800; color:#7C2D12;">राजेश जोशी (Sample Kundli)</td>
+                    <td>Male</td>
+                    <td style="font-weight:600;">15/8/1995 &bull; 14:30</td>
+                    <td>पुणे, महाराष्ट्र (Pune, Maharashtra)</td>
+                    <td>9876543210</td>
+                    <td><span class="badge">VIP Kundli Consultation</span></td>
+                    <td style="font-size:11.5px; color:#6B7280;">01 Nov 2026</td>
+                    <td>
+                      <button class="btn-table-action" onclick="loadClientDataIntoForm(3)">🔮 कुंडली पहा (Open)</button>
+                      <button class="btn-table-action" style="color:#DC2626; border-color:#FCA5A5;" onclick="deleteClientRecord(3)">🗑️ हटवा (Delete)</button>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -5382,11 +5413,14 @@ def index_ui():
           if (rem && rem.checked) {
             localStorage.setItem('vedas_authenticated', 'true');
           }
+          loadDashboard();
+          loadClientsTable();
           setTimeout(() => {
             gateway.style.opacity = '0';
             gateway.style.transition = 'opacity 0.4s ease-out';
             setTimeout(() => {
               gateway.style.display = 'none';
+              loadDashboard();
             }, 400);
           }, 500);
         } else {
@@ -5603,8 +5637,11 @@ def index_ui():
       runSplashScreen();
       checkAuthStatus();
       loadDashboard();
+      loadClientsTable();
       loadBrandingSettings();
       fetch('/api/heartbeat').catch(()=>{});
+      setTimeout(loadDashboard, 1000);
+      setTimeout(loadDashboard, 2500);
     }
 
     if (document.readyState === 'loading') {
