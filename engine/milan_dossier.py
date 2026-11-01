@@ -152,7 +152,7 @@ def build_milan_dossier_html(boy_core: dict, girl_core: dict, milan: dict, brand
         badge_col = "#b91c1c"
 
     # 8. Brand info
-    kendra_name = brand.get("kendra_name", "वेदास ज्योतिष पीठ (Vedas Kundli Predictions)")
+    kendra_name = brand.get("kendra_name", "शिवांश ॲस्ट्रो-वास्तू (Shivansh Astro-Vastu)")
     astrologer_name = brand.get("astrologer_name", "आचार्य ज्योतिषविद")
     phone = brand.get("phone", "+91 98765 43210")
 
@@ -199,7 +199,7 @@ def build_milan_dossier_html(boy_core: dict, girl_core: dict, milan: dict, brand
 <html lang="{lang}">
 <head>
 <meta charset="utf-8"/>
-<title>Vedas Kundli - Matrimonial Milan Dossier ({b_meta['name']} & {g_meta['name']})</title>
+<title>Shivansh Astro-Vastu - Matrimonial Milan Dossier ({b_meta['name']} & {g_meta['name']})</title>
 <style>
   @page {{
     size: A4 portrait;

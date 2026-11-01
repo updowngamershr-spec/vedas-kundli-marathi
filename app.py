@@ -213,265 +213,276 @@ def api_delete_client(client_id: int):
 
 @app.post("/api/kundli-details")
 def api_kundli_details(req: KundliRequest):
-    # === PHASE 2: Client Data Validation Layer ===
-    missing = []
-    if req.year is None or not (1800 <= req.year <= 2100):
-        missing.append("Birth Year (1800-2100)")
-    if req.month is None or not (1 <= req.month <= 12):
-        missing.append("Birth Month (1-12)")
-    if req.day is None or not (1 <= req.day <= 31):
-        missing.append("Birth Day (1-31)")
-    if req.hour is None or not (0 <= req.hour <= 23):
-        missing.append("Birth Hour (0-23)")
-    if req.minute is None or not (0 <= req.minute <= 59):
-        missing.append("Birth Minute (0-59)")
-    if missing:
+    try:
+        # === PHASE 2: Client Data Validation Layer ===
+        missing = []
+        if req.year is None or not (1800 <= req.year <= 2100):
+            missing.append("Birth Year (1800-2100)")
+        if req.month is None or not (1 <= req.month <= 12):
+            missing.append("Birth Month (1-12)")
+        if req.day is None or not (1 <= req.day <= 31):
+            missing.append("Birth Day (1-31)")
+        if req.hour is None or not (0 <= req.hour <= 23):
+            missing.append("Birth Hour (0-23)")
+        if req.minute is None or not (0 <= req.minute <= 59):
+            missing.append("Birth Minute (0-59)")
+        if missing:
+            return JSONResponse({
+                "success": False,
+                "error": "missing_inputs",
+                "message": f"Please fill in: {', '.join(missing)}",
+                "fields": missing
+            }, status_code=422)
+
+        varsha_year = req.varsha_year if req.varsha_year else datetime.now().year
+
+        data = generate_complete_kundli(
+            name=req.name or "Client", sex=req.sex,
+            year=req.year, month=req.month, day=req.day,
+            hour=req.hour, minute=req.minute, second=req.second,
+            place=req.place, lat=req.lat, lon=req.lon, tz=req.tz,
+            varsha_year=varsha_year,
+        )
+        d1 = data["shodashvarga"]["charts"]["D1"]
+        d9 = data["shodashvarga"]["charts"]["D9"]
+        chart_north = render_north_indian_svg(d1["lagna_sign"], d1["house_planets"], size=290, lang=req.lang)
+        chart_south = render_south_indian_svg(d1["lagna_sign"], d1["house_planets"], size=290, lang=req.lang)
+        chart_east = render_east_indian_svg(d1["lagna_sign"], d1["house_planets"], size=290, lang=req.lang)
+
+        d9_north = render_north_indian_svg(d9["lagna_sign"], d9["house_planets"], size=290, lang=req.lang)
+        d9_south = render_south_indian_svg(d9["lagna_sign"], d9["house_planets"], size=290, lang=req.lang)
+        d9_east = render_east_indian_svg(d9["lagna_sign"], d9["house_planets"], size=290, lang=req.lang)
+
+        # All 16 Classical Shodashvarga Divisional Charts (D1 to D60) in 3 Regional Styles
+        all_vargas = {}
+        for code, ch_info in data["shodashvarga"]["charts"].items():
+            all_vargas[code] = {
+                "lagna_sign": ch_info["lagna_sign"],
+                "north": render_north_indian_svg(ch_info["lagna_sign"], ch_info["house_planets"], size=290, lang=req.lang),
+                "south": render_south_indian_svg(ch_info["lagna_sign"], ch_info["house_planets"], size=290, lang=req.lang),
+                "east": render_east_indian_svg(ch_info["lagna_sign"], ch_info["house_planets"], size=290, lang=req.lang),
+            }
+
+        # Real-time Planetary Transit (Gochar) as of now
+        now = datetime.now()
+        transit_core = compute_core_ephemeris(
+            name="Transit", sex="Male",
+            year=now.year, month=now.month, day=now.day,
+            hour=now.hour, minute=now.minute, second=now.second,
+            place=req.place, lat_deg=data["meta"]["lat"], lon_deg=data["meta"]["lon"], tz_hours=data["meta"]["tz"]
+        )
+        natal_lagna_sign = data["meta"]["lagna_sign_num"]
+        transit_houses = {h: [] for h in range(1, 13)}
+        for p in transit_core["planets"]:
+            bh = ((p["sign_num"] - natal_lagna_sign) % 12) + 1
+            transit_houses[bh].append({
+                "id": p["id"],
+                "short_en": p["short_en"],
+                "short_hi": p["short_hi"],
+                "sign": p["sign_num"],
+                "bhav": bh
+            })
+        transit_north = render_north_indian_svg(natal_lagna_sign, transit_houses, size=290, lang=req.lang)
+        transit_south = render_south_indian_svg(natal_lagna_sign, transit_houses, size=290, lang=req.lang)
+
+        # Calculate Current Running Dasha as of today
+        now_tuple = (now.year, now.month, now.day)
+        active_dasha = {
+            "md_name": "", "ad_name": "", "summary": "N/A", "end_date": ""
+        }
+        vim = data["vimshottari"]
+        for md in vim.get("mahadashas", []):
+            md_end_tuple = (md.get("end_y", 9999), md.get("end_m", 12), md.get("end_d", 31))
+            if md_end_tuple >= now_tuple:
+                active_dasha["md_name"] = md.get("name_hi" if req.lang == "hi" else "name_en", md.get("code", ""))
+                for ad in md.get("antardashas", []):
+                    ad_end_tuple = (ad.get("end_y", 9999), ad.get("end_m", 12), ad.get("end_d", 31))
+                    if ad_end_tuple >= now_tuple:
+                        active_dasha["ad_name"] = ad.get("name_hi" if req.lang == "hi" else "name_en", ad.get("code", ""))
+                        active_dasha["end_date"] = ad.get("end_str", "")
+                        break
+                break
+        if active_dasha["md_name"] and active_dasha["ad_name"]:
+            active_dasha["summary"] = f"{active_dasha['md_name']} (MD) • {active_dasha['ad_name']} (AD)"
+
+        bhava_titles_en = [
+            "1st: Tanu (Personality, Health & Self)",
+            "2nd: Dhana (Wealth, Family & Speech)",
+            "3rd: Sahaja (Courage, Siblings & Effort)",
+            "4th: Sukha (Mother, Property & Happiness)",
+            "5th: Putra (Intellect, Children & Destiny)",
+            "6th: Ari (Health, Debts & Competition)",
+            "7th: Jaya (Spouse, Marriage & Partnership)",
+            "8th: Ayur (Longevity, Transformation & Occult)",
+            "9th: Dharma (Fortune, Higher Wisdom & Father)",
+            "10th: Karma (Career, Status & Leadership)",
+            "11th: Labha (Gains, Incomes & Social Circle)",
+            "12th: Vyaya (Expenditure, Foreign & Moksha)"
+        ]
+        bhava_titles_hi = [
+            "प्रथम भाव (तनु): व्यक्तित्व, रूप-रंग व शारीरिक आरोग्यता",
+            "द्वितीय भाव (धन): धन संचय, कुटुंब, वाणी व संपत्ति",
+            "तृतीय भाव (सहज): पराक्रम, भ्रातृ सुख, साहस व पुरुषार्थ",
+            "चतुर्थ भाव (सुख): माता, भूमि, भवन, वाहन व आंतरिक शांति",
+            "पंचम भाव (संतान/बुद्धि): बुद्धि, विद्या, विवेक व पूर्व पुण्य",
+            "षष्ठ भाव (रोग/रिपु): स्वास्थ्य, ऋण, शत्रु व सेवा कार्य",
+            "सप्तम भाव (जाया): जीवनसाथी, विवाह, दांपत्य व साझेदारी",
+            "अष्टम भाव (आयु): आयु, गूढ़ रहस्य, परिवर्तन व सुरक्षा",
+            "नवम भाव (धर्म/भाग्य): भाग्य, धर्म, पिता, गुरु व उच्च शिक्षा",
+            "दशम भाव (कर्म): आजीविका, व्यवसाय, पद-प्रतिष्ठा व सम्मान",
+            "एकादश भाव (लाभ): आय, आर्थिक समृद्धि, मित्र व अभीष्ट सिद्धि",
+            "द्वादश भाव (व्यय): व्यय, विदेश प्रवास, आत्मशुद्धि व मोक्ष"
+        ]
+
+        bhavas_list = []
+        for h in range(1, 13):
+            h_planets = d1["house_planets"].get(h, [])
+            sign_num = ((d1["lagna_sign"] - 1 + (h - 1)) % 12) + 1
+            s_en = RASHI_NAMES_EN[sign_num - 1]
+            s_hi = RASHI_NAMES_HI[sign_num - 1]
+            s_mr = RASHI_NAMES_MR[sign_num - 1]
+            p_names = []
+            for p in h_planets:
+                if isinstance(p, dict):
+                    p_id = p.get("id", "")
+                    p_short_mr = GRAHA_SHORT_MR.get(p_id, to_marathi(p.get("short_hi", "")))
+                    p_short_hi = p.get("short_hi", "")
+                    p_names.append(f"{p_short_mr} ({p_short_hi})" if p_short_hi else p_short_mr)
+                else:
+                    p_names.append(to_marathi(str(p)))
+            p_str = ", ".join(p_names) if p_names else "रिक्त - शुभ प्रभाव"
+            title_mr = BHAVA_TITLES_MR[h-1]
+            title_hi = bhava_titles_hi[h-1]
+            bhavas_list.append({
+                "house": h,
+                "title_mr": title_mr,
+                "title_hi": title_hi,
+                "title_en": bhava_titles_en[h-1],
+                "sign": f"{s_mr} ({s_hi})",
+                "sign_mr": s_mr,
+                "sign_hi": s_hi,
+                "planets": p_str,
+                "summary_mr": to_marathi(f"राशी {s_hi} द्वारे संचालित. हा भाव जातकाच्या जीवनात विशेष तेज, ऊर्जा आणि कार्यक्षेत्रात उत्कृष्ट यश प्रदान करतो."),
+                "summary_hi": f"राशि {s_hi} द्वारा संचालित। यह भाव जातक के जीवन में विशेष स्थिरता, तेज व सफलता प्रदान करता है।",
+                "summary_en": f"Governed by {s_en}. Influences native's vitality and domain success."
+            })
+
+        # Comprehensive Doshas Analysis
+        planets = data["planets"]
+        sun_p = next((p for p in planets if p.get("id") == "Sun"), None)
+        moon_p = next((p for p in planets if p.get("id") == "Moon"), None)
+        mars_p = next((p for p in planets if p.get("id") == "Mars"), None)
+        jup_p = next((p for p in planets if p.get("id") == "Jupiter"), None)
+        sat_p = next((p for p in planets if p.get("id") == "Saturn"), None)
+        rahu_p = next((p for p in planets if p.get("id") == "Rahu"), None)
+        ketu_p = next((p for p in planets if p.get("id") == "Ketu"), None)
+
+        # Pitra Dosha
+        is_pitra = False
+        if sun_p and ((rahu_p and sun_p["sign_num"] == rahu_p["sign_num"]) or (ketu_p and sun_p["sign_num"] == ketu_p["sign_num"]) or (sun_p["house"] == 9 and sat_p and sat_p["house"] == 9)):
+            is_pitra = True
+
+        # Guru Chandal
+        is_guru_chandal = False
+        if jup_p and rahu_p and jup_p["sign_num"] == rahu_p["sign_num"]:
+            is_guru_chandal = True
+
+        # Grahan Dosha
+        is_grahan = False
+        if (sun_p and rahu_p and sun_p["sign_num"] == rahu_p["sign_num"]) or (moon_p and rahu_p and moon_p["sign_num"] == rahu_p["sign_num"]) or (sun_p and ketu_p and sun_p["sign_num"] == ketu_p["sign_num"]) or (moon_p and ketu_p and moon_p["sign_num"] == ketu_p["sign_num"]):
+            is_grahan = True
+
+        # Active Sade Sati Phase
+        cur_year = datetime.now().year  # Dynamic: never hardcoded
+        active_sadesati = None
+        for s in data["sadesati"]:
+            if s["start_year"] <= cur_year <= s["end_year"]:
+                active_sadesati = s
+                break
+        if not active_sadesati and data["sadesati"]:
+            upcoming = [s for s in data["sadesati"] if s["start_year"] >= cur_year]
+            active_sadesati = upcoming[0] if upcoming else data["sadesati"][0]
+
+        doshas_dict = {
+            "manglik": data["manglik"],
+            "kalsarpa": data["kalsarpa"],
+            "sadesati": active_sadesati or {},
+            "pitra_dosha": {
+                "is_present": is_pitra,
+                "title_en": "Pitra Dosha (Ancestral Karmic Influences)" if is_pitra else "No Pitra Dosha (Paternal Blessings)",
+                "title_hi": "पितृ दोष (पूर्वज ऋण व शांति विचार)" if is_pitra else "पितृ दोष से मुक्त (शुभ पितृ कृपा)",
+                "desc_en": "Sun is afflicted by shadow nodes (Rahu/Ketu/Saturn). Perform Shraddha karma and Narayan Bali for prosperity." if is_pitra else "Sun and 9th house are auspiciously placed, ensuring ancestral favor and protection.",
+                "desc_hi": "सूर्य पर छाया ग्रह (राहु/केतु/शनि) की युति होने से पितृ दोष बनता है। अमावस्या पर दान व विष्णु सहस्त्रनाम जप हितकारी है।" if is_pitra else "सूर्य एवं नवम भाव दोषमुक्त हैं, जिससे पितरों का पूर्ण आशीर्वाद प्राप्त होता है।",
+                "remedy_en": "Offer water to Sun at dawn, feed cows on Amavasya, chant Gayatri Mantra.",
+                "remedy_hi": "प्रातः सूर्य को अर्घ्य दें, अमावस्या को गाय को हरा चारा व रोटी खिलाएं, गायत्री मंत्र जपें।"
+            },
+            "guru_chandal": {
+                "is_present": is_guru_chandal,
+                "title_en": "Guru Chandal Yoga" if is_guru_chandal else "Unafflicted Jupiter (Wisdom & Fortune)",
+                "title_hi": "गुरु चांडाल योग (ज्ञान व विवेक मार्गदर्शन)" if is_guru_chandal else "दोष मुक्त बृहस्पति (उत्कृष्ट विवेक)",
+                "desc_en": "Jupiter conjoins Rahu, demanding disciplined thinking and ethical career choices." if is_guru_chandal else "Jupiter is placed serenely, providing clear wisdom, educational success, and spiritual grace.",
+                "desc_hi": "गुरु और राहु की युति से विचारों में असमंजस हो सकता है। शुद्ध आचरण व गुरु पूजन श्रेयस्कर है।" if is_guru_chandal else "देवगुरु बृहस्पति शुभ अवस्था में हैं, जो उच्च शिक्षा, विवेक व सात्विक सफलता प्रदान करते हैं।",
+                "remedy_en": "Chant Brihaspati Beej Mantra (Om Gram Greem Groum Sah Gurave Namah) on Thursdays.",
+                "remedy_hi": "गुरुवार को पीली दाल, चने की दाल का दान करें और 'ॐ बृं बृहस्पतये नमः' का जप करें।"
+            },
+            "grahan_dosha": {
+                "is_present": is_grahan,
+                "title_en": "Grahan Dosha (Eclipse Affliction)" if is_grahan else "No Grahan Dosha (Luminaries Clear)",
+                "title_hi": "ग्रहण दोष (सूर्य/चन्द्र युति प्रभाव)" if is_grahan else "ग्रहण दोष से मुक्त (शुभ तेजस्विता)",
+                "desc_en": "Sun or Moon conjoins nodal axes. Daily meditation and Lord Shiva worship stabilize energy." if is_grahan else "Sun and Moon radiate unhindered vitality, mental clarity, and emotional strength.",
+                "desc_hi": "सूर्य या चन्द्रमा के साथ राहु/केतु स्थित होने से मानसिक उद्वेग संभव है। शिव आराधना लाभकारी है।" if is_grahan else "सूर्य व चन्द्रमा पूर्णतः दोषमुक्त हैं, जिससे आत्मबल, तेज व मानसिक शांति बनी रहती है।",
+                "remedy_en": "Perform Jalabhishek on Shivling on Mondays, wear white on Purnima.",
+                "remedy_hi": "सोमवार को शिवलिंग पर कच्चा दूध व जल अर्पित करें, महामृत्युंजय मंत्र का नित्य जप करें।"
+            }
+        }
+
+        return {
+            "success": True,
+            "meta": data["meta"],
+            "planets": data["planets"],
+            "charts": {
+                "north": chart_north,
+                "south": chart_south,
+                "east": chart_east,
+                "d9_north": d9_north,
+                "d9_south": d9_south,
+                "d9_east": d9_east,
+                "transit_north": transit_north,
+                "transit_south": transit_south,
+            },
+            "active_dasha": active_dasha,
+            "bhavas": bhavas_list,
+            "doshas": doshas_dict,
+            "avkahada": data["avkahada"],
+            "favourable": data["favourable"],
+            "manglik": data["manglik"],
+            "kalsarpa": data["kalsarpa"],
+            "vimshottari": data["vimshottari"],
+            "yogas": data["yogas"][:8],
+            "gemstones": data["gemstones"],
+            "shadbala": data["shadbala"],
+            "ashtakavarga": data["ashtakavarga"],
+            "vargas": all_vargas,
+            "kp": data.get("kp", {}),
+            "kp_four_fold": data.get("kp_four_fold", {}),
+            "kp_gems": data.get("kp_gems", {}),
+            "kp_debts": data.get("kp_debts", {}),
+            "kp_disease": data.get("kp_disease", {}),
+            "kp_event_rules": data.get("kp_event_rules", {}),
+            "lal_kitab": data.get("lal_kitab", {}),
+            "chalit_table": data.get("chalit_table", []),
+            "ghatak": data.get("ghatak", {}),
+        }
+
+
+    except Exception as exc:
+        import traceback
+        traceback.print_exc()
         return JSONResponse({
             "success": False,
-            "error": "missing_inputs",
-            "message": f"Please fill in: {', '.join(missing)}",
-            "fields": missing
-        }, status_code=422)
-
-    varsha_year = req.varsha_year if req.varsha_year else datetime.now().year
-
-    data = generate_complete_kundli(
-        name=req.name or "Client", sex=req.sex,
-        year=req.year, month=req.month, day=req.day,
-        hour=req.hour, minute=req.minute, second=req.second,
-        place=req.place, lat=req.lat, lon=req.lon, tz=req.tz,
-        varsha_year=varsha_year,
-    )
-    d1 = data["shodashvarga"]["charts"]["D1"]
-    d9 = data["shodashvarga"]["charts"]["D9"]
-    chart_north = render_north_indian_svg(d1["lagna_sign"], d1["house_planets"], size=290, lang=req.lang)
-    chart_south = render_south_indian_svg(d1["lagna_sign"], d1["house_planets"], size=290, lang=req.lang)
-    chart_east = render_east_indian_svg(d1["lagna_sign"], d1["house_planets"], size=290, lang=req.lang)
-
-    d9_north = render_north_indian_svg(d9["lagna_sign"], d9["house_planets"], size=290, lang=req.lang)
-    d9_south = render_south_indian_svg(d9["lagna_sign"], d9["house_planets"], size=290, lang=req.lang)
-    d9_east = render_east_indian_svg(d9["lagna_sign"], d9["house_planets"], size=290, lang=req.lang)
-
-    # All 16 Classical Shodashvarga Divisional Charts (D1 to D60) in 3 Regional Styles
-    all_vargas = {}
-    for code, ch_info in data["shodashvarga"]["charts"].items():
-        all_vargas[code] = {
-            "lagna_sign": ch_info["lagna_sign"],
-            "north": render_north_indian_svg(ch_info["lagna_sign"], ch_info["house_planets"], size=290, lang=req.lang),
-            "south": render_south_indian_svg(ch_info["lagna_sign"], ch_info["house_planets"], size=290, lang=req.lang),
-            "east": render_east_indian_svg(ch_info["lagna_sign"], ch_info["house_planets"], size=290, lang=req.lang),
-        }
-
-    # Real-time Planetary Transit (Gochar) as of now
-    now = datetime.now()
-    transit_core = compute_core_ephemeris(
-        name="Transit", sex="Male",
-        year=now.year, month=now.month, day=now.day,
-        hour=now.hour, minute=now.minute, second=now.second,
-        place=req.place, lat_deg=data["meta"]["lat"], lon_deg=data["meta"]["lon"], tz_hours=data["meta"]["tz"]
-    )
-    natal_lagna_sign = data["meta"]["lagna_sign_num"]
-    transit_houses = {h: [] for h in range(1, 13)}
-    for p in transit_core["planets"]:
-        bh = ((p["sign_num"] - natal_lagna_sign) % 12) + 1
-        transit_houses[bh].append({
-            "id": p["id"],
-            "short_en": p["short_en"],
-            "short_hi": p["short_hi"],
-            "sign": p["sign_num"],
-            "bhav": bh
-        })
-    transit_north = render_north_indian_svg(natal_lagna_sign, transit_houses, size=290, lang=req.lang)
-    transit_south = render_south_indian_svg(natal_lagna_sign, transit_houses, size=290, lang=req.lang)
-
-    # Calculate Current Running Dasha as of today
-    now_tuple = (now.year, now.month, now.day)
-    active_dasha = {
-        "md_name": "", "ad_name": "", "summary": "N/A", "end_date": ""
-    }
-    vim = data["vimshottari"]
-    for md in vim.get("mahadashas", []):
-        md_end_tuple = (md.get("end_y", 9999), md.get("end_m", 12), md.get("end_d", 31))
-        if md_end_tuple >= now_tuple:
-            active_dasha["md_name"] = md.get("name_hi" if req.lang == "hi" else "name_en", md.get("code", ""))
-            for ad in md.get("antardashas", []):
-                ad_end_tuple = (ad.get("end_y", 9999), ad.get("end_m", 12), ad.get("end_d", 31))
-                if ad_end_tuple >= now_tuple:
-                    active_dasha["ad_name"] = ad.get("name_hi" if req.lang == "hi" else "name_en", ad.get("code", ""))
-                    active_dasha["end_date"] = ad.get("end_str", "")
-                    break
-            break
-    if active_dasha["md_name"] and active_dasha["ad_name"]:
-        active_dasha["summary"] = f"{active_dasha['md_name']} (MD) • {active_dasha['ad_name']} (AD)"
-    
-    bhava_titles_en = [
-        "1st: Tanu (Personality, Health & Self)",
-        "2nd: Dhana (Wealth, Family & Speech)",
-        "3rd: Sahaja (Courage, Siblings & Effort)",
-        "4th: Sukha (Mother, Property & Happiness)",
-        "5th: Putra (Intellect, Children & Destiny)",
-        "6th: Ari (Health, Debts & Competition)",
-        "7th: Jaya (Spouse, Marriage & Partnership)",
-        "8th: Ayur (Longevity, Transformation & Occult)",
-        "9th: Dharma (Fortune, Higher Wisdom & Father)",
-        "10th: Karma (Career, Status & Leadership)",
-        "11th: Labha (Gains, Incomes & Social Circle)",
-        "12th: Vyaya (Expenditure, Foreign & Moksha)"
-    ]
-    bhava_titles_hi = [
-        "प्रथम भाव (तनु): व्यक्तित्व, रूप-रंग व शारीरिक आरोग्यता",
-        "द्वितीय भाव (धन): धन संचय, कुटुंब, वाणी व संपत्ति",
-        "तृतीय भाव (सहज): पराक्रम, भ्रातृ सुख, साहस व पुरुषार्थ",
-        "चतुर्थ भाव (सुख): माता, भूमि, भवन, वाहन व आंतरिक शांति",
-        "पंचम भाव (संतान/बुद्धि): बुद्धि, विद्या, विवेक व पूर्व पुण्य",
-        "षष्ठ भाव (रोग/रिपु): स्वास्थ्य, ऋण, शत्रु व सेवा कार्य",
-        "सप्तम भाव (जाया): जीवनसाथी, विवाह, दांपत्य व साझेदारी",
-        "अष्टम भाव (आयु): आयु, गूढ़ रहस्य, परिवर्तन व सुरक्षा",
-        "नवम भाव (धर्म/भाग्य): भाग्य, धर्म, पिता, गुरु व उच्च शिक्षा",
-        "दशम भाव (कर्म): आजीविका, व्यवसाय, पद-प्रतिष्ठा व सम्मान",
-        "एकादश भाव (लाभ): आय, आर्थिक समृद्धि, मित्र व अभीष्ट सिद्धि",
-        "द्वादश भाव (व्यय): व्यय, विदेश प्रवास, आत्मशुद्धि व मोक्ष"
-    ]
-    
-    bhavas_list = []
-    for h in range(1, 13):
-        h_planets = d1["house_planets"].get(h, [])
-        sign_num = ((d1["lagna_sign"] - 1 + (h - 1)) % 12) + 1
-        s_en = RASHI_NAMES_EN[sign_num - 1]
-        s_hi = RASHI_NAMES_HI[sign_num - 1]
-        s_mr = RASHI_NAMES_MR[sign_num - 1]
-        p_names = []
-        for p in h_planets:
-            if isinstance(p, dict):
-                p_id = p.get("id", "")
-                p_short_mr = GRAHA_SHORT_MR.get(p_id, to_marathi(p.get("short_hi", "")))
-                p_short_hi = p.get("short_hi", "")
-                p_names.append(f"{p_short_mr} ({p_short_hi})" if p_short_hi else p_short_mr)
-            else:
-                p_names.append(to_marathi(str(p)))
-        p_str = ", ".join(p_names) if p_names else "रिक्त - शुभ प्रभाव"
-        title_mr = BHAVA_TITLES_MR[h-1]
-        title_hi = bhava_titles_hi[h-1]
-        bhavas_list.append({
-            "house": h,
-            "title_mr": title_mr,
-            "title_hi": title_hi,
-            "title_en": bhava_titles_en[h-1],
-            "sign": f"{s_mr} ({s_hi})",
-            "sign_mr": s_mr,
-            "sign_hi": s_hi,
-            "planets": p_str,
-            "summary_mr": to_marathi(f"राशी {s_hi} द्वारे संचालित. हा भाव जातकाच्या जीवनात विशेष तेज, ऊर्जा आणि कार्यक्षेत्रात उत्कृष्ट यश प्रदान करतो."),
-            "summary_hi": f"राशि {s_hi} द्वारा संचालित। यह भाव जातक के जीवन में विशेष स्थिरता, तेज व सफलता प्रदान करता है।",
-            "summary_en": f"Governed by {s_en}. Influences native's vitality and domain success."
-        })
-
-    # Comprehensive Doshas Analysis
-    planets = data["planets"]
-    sun_p = next((p for p in planets if p.get("id") == "Sun"), None)
-    moon_p = next((p for p in planets if p.get("id") == "Moon"), None)
-    mars_p = next((p for p in planets if p.get("id") == "Mars"), None)
-    jup_p = next((p for p in planets if p.get("id") == "Jupiter"), None)
-    sat_p = next((p for p in planets if p.get("id") == "Saturn"), None)
-    rahu_p = next((p for p in planets if p.get("id") == "Rahu"), None)
-    ketu_p = next((p for p in planets if p.get("id") == "Ketu"), None)
-
-    # Pitra Dosha
-    is_pitra = False
-    if sun_p and ((rahu_p and sun_p["sign_num"] == rahu_p["sign_num"]) or (ketu_p and sun_p["sign_num"] == ketu_p["sign_num"]) or (sun_p["house"] == 9 and sat_p and sat_p["house"] == 9)):
-        is_pitra = True
-
-    # Guru Chandal
-    is_guru_chandal = False
-    if jup_p and rahu_p and jup_p["sign_num"] == rahu_p["sign_num"]:
-        is_guru_chandal = True
-
-    # Grahan Dosha
-    is_grahan = False
-    if (sun_p and rahu_p and sun_p["sign_num"] == rahu_p["sign_num"]) or (moon_p and rahu_p and moon_p["sign_num"] == rahu_p["sign_num"]) or (sun_p and ketu_p and sun_p["sign_num"] == ketu_p["sign_num"]) or (moon_p and ketu_p and moon_p["sign_num"] == ketu_p["sign_num"]):
-        is_grahan = True
-
-    # Active Sade Sati Phase
-    cur_year = datetime.now().year  # Dynamic: never hardcoded
-    active_sadesati = None
-    for s in data["sadesati"]:
-        if s["start_year"] <= cur_year <= s["end_year"]:
-            active_sadesati = s
-            break
-    if not active_sadesati and data["sadesati"]:
-        upcoming = [s for s in data["sadesati"] if s["start_year"] >= cur_year]
-        active_sadesati = upcoming[0] if upcoming else data["sadesati"][0]
-
-    doshas_dict = {
-        "manglik": data["manglik"],
-        "kalsarpa": data["kalsarpa"],
-        "sadesati": active_sadesati or {},
-        "pitra_dosha": {
-            "is_present": is_pitra,
-            "title_en": "Pitra Dosha (Ancestral Karmic Influences)" if is_pitra else "No Pitra Dosha (Paternal Blessings)",
-            "title_hi": "पितृ दोष (पूर्वज ऋण व शांति विचार)" if is_pitra else "पितृ दोष से मुक्त (शुभ पितृ कृपा)",
-            "desc_en": "Sun is afflicted by shadow nodes (Rahu/Ketu/Saturn). Perform Shraddha karma and Narayan Bali for prosperity." if is_pitra else "Sun and 9th house are auspiciously placed, ensuring ancestral favor and protection.",
-            "desc_hi": "सूर्य पर छाया ग्रह (राहु/केतु/शनि) की युति होने से पितृ दोष बनता है। अमावस्या पर दान व विष्णु सहस्त्रनाम जप हितकारी है।" if is_pitra else "सूर्य एवं नवम भाव दोषमुक्त हैं, जिससे पितरों का पूर्ण आशीर्वाद प्राप्त होता है।",
-            "remedy_en": "Offer water to Sun at dawn, feed cows on Amavasya, chant Gayatri Mantra.",
-            "remedy_hi": "प्रातः सूर्य को अर्घ्य दें, अमावस्या को गाय को हरा चारा व रोटी खिलाएं, गायत्री मंत्र जपें।"
-        },
-        "guru_chandal": {
-            "is_present": is_guru_chandal,
-            "title_en": "Guru Chandal Yoga" if is_guru_chandal else "Unafflicted Jupiter (Wisdom & Fortune)",
-            "title_hi": "गुरु चांडाल योग (ज्ञान व विवेक मार्गदर्शन)" if is_guru_chandal else "दोष मुक्त बृहस्पति (उत्कृष्ट विवेक)",
-            "desc_en": "Jupiter conjoins Rahu, demanding disciplined thinking and ethical career choices." if is_guru_chandal else "Jupiter is placed serenely, providing clear wisdom, educational success, and spiritual grace.",
-            "desc_hi": "गुरु और राहु की युति से विचारों में असमंजस हो सकता है। शुद्ध आचरण व गुरु पूजन श्रेयस्कर है।" if is_guru_chandal else "देवगुरु बृहस्पति शुभ अवस्था में हैं, जो उच्च शिक्षा, विवेक व सात्विक सफलता प्रदान करते हैं।",
-            "remedy_en": "Chant Brihaspati Beej Mantra (Om Gram Greem Groum Sah Gurave Namah) on Thursdays.",
-            "remedy_hi": "गुरुवार को पीली दाल, चने की दाल का दान करें और 'ॐ बृं बृहस्पतये नमः' का जप करें।"
-        },
-        "grahan_dosha": {
-            "is_present": is_grahan,
-            "title_en": "Grahan Dosha (Eclipse Affliction)" if is_grahan else "No Grahan Dosha (Luminaries Clear)",
-            "title_hi": "ग्रहण दोष (सूर्य/चन्द्र युति प्रभाव)" if is_grahan else "ग्रहण दोष से मुक्त (शुभ तेजस्विता)",
-            "desc_en": "Sun or Moon conjoins nodal axes. Daily meditation and Lord Shiva worship stabilize energy." if is_grahan else "Sun and Moon radiate unhindered vitality, mental clarity, and emotional strength.",
-            "desc_hi": "सूर्य या चन्द्रमा के साथ राहु/केतु स्थित होने से मानसिक उद्वेग संभव है। शिव आराधना लाभकारी है।" if is_grahan else "सूर्य व चन्द्रमा पूर्णतः दोषमुक्त हैं, जिससे आत्मबल, तेज व मानसिक शांति बनी रहती है।",
-            "remedy_en": "Perform Jalabhishek on Shivling on Mondays, wear white on Purnima.",
-            "remedy_hi": "सोमवार को शिवलिंग पर कच्चा दूध व जल अर्पित करें, महामृत्युंजय मंत्र का नित्य जप करें।"
-        }
-    }
-
-    return {
-        "success": True,
-        "meta": data["meta"],
-        "planets": data["planets"],
-        "charts": {
-            "north": chart_north,
-            "south": chart_south,
-            "east": chart_east,
-            "d9_north": d9_north,
-            "d9_south": d9_south,
-            "d9_east": d9_east,
-            "transit_north": transit_north,
-            "transit_south": transit_south,
-        },
-        "active_dasha": active_dasha,
-        "bhavas": bhavas_list,
-        "doshas": doshas_dict,
-        "avkahada": data["avkahada"],
-        "favourable": data["favourable"],
-        "manglik": data["manglik"],
-        "kalsarpa": data["kalsarpa"],
-        "vimshottari": data["vimshottari"],
-        "yogas": data["yogas"][:8],
-        "gemstones": data["gemstones"],
-        "shadbala": data["shadbala"],
-        "ashtakavarga": data["ashtakavarga"],
-        "vargas": all_vargas,
-        "kp": data.get("kp", {}),
-        "kp_four_fold": data.get("kp_four_fold", {}),
-        "kp_gems": data.get("kp_gems", {}),
-        "kp_debts": data.get("kp_debts", {}),
-        "kp_disease": data.get("kp_disease", {}),
-        "kp_event_rules": data.get("kp_event_rules", {}),
-        "lal_kitab": data.get("lal_kitab", {}),
-        "chalit_table": data.get("chalit_table", []),
-        "ghatak": data.get("ghatak", {}),
-    }
+            "error": "calculation_exception",
+            "message": f"Kundli Calculation Error: {str(exc)}"
+        }, status_code=400)
 
 
 @app.post("/api/prashna-kundli")
@@ -816,7 +827,7 @@ def index_ui():
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>शिवांश ॲस्ट्रो-वास्तू प्रोफेशनल - महाराष्ट्रियन मराठी (Vedas Kundli)</title>
+  <title>शिवांश ॲस्ट्रो-वास्तू प्रोफेशनल - महाराष्ट्रियन मराठी (Shivansh Astro-Vastu)</title>
   <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3023,7 +3034,7 @@ def index_ui():
 
             <!-- DIRECT FULL PDF PREVIEW CONTAINER -->
             <div style="width:100%; border-radius:12px; overflow:hidden; box-shadow:0 6px 24px rgba(124,45,18,0.12); margin-bottom:14px; background:#F5EFEB;">
-              <iframe id="reportFrame" title="Vedas Kundli Full Report Preview" style="width:100%; height:75vh; min-height:540px; border:1.5px solid #D4AF37; border-radius:12px; background:#FFFFFF; display:block;"></iframe>
+              <iframe id="reportFrame" title="Shivansh Astro-Vastu Full Report Preview" style="width:100%; height:75vh; min-height:540px; border:1.5px solid #D4AF37; border-radius:12px; background:#FFFFFF; display:block;"></iframe>
             </div>
 
             <!-- Collapsible Dossier & Chapter Settings -->

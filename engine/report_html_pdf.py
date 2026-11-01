@@ -747,7 +747,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
                 for y in yogas
             )
             extra_p9 = f"""
-            <div class="box-heading mt-14">{T("Auspicious Yogas & Raja Yogas in Your Kundli (Gurukulam Special)", "कुंडली में निर्मित प्रमुख राजयोग एवं विशेष योग")}</div>
+            <div class="box-heading mt-14">{T("Auspicious Yogas & Raja Yogas in Your Kundli (Shivansh Special)", "कुंडली में निर्मित प्रमुख राजयोग एवं विशेष योग")}</div>
             {yoga_cards}
             """
         pages.append(_page_wrapper(p_num, meta, brand, "Life Predictions", "जीवन फलादेश", f"<div class='prose-block'>{blocks_html}{extra_p9}</div>", lang))
@@ -863,7 +863,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       )}</p>
 
       <div class="note-box">
-        <strong>{T("Gurukulam Classical Note:", "गुरुकुलम् शास्त्रीय टिप्पणी:")}</strong>
+        <strong>{T("Shivansh Astro-Vastu Note:", "शिवांश ॲस्ट्रो-वास्तू शास्त्रीय टीप:")}</strong>
         {P(
           "Sade Sati is not universally malefic; its actual effect depends on the ongoing Vimshottari Dasha, Ashtakavarga bindus in Saturn's transit sign, and Saturn's functional nature for your Ascendant.",
           "साढ़े साती सदैव अशुभ नहीं होती; इसका वास्तविक प्रभाव वर्तमान महादशा, अष्टकवर्ग के शुभ बिंदुओं और लग्न के अनुसार शनि के स्वामित्व पर निर्भर करता है।"
@@ -1108,19 +1108,24 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     for p_num, lk_slice in lk_page_slices:
         lk_blocks = []
         for item in lk_slice:
+            rems_source = item.get("remedies_hi") or item.get("remedies_en") or []
             if is_mr:
-                rems_source = item.get("remedies_hi") or item.get("remedies_en") or []
-                rems_html = "<br/>".join([f"• {to_marathi(r)}" for r in rems_source])
+                rems_html = "<br/>".join([f"• {to_marathi(r)}" for r in rems_source]) if rems_source else "• नियमित कुलदेवता व इष्टदेवता उपासना करावी."
                 title_disp = to_marathi(item.get("title_hi") or item.get("title_en") or "")
             elif is_hi:
-                rems_html = "<br/>".join(item.get("remedies_hi") or [])
+                rems_html = "<br/>".join([f"• {r}" for r in rems_source]) if rems_source else "• नियमित कुलदेवता एवं इष्टदेवता की आराधना करें।"
                 title_disp = item.get("title_hi") or item.get("title_en") or ""
             elif is_both:
-                rems_html = "<br/>".join([f"{en} <span class='hi-sub'>({hi})</span>" for en, hi in zip(item.get("remedies_en", []), item.get("remedies_hi", []))])
-                title_disp = f"{item.get('title_en', '')} / {item.get('title_hi', '')}"
+                rems_en = item.get("remedies_en") or []
+                rems_hi = item.get("remedies_hi") or []
+                if rems_en and rems_hi and len(rems_en) == len(rems_hi):
+                    rems_html = "<br/>".join([f"• {en} <span class='hi-sub'>({to_marathi(hi)})</span>" for en, hi in zip(rems_en, rems_hi)])
+                else:
+                    rems_html = "<br/>".join([f"• {to_marathi(r)}" for r in rems_source]) if rems_source else "• नियमित कुलदेवता उपासना करावी."
+                title_disp = f"{item.get('title_en', '')} / {to_marathi(item.get('title_hi', ''))}"
             else:
-                rems_html = "<br/>".join(item.get("remedies_en") or [])
-                title_disp = item.get("title_en") or ""
+                rems_html = "<br/>".join([f"• {r}" for r in rems_source]) if rems_source else "• Worship family deity and practice satvik karmas."
+                title_disp = item.get("title_en") or item.get("title_hi") or ""
 
             body_formatted_en = item["body_en"].replace("\n", "<br/>")
             lk_top_badge = ""
@@ -1299,7 +1304,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
                 for g in gems
             )
             extra_p43 = f"""
-            <div class="box-heading mt-10">{T("Gurukulam Vedic Ratna (Gemstone), Rudraksha & Beej Mantra Prescription", "गुरुकुलम् वैदिक रत्न, रुद्राक्ष एवं बीज मंत्र परामर्श")}</div>
+            <div class="box-heading mt-10">{T("Shivansh Astro-Vastu Vedic Ratna, Rudraksha & Beej Mantra Prescription", "शिवांश ॲस्ट्रो-वास्तू वैदिक रत्न, रुद्राक्ष व बीज मंत्र सल्ला")}</div>
             <table class="data-table ultra-compact">
               <thead><tr><th>Trikona Role</th><th>Planet</th><th>Recommended Gemstone</th><th>Metal &amp; Finger</th><th>Rudraksha</th><th>Vedic Beej Mantra</th></tr></thead>
               <tbody>{gem_rows}</tbody>
@@ -1903,7 +1908,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     p56_inner = f"""
     <div class="prose-block">
       <div class="highlight-banner" style="font-size:12.5px; border-left:4px solid #B45309;">
-        <strong>{T("Special Gurukulam Master Guide: Understand Your Life & Kundli In Simple Words", "विशेष गुरुकुलम् मार्गदर्शिका: अपनी कुंडली को आसान भाषा में समझें")}</strong><br/>
+        <strong>{T("Special Shivansh Master Guide: Understand Your Life & Kundli In Simple Words", "विशेष गुरुकुलम् मार्गदर्शिका: अपनी कुंडली को आसान भाषा में समझें")}</strong><br/>
         <span style="font-size:10px; color:#78350F;">{T("A practical, easy-to-understand breakdown of major doshas, life roadmap, and real Lal Kitab wisdom for daily living.", "कुंडली में कौन-से मुख्य दोष हैं, जीवन का भविष्य कैसा रहेगा और लाल किताब अनुसार क्या करना चाहिए।")}</span>
       </div>
 
