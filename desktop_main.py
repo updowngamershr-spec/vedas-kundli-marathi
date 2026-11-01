@@ -60,7 +60,7 @@ def main():
     user_storage = os.path.join(get_user_data_root(), "webview_profile")
     os.makedirs(user_storage, exist_ok=True)
 
-    # Create native Windows Desktop Window
+    # Create native Windows Desktop Window - Maximize for authentic Filmora-style desktop suite!
     window = webview.create_window(
         title="Shivansh Astro-Vastu Professional (शिवांश ॲस्ट्रो-वास्तू)",
         url=app_url,
@@ -68,7 +68,7 @@ def main():
         height=920,
         min_size=(1024, 700),
         background_color="#1A0F08",
-        text_select=True,
+        text_select=False,
     )
 
     # Start native Windows message loop (blocks until window is closed by user)

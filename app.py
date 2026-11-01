@@ -833,6 +833,32 @@ def index_ui():
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    /* === Native Windows Desktop App Styling === */
+    body {
+      -webkit-user-select: none;
+      user-select: none;
+      overflow-x: hidden;
+    }
+    input, textarea, [contenteditable="true"], .report-scroll, pre, code {
+      -webkit-user-select: text !important;
+      user-select: text !important;
+    }
+    /* Luxury Dark Desktop Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1C0F08;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #78350F;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #D97706;
+    }
+
     :root {
       --bg-canvas: #FAF6F0;
       --bg-card: #FFFDF9;
@@ -3273,6 +3299,94 @@ def index_ui():
 
   <!-- Javascript Logic -->
   <script>
+    // === NATIVE DESKTOP NOTIFICATION / TOAST SYSTEM (Replaces ugly browser alerts) ===
+    function showNativeToast(message, type) {
+      let toast = document.getElementById('nativeAppToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'nativeAppToast';
+        toast.style.cssText = `
+          position: fixed;
+          top: 24px;
+          right: 28px;
+          z-index: 99999999;
+          min-width: 320px;
+          max-width: 480px;
+          background: linear-gradient(135deg, #1C0F08 0%, #2A170C 100%);
+          border: 1.5px solid #D4AF37;
+          border-left: 6px solid #F59E0B;
+          border-radius: 10px;
+          box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 20px rgba(212,175,55,0.25);
+          padding: 14px 18px;
+          color: #FEF3C7;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          font-size: 13.5px;
+          line-height: 1.5;
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          opacity: 0;
+          transform: translateY(-20px);
+          transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          pointer-events: auto;
+        `;
+        document.body.appendChild(toast);
+      }
+
+      let icon = 'ℹ️';
+      let borderColor = '#F59E0B';
+      let strMsg = String(message || '');
+      if (strMsg.toLowerCase().includes('error') || strMsg.toLowerCase().includes('fail') || strMsg.toLowerCase().includes('required')) {
+        icon = '⚠️';
+        borderColor = '#EF4444';
+      } else if (strMsg.toLowerCase().includes('success') || strMsg.toLowerCase().includes('saved') || strMsg.toLowerCase().includes('यशस्वी') || strMsg.toLowerCase().includes('सज्ज')) {
+        icon = '✅';
+        borderColor = '#10B981';
+      }
+
+      toast.style.borderLeftColor = borderColor;
+      toast.innerHTML = `
+        <span style="font-size: 22px; line-height: 1; margin-top: 1px;">${icon}</span>
+        <div style="flex: 1; word-break: break-word;">
+          <div style="font-weight: 800; color: #FDE68A; margin-bottom: 3px; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.8px;">
+            Shivansh Astro-Vastu Suite
+          </div>
+          <div style="color: #F9FAFB; font-size: 13px; font-weight: 500;">
+            ${strMsg.replace(/\n/g, '<br/>')}
+          </div>
+        </div>
+        <button onclick="dismissNativeToast()" style="background:none; border:none; color:#D1D5DB; cursor:pointer; font-size:16px; font-weight:bold; padding:0 4px; margin-left:6px;">✕</button>
+      `;
+
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(dismissNativeToast, 5000);
+    }
+
+    function dismissNativeToast() {
+      const toast = document.getElementById('nativeAppToast');
+      if (toast) {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-20px)';
+      }
+    }
+
+    // Globally override window.alert so no browser dialog ever pops up
+    window.alert = function(msg) {
+      showNativeToast(msg);
+    };
+
+    // Prevent default browser right-click context menu (Feels 100% Native)
+    document.addEventListener('contextmenu', function(e) {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+        return true;
+      }
+      e.preventDefault();
+      return false;
+    });
+
     
         // 🌟 MARATHI LOCALIZATION HELPERS (Authentic Marathi + Hindi in Brackets)
     const MR_TERM_MAP = {
