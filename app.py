@@ -2367,52 +2367,52 @@ def index_ui():
               </div>
             </div>
 
-            <!-- Date & Time Grid -->
+            <!-- Date & Time Grid (Clean & Blank by Default) -->
             <div class="form-grid" style="grid-template-columns: repeat(6, 1fr);">
               <div class="form-group">
                 <label>दिवस (Day 1-31) *</label>
-                <input type="number" id="day" min="1" max="31" value="3" placeholder="DD" required/>
+                <input type="number" id="day" min="1" max="31" value="" placeholder="DD" required/>
               </div>
               <div class="form-group">
                 <label>महिना (Month 1-12) *</label>
-                <input type="number" id="month" min="1" max="12" value="10" placeholder="MM" required/>
+                <input type="number" id="month" min="1" max="12" value="" placeholder="MM" required/>
               </div>
               <div class="form-group">
                 <label>वर्ष (Year) *</label>
-                <input type="number" id="year" min="1800" max="2100" value="2005" placeholder="YYYY" required/>
+                <input type="number" id="year" min="1800" max="2100" value="" placeholder="YYYY" required/>
               </div>
               <div class="form-group">
                 <label>तास (Hour 0-23) *</label>
-                <input type="number" id="hour" min="0" max="23" value="10" placeholder="HH" required/>
+                <input type="number" id="hour" min="0" max="23" value="" placeholder="HH" required/>
               </div>
               <div class="form-group">
                 <label>मिनिट (Minute 0-59) *</label>
-                <input type="number" id="minute" min="0" max="59" value="2" placeholder="MM" required/>
+                <input type="number" id="minute" min="0" max="59" value="" placeholder="MM" required/>
               </div>
               <div class="form-group">
                 <label>सेकंद (Second 0-59)</label>
-                <input type="number" id="second" min="0" max="59" value="6"/>
+                <input type="number" id="second" min="0" max="59" value="0" placeholder="0"/>
               </div>
             </div>
 
-            <!-- Searchable City Grid -->
+            <!-- Searchable City Grid (Clean & Blank by Default) -->
             <div class="form-grid" style="grid-template-columns: 2fr 1fr 1fr 1fr;">
               <div class="form-group city-wrap">
                 <label>शहर शोधा (Search City - ७+ लाख जागतिक शहरे)</label>
-                <input type="text" id="citySearchInput" placeholder="Type city e.g. Delhi, Jaipur, London..." oninput="onCitySearchType()" autocomplete="off"/>
+                <input type="text" id="citySearchInput" placeholder="शहर शोधा उदा. पुणे, मुंबई, नाशिक, दिल्ली..." oninput="onCitySearchType()" autocomplete="off"/>
                 <div class="city-dropdown" id="citySuggestions"></div>
               </div>
               <div class="form-group">
                 <label>निवडलेले ठिकाण (Selected Place) *</label>
-                <input type="text" id="place" placeholder="City / Town" value="Ludhiana"/>
+                <input type="text" id="place" placeholder="उदा. मुंबई / Pune" value=""/>
               </div>
               <div class="form-group">
                 <label>अक्षवृत्त (Latitude °N)</label>
-                <input type="number" id="lat" step="0.0001" value="30.9120"/>
+                <input type="number" id="lat" step="0.0001" value="" placeholder="उदा. 18.92"/>
               </div>
               <div class="form-group">
                 <label>रेखावृत्त (Longitude °E)</label>
-                <input type="number" id="lon" step="0.0001" value="75.8538"/>
+                <input type="number" id="lon" step="0.0001" value="" placeholder="उदा. 72.83"/>
               </div>
             </div>
 
@@ -2570,6 +2570,7 @@ def index_ui():
             <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; font-weight:700;" onclick="document.querySelector('.charts-grid').scrollIntoView({behavior:'smooth'})">🪐 Charts &amp; Vargas</button>
             <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; font-weight:700;" onclick="document.getElementById('sec_shadbala_sav').scrollIntoView({behavior:'smooth'})">⚖️ षड्बल व SAV (Shadbala)</button>
             <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; background:#FEF3C7; color:#78350F; font-weight:800; border-color:#FDE68A;" onclick="document.getElementById('sec_kp_system').scrollIntoView({behavior:'smooth'})">🏛️ KP System &amp; Cusps</button>
+            <button type="button" class="btn-time-step" style="padding:4px 12px; font-size:11.5px; background:linear-gradient(135deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; font-weight:900; border:1.5px solid #D4AF37; box-shadow:0 2px 6px rgba(124,45,18,0.25); cursor:pointer;" onclick="openKPRemediesDirectPDF()">🔮 KP Remedies &amp; Upay (के.पी. अचूक उपाय PDF)</button>
             <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; background:#FEE2E2; color:#991B1B; font-weight:800; border-color:#FCA5A5;" onclick="document.getElementById('sec_lal_kitab').scrollIntoView({behavior:'smooth'})">📖 Lal Kitab &amp; Upay</button>
             <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; background:#DCFCE7; color:#166534; font-weight:800; border-color:#86EFAC;" onclick="document.getElementById('sec_ratna_yantra').scrollIntoView({behavior:'smooth'})">💎 रत्ने व सिद्ध यंत्रे (रत्न व यंत्र)</button>
             <button type="button" class="btn-time-step" style="padding:4px 10px; font-size:11.5px; background:#E0E7FF; color:#3730A3; font-weight:800; border-color:#C7D2FE;" onclick="document.getElementById('sec_avkahada_science').scrollIntoView({behavior:'smooth'})">🔬 अवकहडा व विज्ञान (Avakahada &amp; Science)</button>
@@ -2731,6 +2732,15 @@ def index_ui():
           <!-- MODULE A: KRISHNAMURTI PADDHATI (KP SYSTEM) -->
           <!-- ========================================================= -->
           <div class="glass-card" id="sec_kp_system">
+            <div style="background:linear-gradient(135deg, #7C2D12 0%, #451A03 100%); color:#FDE68A; padding:12px 16px; border-radius:8px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; border:1.5px solid #D4AF37; box-shadow:0 2px 8px rgba(124,45,18,0.25);">
+              <div>
+                <div style="font-weight:900; font-size:14px; color:#FFFFFF;">🔮 कृष्णमूर्ती पद्धती (के.पी.) अचूक वैज्ञानिक उपाय व ग्रह कार्येश</div>
+                <div style="font-size:11px; color:#FDE68A; opacity:0.9;">Prof. K. S. Krishnamurti Reader III Zero-Damage Gemstones, 4-Fold Significators &amp; Gautam Verma 12-Bhava Formulas</div>
+              </div>
+              <button type="button" class="btn-time-step" style="background:#FDE68A; color:#7C2D12; font-weight:900; font-size:12px; padding:6px 14px; border:none; border-radius:6px; cursor:pointer;" onclick="openKPRemediesDirectPDF()">
+                📄 थेट उपाय PDF पहा / प्रिंट करा
+              </button>
+            </div>
             <div class="card-header">
               <span>🏛️ कृष्णमूर्ती पद्धती आणि १२ भाव सब-लॉर्ड्स (कृष्णमूर्ति पद्धति)</span>
               <span class="badge">KP Horary &amp; Cuspal Precision</span>
@@ -3319,6 +3329,7 @@ def index_ui():
         if (titleEl) titleEl.innerHTML = titles[viewId] || 'Vedas Kundli Predictions';
 
         if (viewId === 'dashboard') loadDashboard();
+        if (viewId === 'new_kundli') resetNewKundliForm();
         if (viewId === 'clients') loadClientsTable();
         if (viewId === 'reports') updateReportStudioState();
         if (viewId === 'settings') loadBrandingSettings();
@@ -3543,6 +3554,25 @@ def index_ui():
       document.getElementById('citySearchInput').value = name;
     }
 
+    // Completely Reset New Kundli Form to Pristine Clean State
+    function resetNewKundliForm() {
+      const ids = ['name', 'day', 'month', 'year', 'hour', 'minute', 'second', 'citySearchInput', 'place', 'lat', 'lon', 'phone', 'email', 'notes', 'clientId'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      const tzEl = document.getElementById('tz');
+      if (tzEl) tzEl.value = '5.5';
+      const varshaEl = document.getElementById('varsha_year');
+      if (varshaEl) varshaEl.value = new Date().getFullYear();
+      const sexEl = document.getElementById('sex');
+      if (sexEl) sexEl.value = 'Male';
+      const catEl = document.getElementById('category');
+      if (catEl) catEl.value = 'General Consultation';
+      const sug = document.getElementById('citySuggestions');
+      if (sug) { sug.innerHTML = ''; sug.style.display = 'none'; }
+    }
+
     // Save Client Record
     async function saveClientRecordOnly() {
       const payload = getFormPayload();
@@ -3682,40 +3712,27 @@ def index_ui():
           document.getElementById('txtDashaValid').innerText = data.active_dasha.end_date ? ('Valid till ' + data.active_dasha.end_date) : '';
         }
 
-        // Render D1
-        renderD1Svg();
-        // Render Divisional
-        onDivisionalChange();
-
-        // Planetary Coordinates Table
-        renderPlanetsTable(data.planets);
-
-        // 12 Bhavas
-        renderBhavas(data.bhavas);
-
-        // Dasha & Gemstones
-        renderDashaAndGems(data);
-
-        // Doshas
-        renderDoshas(data.doshas);
-
-        // Yogas
-        renderYogas(data.yogas);
-
-        // Shadbala & Ashtakavarga
-        renderShadbalaAndSAV(data);
+        // Render Sub-modules defensively so no single widget ever breaks calculation
+        try { renderD1Svg(); } catch (e) { console.warn('renderD1Svg error:', e); }
+        try { onDivisionalChange(); } catch (e) { console.warn('onDivisionalChange error:', e); }
+        try { renderPlanetsTable(data.planets); } catch (e) { console.warn('renderPlanetsTable error:', e); }
+        try { renderBhavas(data.bhavas); } catch (e) { console.warn('renderBhavas error:', e); }
+        try { renderDashaAndGems(data); } catch (e) { console.warn('renderDashaAndGems error:', e); }
+        try { renderDoshas(data.doshas); } catch (e) { console.warn('renderDoshas error:', e); }
+        try { renderYogas(data.yogas); } catch (e) { console.warn('renderYogas error:', e); }
+        try { renderShadbalaAndSAV(data); } catch (e) { console.warn('renderShadbalaAndSAV error:', e); }
 
         // Render New Advanced VIP Modules
-        if (data.kp) renderKPSystem(data.kp, data);
-        if (data.lal_kitab) renderLalKitab(data.lal_kitab);
-        if (data.gemstones) renderGemstonesAndYantras(data);
-        if (data.avkahada || data.favourable) renderAvkahadaAndFavourable(data);
+        try { if (data.kp) renderKPSystem(data.kp, data); } catch (e) { console.warn('renderKPSystem error:', e); }
+        try { if (data.lal_kitab) renderLalKitab(data.lal_kitab); } catch (e) { console.warn('renderLalKitab error:', e); }
+        try { if (data.gemstones) renderGemstonesAndYantras(data); } catch (e) { console.warn('renderGemstonesAndYantras error:', e); }
+        try { if (data.avkahada || data.favourable) renderAvkahadaAndFavourable(data); } catch (e) { console.warn('renderAvkahadaAndFavourable error:', e); }
 
-        document.getElementById('statusPill').innerText = '✨ सज्ज • १००% ऑफलाइन';
-        loadInAppPdfPreview();
+        document.getElementById('statusPill').innerText = '✨ सज्ज • १००% अचूक';
+        try { loadInAppPdfPreview(); } catch (e) { console.warn('loadInAppPdfPreview error:', e); }
       } catch (err) {
-        console.error(err);
-        document.getElementById('statusPill').innerText = '⚠️ Calculation Failed';
+        console.error('calculateKundli error:', err);
+        document.getElementById('statusPill').innerText = '⚠️ ' + (err.message || 'Calculation Error');
       } finally {
         if (modal) {
           if (bar) bar.style.width = '100%';
@@ -4067,6 +4084,243 @@ def index_ui():
       }).join('');
     }
 
+    // ===============================================================
+    // CORE ASTROLOGICAL RENDERING MODULES (BHAVAS, DASHA, DOSHAS, YOGAS, SHADBALA)
+    // ===============================================================
+
+    // Render 12 Bhavas
+    function renderBhavas(bhavas) {
+      const container = document.getElementById('bhavasGrid');
+      if (!container || !bhavas) return;
+      container.innerHTML = bhavas.map(b => {
+        const houseNum = b.house || b.num || 1;
+        const title = (currentLang === 'mr' || currentLang === 'hi') ? (toMrWithHi(b.title_mr || b.title_hi || b.title_en)) : (b.title_en || b.title_hi);
+        const sign = b.sign_mr || b.sign || b.sign_name || '';
+        const planets = b.planets || 'रिक्त (Vacant)';
+        const summary = (currentLang === 'mr' || currentLang === 'hi') ? (toMrWithHi(b.summary_mr || b.summary_hi || b.prediction_hi || '')) : (b.summary_en || b.prediction_en || '');
+        return `
+        <div style="background:#FFFFFF; border:1.5px solid #EADBC8; border-radius:8px; padding:10px 12px; border-left:4px solid #C2540A;">
+          <div style="font-size:12px; font-weight:800; color:#7C2D12;">${houseNum}. ${title}</div>
+          <div style="font-size:11px; color:#854D0E; font-weight:700; margin:3px 0;">राशी (Sign): ${sign} • ग्रह (Planets): ${planets}</div>
+          <div style="font-size:11px; color:#2E1C10; line-height:1.45; font-weight:500;">${summary}</div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    // Render Dasha & Gemstones
+    function renderDashaAndGems(data) {
+      if (!data) return;
+      const v = data.vimshottari || {};
+      const dashas = v.mahadashas || [];
+      const dashaEl = document.getElementById('dashaSummary');
+      if (dashaEl) {
+        dashaEl.innerHTML = `
+          <div style="margin-bottom:10px; padding:8px 12px; background:#FEF3C7; border:1.5px solid #FDE68A; border-radius:8px; color:#78350F; font-size:12px; font-weight:700;">
+            <strong>जन्म कालीन दशा शेष (Birth Dasha Balance):</strong> ${v.balance_hi || v.balance_str || '-'}
+          </div>
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:10px; margin-top:10px;">
+            ${dashas.map(d => `
+              <div style="background:#FFFFFF; padding:8px 10px; border-radius:8px; font-size:11.5px; border:1.5px solid #EADBC8; box-shadow:0 1px 4px rgba(46,28,16,0.03);">
+                <strong style="color:#7C2D12; font-size:12px;">${toMrWithHi(d.name_hi || d.name_en)} (${d.years} वर्ष)</strong><br/>
+                <span style="color:#4B5563; font-size:11px; font-weight:600;">${d.range_str}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      const gems = data.gemstones || [];
+      const gemEl = document.getElementById('gemstonesSummary');
+      if (gemEl) {
+        gemEl.innerHTML = gems.map(g => `
+          <div style="margin-bottom:8px; padding:8px 12px; background:#FFFFFF; border:1.5px solid #EADBC8; border-radius:8px;">
+            <strong style="color:#7C2D12; font-size:12.5px; font-weight:800;">${toMrWithHi(g.role_hi || g.role_en)}: ${toMrWithHi(g.gem_hi || g.gem_en)}</strong>
+            <div style="font-size:11.5px; color:#4B5563; margin-top:3px; font-weight:600;">
+              <span>धातू: ${toMrWithHi(g.metal_hi || g.metal_en)}</span> •
+              <span>बोट: ${toMrWithHi(g.finger_hi || g.finger_en)}</span> •
+              <span>वार: ${toMrWithHi(g.day_hi || g.day_en)}</span>
+            </div>
+            <div style="font-size:11px; color:#166534; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:6px; padding:4px 8px; margin-top:5px; font-weight:600;">
+              📿 ${toMrWithHi(g.rudra_hi || g.rudra_en)} | <span>मंत्र: ${g.mantra}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Render Doshas
+    function renderDoshas(doshas) {
+      if (!doshas) return;
+      const container = document.getElementById('doshasList');
+      if (!container) return;
+      const mg = doshas.manglik || doshas.mangal_dosha || {};
+      const ks = doshas.kalsarpa || doshas.kaalsarp || {};
+      const ss = doshas.sadesati || {};
+      const pt = doshas.pitra_dosha || {};
+      const gc = doshas.guru_chandal || {};
+      const gr = doshas.grahan_dosha || {};
+
+      container.innerHTML = `
+        <div class="dosha-card">
+          <div class="dosha-head">
+            <span>🔴 मंगळ दोष (Kuja / Mangal Dosha)</span>
+            <span class="badge" style="background:${mg.is_manglik ? '#FEE2E2':'#DCFCE7'}; color:${mg.is_manglik ? '#991B1B':'#166534'};">${mg.is_manglik ? 'दोष सक्रिय (Present)':'दोष मुक्त (Free)'}</span>
+          </div>
+          <div style="font-size:11.5px; color:#854D0E; font-weight:700; margin:4px 0;"><strong>स्थान:</strong> लग्नापासून भाव ${mg.mars_house_lagna || '-'} मध्ये मंगळ</div>
+          <div class="dosha-desc">${toMrWithHi(mg.status_hi || mg.status_en || '')}</div>
+          <div class="remedy-pill"><strong>उपाय:</strong> दर मंगळवारी हनुमान चालीसा पठण करा व लाल मसूर दान करा.</div>
+        </div>
+
+        <div class="dosha-card">
+          <div class="dosha-head">
+            <span>🐍 कालसर्प योग (Kaal Sarp Yoga)</span>
+            <span class="badge" style="background:${ks.is_kalsarpa ? '#FEE2E2':'#DCFCE7'}; color:${ks.is_kalsarpa ? '#991B1B':'#166534'};">${ks.is_kalsarpa ? 'सक्रिय (Active)':'दोष मुक्त (Free)'}</span>
+          </div>
+          <div style="font-size:11.5px; color:#854D0E; font-weight:700; margin:4px 0;"><strong>प्रकार:</strong> ${toMrWithHi(ks.type_hi || 'दोष मुक्त')}</div>
+          <div class="dosha-desc">${toMrWithHi(ks.result_hi || ks.result_en || '')}</div>
+          <div class="remedy-pill"><strong>उपाय:</strong> महामृत्युंजय जप आणि भगवान शंकराचा रुद्राभिषेक करा.</div>
+        </div>
+
+        <div class="dosha-card">
+          <div class="dosha-head">
+            <span>🪐 शनी साडेसाती (Shani Sade Sati)</span>
+            <span class="badge">${toMrWithHi(ss.type_hi || ss.type_en || 'गोचर प्रभाव')}</span>
+          </div>
+          <div style="font-size:11.5px; color:#9A3412; font-weight:700; margin:4px 0;"><strong>चरण:</strong> ${toMrWithHi(ss.phase_hi || ss.phase_en || 'सकारात्मक')} (${ss.start_year || 2025} - ${ss.end_year || 2028})</div>
+          <div class="dosha-desc">शनीचे भ्रमण जातकाच्या चंद्र राशीभोवती. संयम, प्रामाणिक कर्म व सेवाभाव लाभदायक.</div>
+          <div class="remedy-pill"><strong>उपाय:</strong> दर शनिवारी पिंपळाच्या वृक्षाखाली तिळाच्या किंवा मोहरीच्या तेलाचा दिवा लावावा.</div>
+        </div>
+
+        <div class="dosha-card">
+          <div class="dosha-head">
+            <span>☀️ ${toMrWithHi(pt.title_hi || 'पितृ दोष (Pitra Dosha)')}</span>
+            <span class="badge" style="background:${pt.is_present ? '#FEE2E2':'#DCFCE7'}; color:${pt.is_present ? '#991B1B':'#166534'};">${pt.is_present ? 'सक्रिय (Active)':'दोष मुक्त (Free)'}</span>
+          </div>
+          <div class="dosha-desc">${toMrWithHi(pt.desc_hi || pt.desc_en || '')}</div>
+          <div class="remedy-pill"><strong>उपाय:</strong> ${toMrWithHi(pt.remedy_hi || pt.remedy_en || '')}</div>
+        </div>
+
+        <div class="dosha-card">
+          <div class="dosha-head">
+            <span>📿 ${toMrWithHi(gc.title_hi || 'गुरु चांडाल योग (Guru Chandal Yoga)')}</span>
+            <span class="badge" style="background:${gc.is_present ? '#FEE2E2':'#DCFCE7'}; color:${gc.is_present ? '#991B1B':'#166534'};">${gc.is_present ? 'सक्रिय (Active)':'दोष मुक्त (Free)'}</span>
+          </div>
+          <div class="dosha-desc">${toMrWithHi(gc.desc_hi || gc.desc_en || '')}</div>
+          <div class="remedy-pill"><strong>उपाय:</strong> ${toMrWithHi(gc.remedy_hi || gc.remedy_en || '')}</div>
+        </div>
+
+        <div class="dosha-card">
+          <div class="dosha-head">
+            <span>🌕 ${toMrWithHi(gr.title_hi || 'ग्रहण दोष (Grahan Dosha)')}</span>
+            <span class="badge" style="background:${gr.is_present ? '#FEE2E2':'#DCFCE7'}; color:${gr.is_present ? '#991B1B':'#166534'};">${gr.is_present ? 'सक्रिय (Active)':'दोष मुक्त (Free)'}</span>
+          </div>
+          <div class="dosha-desc">${toMrWithHi(gr.desc_hi || gr.desc_en || '')}</div>
+          <div class="remedy-pill"><strong>उपाय:</strong> ${toMrWithHi(gr.remedy_hi || gr.remedy_en || '')}</div>
+        </div>
+      `;
+    }
+
+    // Render Yogas
+    function renderYogas(yogas) {
+      const container = document.getElementById('yogasList');
+      if (!container || !yogas) return;
+      container.innerHTML = yogas.map(y => `
+        <div style="background:#FFFFFF; padding:12px 14px; border-radius:10px; border:1.5px solid #EADBC8; box-shadow:0 1px 4px rgba(46,28,16,0.03);">
+          <strong style="color:#7C2D12; font-size:13px; font-weight:800;">${toMrWithHi(y.name_mr || y.name_hi || y.name_en)}</strong>
+          <p style="font-size:11.8px; color:#2E1C10; margin-top:4px; line-height:1.5; font-weight:500;">${toMrWithHi(y.desc_mr || y.desc_hi || y.desc_en)}</p>
+        </div>
+      `).join('');
+    }
+
+    // Render Shadbala and SAV
+    function renderShadbalaAndSAV(data) {
+      if (!data || !data.shadbala) return;
+      const sb = data.shadbala;
+      const rankMap = sb.shadbala_rank || {};
+      const rupasMap = sb.shadbala_in_rupas || {};
+      const minMap = sb.shadbala_min_req || {};
+      const ratioMap = sb.shadbala_ratio || {};
+      const totalVirupa = sb.shadbala_total || {};
+      const sthanMap = sb.sthana_bala_total || {};
+      const digMap = sb.dig_bala || {};
+      const kalaMap = sb.kaala_bala_total || {};
+      const chestaMap = sb.chesta_bala || {};
+      const naisMap = sb.naisargika_bala || {};
+      const drikMap = sb.drik_bala || {};
+
+      const pKeys = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"];
+      const pNamesMr = {"Sun":"सूर्य","Moon":"चंद्र","Mars":"मंगळ","Mercury":"बुध","Jupiter":"गुरू","Venus":"शुक्र","Saturn":"शनी"};
+
+      let sbHtml = "";
+      pKeys.forEach(p => {
+        const r = ratioMap[p] || 0;
+        const isStrong = r >= 1.0;
+        const statusBg = isStrong ? '#DCFCE7' : '#FEE2E2';
+        const statusFg = isStrong ? '#166534' : '#991B1B';
+        const badge = isStrong ? 'बलवान (Strong)' : 'अल्पबली (Deficit)';
+        const rank = rankMap[p] || '-';
+        sbHtml += "<tr style='border-bottom:1px solid #E5E7EB;'>" +
+          "<td style='text-align:left; font-weight:800; color:#7C2D12; padding-left:10px;'>" + (pNamesMr[p] || p) + "</td>" +
+          "<td style='color:#1F2937; font-weight:600;'>" + (sthanMap[p]||0).toFixed(1) + "</td>" +
+          "<td style='color:#1F2937; font-weight:600;'>" + (digMap[p]||0).toFixed(1) + "</td>" +
+          "<td style='color:#1F2937; font-weight:600;'>" + (kalaMap[p]||0).toFixed(1) + "</td>" +
+          "<td style='color:#1F2937; font-weight:600;'>" + (chestaMap[p]||0).toFixed(1) + "</td>" +
+          "<td style='color:#1F2937; font-weight:600;'>" + (naisMap[p]||0).toFixed(1) + "</td>" +
+          "<td style='color:#1F2937; font-weight:600;'>" + (drikMap[p]||0).toFixed(1) + "</td>" +
+          "<td style='font-weight:800; color:#9A3412;'>" + (totalVirupa[p]||0).toFixed(1) + "</td>" +
+          "<td style='font-weight:800; color:#7C2D12;'>" + (rupasMap[p]||0).toFixed(2) + " R</td>" +
+          "<td style='color:#6B7280; font-weight:600;'>" + (minMap[p]||0) + " R</td>" +
+          "<td><span style='background:" + statusBg + "; color:" + statusFg + "; padding:2px 8px; border-radius:4px; font-weight:800;'>" + (r*100).toFixed(0) + "% (" + badge + ")</span></td>" +
+          "<td><span style='background:#FEF3C7; color:#78350F; border:1px solid #FDE68A; padding:2px 8px; border-radius:4px; font-weight:800;'>#" + rank + "</span></td>" +
+        "</tr>";
+      });
+      const sbEl = document.getElementById('shadbalaTableBody');
+      if (sbEl) sbEl.innerHTML = sbHtml;
+
+      // Ashtakavarga SAV Grid
+      if (data.ashtakavarga) {
+        const av = data.ashtakavarga;
+        let avHtml = "";
+        (av.bhinna_rows || []).forEach(br => {
+          avHtml += "<tr style='border-bottom:1px solid #F3EDE4;'>" +
+            "<td style='text-align:left; font-weight:800; color:#7C2D12; padding-left:10px;'>" + toMrWithHi(br.name_hi || br.name_en) + "</td>" +
+            (br.values || []).map(v => "<td style='color:#1F2937; font-weight:600; padding:6px 4px;'>" + v + "</td>").join("") +
+            "<td style='font-weight:800; color:#9A3412; font-size:12px;'>" + br.total + "</td>" +
+          "</tr>";
+        });
+        if (av.sarva_totals) {
+          const totalSav = av.sarva_totals.reduce((a,b)=>a+b, 0);
+          avHtml += "<tr style='background:#FAF6F0; font-weight:800; border-top:2px solid #EADBC8;'>" +
+            "<td style='text-align:left; color:#7C2D12; font-weight:900; padding-left:10px;'>सर्वअष्टकवर्ग (SAV Total)</td>" +
+            av.sarva_totals.map(pts => {
+              const bg = pts >= 28 ? '#DCFCE7' : (pts >= 25 ? '#FEF3C7' : '#FEE2E2');
+              const fg = pts >= 28 ? '#166534' : (pts >= 25 ? '#854D0E' : '#991B1B');
+              return "<td style='background:" + bg + "; color:" + fg + "; font-weight:800; padding:6px 4px;'>" + pts + "</td>";
+            }).join("") +
+            "<td style='color:#7C2D12; font-size:12.5px; font-weight:900;'>" + totalSav + "</td>" +
+          "</tr>";
+        }
+        const savEl = document.getElementById('savTableBody');
+        if (savEl) savEl.innerHTML = avHtml;
+      }
+
+      // Bhavabala Cards
+      if (sb.bhavabala_in_rupas) {
+        let bhHtml = "";
+        sb.bhavabala_in_rupas.forEach((rupas, idx) => {
+          const val = (sb.bhavabala_total && sb.bhavabala_total[idx]) || 0;
+          bhHtml += "<div style='background:#FFFBEB; border:1.5px solid #FDE68A; padding:8px 6px; border-radius:8px; text-align:center; box-shadow:0 1px 3px rgba(46,28,16,0.03);'>" +
+            "<div style='font-size:10.5px; color:#78350F; font-weight:800;'>भाव " + (idx+1) + " (Bhava)</div>" +
+            "<div style='font-size:14px; font-weight:900; color:#B45309; margin:2px 0;'>" + rupas + " R</div>" +
+            "<div style='font-size:9.5px; color:#6B7280; font-weight:600;'>" + (val ? val.toFixed(0) : '0') + " Virupas</div>" +
+          "</div>";
+        });
+        const bhEl = document.getElementById('bhavabalaSummaryGrid');
+        if (bhEl) bhEl.innerHTML = bhHtml;
+      }
+    }
+
     // Kundli Milan Calculation
     async function calculateMilan() {
       const payload = {
@@ -4300,6 +4554,32 @@ def index_ui():
         const frame = document.getElementById('reportFrame');
         if (frame) frame.srcdoc = html;
       } catch (e) {}
+    }
+
+
+    // Direct 1-Click Action: KP Remedies & Upay (के.पी. अचूक उपाय PDF)
+    async function openKPRemediesDirectPDF() {
+      // 1. Ensure Kundli is calculated
+      if (!currentKundliData) {
+        const payload = getFormPayload();
+        if (!validateInputs(payload)) {
+          alert('कृपया आधी जातकाची जन्म माहिती भरा आणि Calculate करा.');
+          return;
+        }
+        await calculateKundli();
+      }
+
+      // 2. Smoothly scroll to KP Remedies section in interactive workspace
+      const kpSec = document.getElementById('sec_kp_system');
+      if (kpSec) {
+        kpSec.scrollIntoView({behavior:'smooth'});
+      }
+
+      // 3. Switch to Report Studio with VIP Dossier including KP Remedies
+      switchNav('reports');
+      const pkgSelect = document.getElementById('reportPackageSelect');
+      if (pkgSelect) pkgSelect.value = 'maha';
+      await loadInAppPdfPreview();
     }
 
     function openReportInNewTab() {
