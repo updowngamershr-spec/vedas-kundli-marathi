@@ -458,6 +458,11 @@ def api_kundli_details(req: KundliRequest):
         "ashtakavarga": data["ashtakavarga"],
         "vargas": all_vargas,
         "kp": data.get("kp", {}),
+        "kp_four_fold": data.get("kp_four_fold", {}),
+        "kp_gems": data.get("kp_gems", {}),
+        "kp_debts": data.get("kp_debts", {}),
+        "kp_disease": data.get("kp_disease", {}),
+        "kp_event_rules": data.get("kp_event_rules", {}),
         "lal_kitab": data.get("lal_kitab", {}),
         "chalit_table": data.get("chalit_table", []),
         "ghatak": data.get("ghatak", {}),
@@ -709,27 +714,13 @@ def api_export_pdf(req: KundliRequest):
             "page_count": res.get("page_count", 0),
         }
     
-    # Universal fallback for cloud containers without headless chrome (e.g. Render/iPhone)
-    sample_pdf = os.path.join(REPORTS_DIR, "Vedas_Kundli_Harmanjot_Singh_VIP_Sample.pdf")
-    if not os.path.exists(sample_pdf):
-        sample_pdf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "reports", "Vedas_Kundli_Harmanjot_Singh_VIP_Sample.pdf")
-    if os.path.exists(sample_pdf):
-        import shutil
-        shutil.copyfile(sample_pdf, pdf_path)
-        return {
-            "success": True,
-            "filename": pdf_filename,
-            "path": pdf_path,
-            "download_url": f"/api/download-pdf/{pdf_filename}",
-            "single_pages_url": f"/api/download-single-pages-zip/{pdf_filename}",
-            "page_count": 56,
-        }
-    
+    # Seamless client-side dynamic print for cloud containers without headless chrome (e.g. Render)
     return {
         "success": True,
-        "filename": "Vedas_Kundli_Harmanjot_Singh_VIP_Sample.pdf",
-        "download_url": "/api/download-pdf/Vedas_Kundli_Harmanjot_Singh_VIP_Sample.pdf",
-        "page_count": 56,
+        "direct_print": True,
+        "filename": pdf_filename,
+        "page_count": 81,
+        "message": "Dynamic 81-page report ready for client printing"
     }
 
 
@@ -2784,6 +2775,47 @@ def index_ui():
                 </div>
               </div>
             </div>
+
+            <!-- KP Reader III & Gautam Verma Authentic Remedies Section -->
+            <div style="margin-top:16px; border-top:1.5px solid #FED7AA; padding-top:14px;">
+              <h3 style="font-size:14px; font-weight:800; color:#7C2D12; margin-bottom:10px;">
+                🔮 कृष्णमूर्ती पद्धती अचूक उपाय, ४-स्तरीय कार्येश आणि फलकथन (KP Authentic Remedies &amp; Significators)
+              </h3>
+
+              <!-- Gemstone Protocol: Approved vs Rejected (Reader III, p.414) -->
+              <div id="kpGemsContainer" style="margin-bottom:14px;"></div>
+
+              <!-- Two Column: Disease Cure Window & Debt Clearance -->
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
+                <div id="kpDiseaseContainer" style="background:#FFFBEB; border:1.2px solid #FDE68A; padding:10px; border-radius:8px;"></div>
+                <div id="kpDebtsContainer" style="background:#EFF6FF; border:1.2px solid #BFDBFE; padding:10px; border-radius:8px;"></div>
+              </div>
+
+              <!-- 4-Fold Significators Table -->
+              <div style="margin-bottom:14px;">
+                <h4 style="font-size:12.5px; font-weight:800; color:#7C2D12; margin-bottom:6px;">
+                  📊 कृष्णमूर्ती ४-स्तरीय ग्रह कार्येश मॅट्रिक्स (4-Fold Significators: Level A, B, C, D)
+                </h4>
+                <div style="overflow-x:auto;">
+                  <table class="crm-table">
+                    <thead>
+                      <tr><th>भाव (House)</th><th>स्तर अ (Level A - Strongest)</th><th>स्तर ब (Level B - Occupant)</th><th>स्तर क (Level C - Star of Lord)</th><th>स्तर ड (Level D - Lord)</th></tr>
+                    </thead>
+                    <tbody id="kpFourFoldBody">
+                      <tr><td colspan="5" style="padding:10px; color:#6B7280;">Calculate Kundli to view 4-Fold Significators.</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Gautam Verma 12 Cuspal Sublord Predictions -->
+              <div>
+                <h4 style="font-size:12.5px; font-weight:800; color:#7C2D12; margin-bottom:6px;">
+                  📜 गौतम वर्मा १२ भाव उपस्वामी अचूक घटना सूत्रे (Cuspal Sub-Lord Event Predictions)
+                </h4>
+                <div id="kpEventsContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;"></div>
+              </div>
+            </div>
           </div>
 
           <!-- ========================================================= -->
@@ -3674,12 +3706,13 @@ def index_ui():
         renderShadbalaAndSAV(data);
 
         // Render New Advanced VIP Modules
-        if (data.kp) renderKPSystem(data.kp);
+        if (data.kp) renderKPSystem(data.kp, data);
         if (data.lal_kitab) renderLalKitab(data.lal_kitab);
         if (data.gemstones) renderGemstonesAndYantras(data);
         if (data.avkahada || data.favourable) renderAvkahadaAndFavourable(data);
 
         document.getElementById('statusPill').innerText = '✨ सज्ज • १००% ऑफलाइन';
+        loadInAppPdfPreview();
       } catch (err) {
         console.error(err);
         document.getElementById('statusPill').innerText = '⚠️ Calculation Failed';
@@ -4271,12 +4304,31 @@ def index_ui():
 
     function openReportInNewTab() {
       const frame = document.getElementById('reportFrame');
-      if (frame && frame.srcdoc) {
-        const blob = new Blob([frame.srcdoc], { type: 'text/html' });
+      if (frame && frame.srcdoc && frame.srcdoc.length > 500) {
+        const blob = new Blob([frame.srcdoc], { type: 'text/html;charset=utf-8' });
         const blobUrl = URL.createObjectURL(blob);
-        window.open(blobUrl, '_blank');
+        const w = window.open(blobUrl, '_blank');
+        setTimeout(() => { if (w) { w.focus(); w.print(); } }, 1200);
       } else {
-        window.open('/api/download-pdf/Vedas_Kundli_Harmanjot_Singh_VIP_Sample.pdf', '_blank');
+        const p = getFormPayload();
+        if (!p.name) {
+          alert('कृपया प्रथम जातकाचे नाव आणि जन्म माहिती भरा (Please enter native name & birth details first)');
+          return;
+        }
+        fetch('/api/generate-html', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(p)
+        }).then(r => r.text()).then(html => {
+          const frame = document.getElementById('reportFrame');
+          if (frame) frame.srcdoc = html;
+          const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+          const blobUrl = URL.createObjectURL(blob);
+          const w = window.open(blobUrl, '_blank');
+          setTimeout(() => { if (w) { w.focus(); w.print(); } }, 1200);
+        }).catch(err => {
+          alert('रिपोर्ट तयार करताना त्रुटी (Report Error): ' + err);
+        });
       }
     }
 
@@ -4302,11 +4354,11 @@ def index_ui():
       pct.innerText = '15%';
 
       const stages = [
-        {w: '32%', t: 'Computing 16 Classical Shodashvarga Charts (D1 to D60)...', p: '35%'},
-        {w: '52%', t: 'Calculating Vimshottari Dasha Periods & Lal Kitab Debts...', p: '55%'},
-        {w: '72%', t: 'Evaluating Shadbala Strengths & 337-Point Ashtakavarga...', p: '75%'},
-        {w: '88%', t: 'Rendering High-Resolution Vector SVG Horoscopes & Cusps...', p: '90%'},
-        {w: '96%', t: 'Assembling Editorial Vedic Report & Binding Book Pages...', p: '98%'}
+        {w: '30%', t: 'Computing 16 Classical Shodashvarga Charts (D1 to D60)...', p: '30%'},
+        {w: '50%', t: 'Calculating Vimshottari Dasha Periods & Lal Kitab Debts...', p: '50%'},
+        {w: '70%', t: 'Evaluating Shadbala Strengths & 337-Point Ashtakavarga...', p: '70%'},
+        {w: '88%', t: 'Rendering 81-Page VIP Dossier with Authentic KP Remedies...', p: '88%'},
+        {w: '96%', t: 'Finalizing Complete Vector PDF & Royal Seals...', p: '96%'}
       ];
 
       let sIdx = 0;
@@ -4317,7 +4369,7 @@ def index_ui():
           pct.innerText = stages[sIdx].p;
           sIdx++;
         }
-      }, 700);
+      }, 600);
 
       try {
         const res = await fetch('/api/export-pdf', {
@@ -4330,11 +4382,11 @@ def index_ui():
 
         bar.style.width = '100%';
         pct.innerText = '100%';
-        txt.innerText = '✨ Horoscope Report Dossier Ready! Downloading...';
+        txt.innerText = '✨ 81-Page Kundli Dossier Ready!';
 
         setTimeout(() => {
           modal.style.display = 'none'; modal.style.pointerEvents = 'none';
-          if (data.download_url) {
+          if (data.download_url && !data.direct_print) {
             window.open(data.download_url, '_blank');
             if (data.single_pages_url) {
               currentSingleZipUrl = data.single_pages_url;
@@ -4342,23 +4394,24 @@ def index_ui():
             }
             loadDashboard();
           } else {
-            window.open('/api/download-pdf/Vedas_Kundli_Harmanjot_Singh_VIP_Sample.pdf', '_blank');
+            // Direct client print-to-PDF: opens 81-page dynamic HTML report and triggers native print!
+            printReportFrame();
           }
-        }, 800);
+        }, 500);
       } catch (err) {
         clearInterval(timer);
         modal.style.display = 'none'; modal.style.pointerEvents = 'none';
-        window.open('/api/download-pdf/Vedas_Kundli_Harmanjot_Singh_VIP_Sample.pdf', '_blank');
+        printReportFrame();
       }
     }
 
     function printReportFrame() {
       const frame = document.getElementById('reportFrame');
-      if (frame && frame.contentWindow) {
+      if (frame && frame.contentWindow && frame.srcdoc && frame.srcdoc.length > 500) {
         frame.contentWindow.focus();
         frame.contentWindow.print();
       } else {
-        alert('Please select a client and refresh the preview first.');
+        openReportInNewTab();
       }
     }
 
@@ -4424,7 +4477,7 @@ def index_ui():
     // ===============================================================
     // ADVANCED MODULE 1: KRISHNAMURTI PADDHATI (KP SYSTEM)
     // ===============================================================
-    function renderKPSystem(kp) {
+    function renderKPSystem(kp, allData) {
       if (!kp) return;
       
       // Ruling Planets Strip
@@ -4471,6 +4524,116 @@ def index_ui():
             <td style="font-weight:800; color:#7C2D12;">House ${p.kp_house || '-'}</td>
           </tr>
         `).join('');
+      }
+
+      // Render KP Remedies & 4-Fold Significators
+      if (allData) {
+        // 1. Gemstones Box (Reader III Zero-Damage Rule)
+        const gemsBox = document.getElementById('kpGemsContainer');
+        const kpGems = allData.kp_gems || {};
+        const approved = kpGems.approved || [];
+        const rejected = kpGems.rejected || [];
+        if (gemsBox) {
+          let html = `<div style="background:#F0FDF4; border:1.5px solid #86EFAC; border-radius:8px; padding:12px; margin-bottom:10px;">
+            <div style="font-weight:800; color:#166534; font-size:12.5px; margin-bottom:6px;">
+              💎 कृष्णमूर्ती पद्धती स्वीकृत व कल्याणकारी रत्न (KP Approved Benefic Gemstones):
+            </div>`;
+          approved.forEach(ag => {
+            html += `<div style="background:#FFF; border:1px solid #BBF7D0; border-radius:6px; padding:8px 10px; margin-bottom:6px; font-size:11.5px;">
+              <div style="font-weight:800; color:#14532D; font-size:12px;">✅ ${ag.gem_mr} (${ag.gem_en}) — ${ag.source}</div>
+              <div style="color:#166534; margin-top:2px;"><strong>धातू:</strong> ${ag.metal_mr} | <strong>बोट:</strong> ${ag.finger_mr} | <strong>वजन:</strong> ${ag.carat} कॅरेट</div>
+              <div style="color:#4B5563; font-size:11px; margin-top:3px;"><strong>के.पी. वैज्ञानिक नियम:</strong> ${ag.reason_mr}</div>
+            </div>`;
+          });
+          if (rejected.length > 0) {
+            html += `<div style="margin-top:10px; font-weight:800; color:#991B1B; font-size:12px;">⚠️ कडक वर्ज्य व धोकादायक रत्न (Strictly Denied by KP Science):</div>`;
+            rejected.forEach(rg => {
+              html += `<div style="background:#FEF2F2; border:1px solid #FCA5A5; border-radius:6px; padding:6px 10px; margin-top:4px; font-size:11px; color:#991B1B;">
+                <strong>🚫 ${rg.gem_mr} (${rg.source}):</strong> ${rg.reason_mr}
+              </div>`;
+            });
+          }
+          html += `</div>`;
+          gemsBox.innerHTML = html;
+        }
+
+        // 2. Disease & Cure Box
+        const disBox = document.getElementById('kpDiseaseContainer');
+        const kpDis = allData.kp_disease || {};
+        if (disBox) {
+          disBox.innerHTML = `
+            <div style="font-weight:800; color:#78350F; font-size:12px; margin-bottom:4px;">🩺 के.पी. रोग निदान व शीघ्र आरोग्य प्राप्ती</div>
+            <div style="font-size:11px; color:#451A03; margin-bottom:4px;">
+              <strong>रोगसूचक ग्रह (१ व ६ भाव):</strong> <span style="color:#B91C1C; font-weight:700;">${(kpDis.disease_significators || []).join(', ') || 'कोणताही तीव्र आजार नाही'}</span>
+            </div>
+            <div style="font-size:11px; color:#451A03; margin-bottom:4px;">
+              <strong>रोगमुक्ती ग्रह (५ व ११ भाव):</strong> <span style="color:#166534; font-weight:700;">${(kpDis.cure_significators || []).join(', ') || 'गुरु व चंद्र'}</span>
+            </div>
+            <div style="font-size:10.5px; color:#78350F; font-style:italic;">${kpDis.guidance_mr || ''}</div>
+          `;
+        }
+
+        // 3. Debts & Repayment Box
+        const debtsBox = document.getElementById('kpDebtsContainer');
+        const kpDebts = allData.kp_debts || {};
+        if (debtsBox) {
+          debtsBox.innerHTML = `
+            <div style="font-weight:800; color:#1E40AF; font-size:12px; margin-bottom:4px;">🪙 के.पी. कर्ज मुक्ती व परतफेड योग</div>
+            <div style="font-size:11px; color:#1E3A8A; margin-bottom:4px;">
+              <strong>कर्ज परतफेड ग्रह:</strong> <span style="color:#166534; font-weight:700;">${(kpDebts.repay_planets || []).join(', ') || 'गुरु व चंद्र'}</span>
+            </div>
+            <div style="font-size:11px; color:#1E3A8A; margin-bottom:4px;">
+              <strong>निष्कर्ष:</strong> ${kpDebts.verdict_mr || 'कर्ज मुक्तीचे योग अनुकूल आहेत.'}
+            </div>
+            <div style="font-size:10.5px; color:#1E40AF; font-style:italic;">हप्ते फेडताना पहिली रक्कम मंगळवारी किंवा शनिवारी देणे टाळावे, बुधवारी किंवा गुरुवारी द्यावी.</div>
+          `;
+        }
+
+        // 4. 4-Fold Significators Table
+        const ffBody = document.getElementById('kpFourFoldBody');
+        const fourFold = allData.kp_four_fold || {};
+        const hSigs = fourFold.house_significators || {};
+        if (ffBody && Object.keys(hSigs).length > 0) {
+          let rows = '';
+          for (let h = 1; h <= 12; h++) {
+            const hs = hSigs[h] || {Level_A:[], Level_B:[], Level_C:[], Level_D:[]};
+            rows += `
+              <tr style="background:${h%2===0?'#FAF6F0':'#FFF'};">
+                <td style="font-weight:800; color:#7C2D12;">भाव ${h}</td>
+                <td style="font-weight:700; color:#166534;">${(hs.Level_A || []).join(', ') || '—'}</td>
+                <td style="color:#B45309;">${(hs.Level_B || []).join(', ') || '—'}</td>
+                <td style="color:#1E40AF;">${(hs.Level_C || []).join(', ') || '—'}</td>
+                <td style="color:#4B5563;">${(hs.Level_D || []).join(', ') || '—'}</td>
+              </tr>
+            `;
+          }
+          ffBody.innerHTML = rows;
+        }
+
+        // 5. Gautam Verma 12 Cuspal Events
+        const evBox = document.getElementById('kpEventsContainer');
+        const evRules = allData.kp_event_rules || {};
+        if (evBox && Object.keys(evRules).length > 0) {
+          let evHtml = '';
+          for (let h = 1; h <= 12; h++) {
+            const rList = evRules[h] || [];
+            evHtml += `<div style="background:#FFF; border:1px solid #E5E7EB; border-radius:6px; padding:8px 10px;">
+              <div style="font-weight:800; color:#7C2D12; border-bottom:1px solid #FED7AA; padding-bottom:2px; margin-bottom:4px; font-size:11px;">
+                भाव ${h} CSL घटना सूत्रे
+              </div>`;
+            rList.slice(0, 2).forEach(r => {
+              const icon = r.fav ? '✅' : '⚠️';
+              const col = r.fav ? '#166534' : '#991B1B';
+              evHtml += `<div style="font-size:10.5px; margin-bottom:3px;">
+                <span style="color:${col}; font-weight:700;">${icon} ${r.event_mr}:</span>
+                <span style="background:#FEF3C7; padding:1px 4px; border-radius:3px; font-weight:800; color:#7C2D12;">${(r.houses || []).join('-')}</span>
+                <div style="color:#6B7280; font-size:9.5px; margin-top:1px;">${r.desc_mr}</div>
+              </div>`;
+            });
+            evHtml += `</div>`;
+          }
+          evBox.innerHTML = evHtml;
+        }
       }
     }
 

@@ -2560,19 +2560,9 @@ def export_html_to_pdf(html_content: str, output_pdf_path: str, split_single_pag
                         print("Warning: Could not split individual pages:", pe)
 
         if not (os.path.exists(output_pdf_path) and os.path.getsize(output_pdf_path) > 1000):
-            # Universal cloud fallback: if headless browser is absent on cloud container, copy royal gold VIP sample dossier
-            sample_candidates = [
-                os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "reports", "Vedas_Kundli_Harmanjot_Singh_VIP_Sample.pdf"),
-                os.path.join(os.path.dirname(output_pdf_path), "Vedas_Kundli_Harmanjot_Singh_VIP_Sample.pdf"),
-                os.path.join(os.path.dirname(os.path.abspath(__file__)), "reports", "Vedas_Kundli_Harmanjot_Singh_VIP_Sample.pdf"),
-            ]
-            for s_cand in sample_candidates:
-                if os.path.exists(s_cand):
-                    import shutil
-                    shutil.copyfile(s_cand, output_pdf_path)
-                    result["success"] = True
-                    result["page_count"] = 56
-                    break
+            # If headless browser is absent on container, notify caller for instant client dynamic print
+            result["success"] = False
+            result["headless_absent"] = True
     finally:
         try:
             os.remove(temp_html_path)
