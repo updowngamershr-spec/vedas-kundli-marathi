@@ -139,7 +139,7 @@ def init_crm_db():
             INSERT INTO clients (name, sex, year, month, day, hour, minute, second, place, lat, lon, tz, phone, email, category, notes, created_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            "राजेश जोशी (Sample Kundli)",
+            "राजेश जोशी",
             "Male",
             1995, 8, 15,
             14, 30, 0,

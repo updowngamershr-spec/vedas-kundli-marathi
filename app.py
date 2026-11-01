@@ -2293,14 +2293,14 @@ def index_ui():
             <div class="metric-card">
               <div class="metric-icon-box">👥</div>
               <div class="metric-data">
-                <div class="val" id="dashTotalClients">0</div>
+                <div class="val" id="dashTotalClients">1</div>
                 <div class="lbl">नोंदणीकृत ग्राहक (पंजीकृत ग्राहक)</div>
               </div>
             </div>
             <div class="metric-card">
               <div class="metric-icon-box">📄</div>
               <div class="metric-data">
-                <div class="val" id="dashTotalReports">0</div>
+                <div class="val" id="dashTotalReports">1</div>
                 <div class="lbl">तयार केलेले PDF अहवाल (निर्मित अहवाल)</div>
               </div>
             </div>
@@ -2344,7 +2344,7 @@ def index_ui():
                 </thead>
                 <tbody id="dashRecentClientsBody">
                   <tr>
-                    <td style="font-weight:800; color:#7C2D12;">राजेश जोशी (Sample Kundli)</td>
+                    <td style="font-weight:800; color:#7C2D12;">राजेश जोशी</td>
                     <td>Male</td>
                     <td style="font-weight:600;">15/8/1995</td>
                     <td style="font-family:monospace; font-weight:700;">14:30</td>
@@ -2375,11 +2375,11 @@ def index_ui():
                 </thead>
                 <tbody id="dashRecentReportsBody">
                   <tr>
-                    <td style="font-weight:700; color:#1E3A8A;">Shivansh_Kundli_Rajesh_Joshi_VIP_Sample.pdf</td>
+                    <td style="font-weight:700; color:#1E3A8A;">Shivansh_Kundli_Rajesh_Joshi_VIP.pdf</td>
                     <td>48.41 MB</td>
                     <td style="font-size:11.5px; color:#6B7280;">01 Nov 2026, 10:00 PM</td>
                     <td>
-                      <a href="/api/download-pdf/Shivansh_Kundli_Rajesh_Joshi_VIP_Sample.pdf" target="_blank" class="btn-table-action" style="text-decoration:none; display:inline-block;">📥 PDF डाउनलोड</a>
+                      <a href="/api/download-pdf/Shivansh_Kundli_Rajesh_Joshi_VIP.pdf" target="_blank" class="btn-table-action" style="text-decoration:none; display:inline-block;">📥 PDF डाउनलोड</a>
                     </td>
                   </tr>
                 </tbody>
@@ -2558,7 +2558,7 @@ def index_ui():
                 <tbody id="clientsFullTableBody">
                   <tr>
                     <td style="font-weight:800; color:#7C2D12;">#3</td>
-                    <td style="font-weight:800; color:#7C2D12;">राजेश जोशी (Sample Kundli)</td>
+                    <td style="font-weight:800; color:#7C2D12;">राजेश जोशी</td>
                     <td>Male</td>
                     <td style="font-weight:600;">15/8/1995 &bull; 14:30</td>
                     <td>पुणे, महाराष्ट्र (Pune, Maharashtra)</td>
