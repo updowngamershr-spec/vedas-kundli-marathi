@@ -32,7 +32,7 @@ from engine.planetary_longitudes import calculate_planetary_longitudes
 from engine.houses_calc import (
     calculate_ascendant_and_mc, calculate_whole_sign_houses,
     calculate_sripati_chalit, calculate_kp_placidus_cusps,
-    map_planetary_houses, RASHI_NAMES_EN
+    map_planetary_houses, map_transit_houses, RASHI_NAMES_EN
 )
 from engine.nakshatra_pada import enrich_planets_with_nakshatra
 from engine.vimshottari_dasha import calculate_vimshottari_dasha
@@ -208,6 +208,9 @@ def generate_complete_kundli(
     modular_transit = calculate_transit_today(
         lat=b_inputs["lat"], lon=b_inputs["lon"], tz=b_inputs["tz"]
     )
+    natal_moon_sign_idx = modular_p_by_id["Moon"]["sign_idx"]
+    mapped_transit_planets = map_transit_houses(modular_transit["planets"], asc_sign_idx, natal_moon_sign_idx)
+    modular_transit["planets"] = mapped_transit_planets
 
     # Core ephemeris bundle for full 78-page report layout
     core = compute_core_ephemeris(
@@ -257,6 +260,11 @@ def generate_complete_kundli(
     manglik_kalsarpa = compute_manglik_and_kalsarpa(core)
     sadesati = compute_sadesati_report(core)
     varshaphal_transit = compute_varshaphal_and_transit(core, target_year=varsha_year)
+    # Harmonize with verified modular mathematical engine
+    varshaphal_transit["varsha_chart"]["lagna_sign"] = modular_varshaphal["varsha_lagna_sign"]
+    varshaphal_transit["muntha_sign"] = modular_varshaphal["muntha_sign"]
+    varshaphal_transit["muntha_bhav"] = modular_varshaphal["muntha_house"]
+    varshaphal_transit["transit_planets"] = mapped_transit_planets
     yogas_gems = compute_yogas_and_gemstones(core)
     written_reports = compute_all_written_reports(core, vimshottari, varshaphal_transit)
 
@@ -324,7 +332,7 @@ def generate_complete_kundli(
         "kalsarpa": manglik_kalsarpa["kalsarpa"],
         "sadesati": sadesati,
         "varshaphal": varshaphal_transit,
-        "yogas": yogas_gems["yogas"],
+        "yogas": modular_yogas,
         "gemstones": yogas_gems["gemstones"],
         "written": written_reports,
         "vastu": compute_astro_vastu_audit(core),
@@ -349,6 +357,7 @@ def generate_complete_kundli(
     payload["meta"]["jd_ut"] = core["meta"]["jd_float"]
     payload["meta"]["ayanamsa"] = core["meta"]["ayanamsa_deg"]
     payload["meta"]["asc_sid_lon"] = core["planet_by_id"]["ASC"]["sid_lon"]
+    payload["meta"]["asc_sign_name"] = RASHI_NAMES_EN[asc_sign_idx]
 
     # -------------------------------------------------------------------------
     # MODULE 16: AUTOMATED CALCULATION VALIDATION & PDF GENERATION LOCK

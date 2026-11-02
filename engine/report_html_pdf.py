@@ -650,16 +650,21 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
                 return i + 1
         return 1
 
-    planet_rows_html = "".join(
-        f"<tr><td><b>{L(p['name_en'], p['name_hi'])}</b></td>"
-        f"<td>{L(p['sign_en'], p['sign_hi'])}</td>"
-        f"<td class='c'>{p['dms']}</td>"
-        f"<td class='c'><b>{p['house']}</b></td>"
-        f"<td class='c'><b>{_get_chalit_bhava(p['sid_lon'])}</b></td>"
-        f"<td>{L(p['nakshatra_en'], p['nakshatra_hi'])}</td>"
-        f"<td class='c'>{p['pada']}</td></tr>"
-        for p in data["planets"]
-    )
+    planet_rows_list = []
+    for p in data["planets"]:
+        is_asc = (p.get("id") == "ASC")
+        r_bhav = 1 if is_asc else p.get("rashi_house", p.get("house", 1))
+        c_bhav = 1 if is_asc else (p.get("chalit_house") or _get_chalit_bhava(p.get("sid_lon", 0.0)))
+        planet_rows_list.append(
+            f"<tr><td><b>{L(p['name_en'], p['name_hi'])}</b></td>"
+            f"<td>{L(p['sign_en'], p['sign_hi'])}</td>"
+            f"<td class='c'>{p['dms']}</td>"
+            f"<td class='c'><b>{r_bhav}</b></td>"
+            f"<td class='c'><b>{c_bhav}</b></td>"
+            f"<td>{L(p['nakshatra_en'], p['nakshatra_hi'])}</td>"
+            f"<td class='c'>{p['pada']}</td></tr>"
+        )
+    planet_rows_html = "".join(planet_rows_list)
 
     # Ashtakvarga full table
     av_rows_html = "".join(

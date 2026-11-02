@@ -22,6 +22,15 @@ RASHI_NAMES_EN = [
     "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
     "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
 ]
+RASHI_NAMES_HI = [
+    "मेष", "वृषभ", "मिथुन", "कर्क", "सिंह", "कन्या",
+    "तूळ", "वृश्चिक", "धनु", "मकर", "कुंभ", "मीन"
+]
+GRAHA_NAMES_HI = {
+    "Sun": "सूर्य", "Moon": "चंद्र", "Mars": "मंगळ", "Mercury": "बुध",
+    "Jupiter": "गुरू", "Venus": "शुक्र", "Saturn": "शनी", "Rahu": "राहू", "Ketu": "केतू",
+    "Uranus": "हर्षल", "Neptune": "नेपच्यून", "Pluto": "प्लूटो"
+}
 RASHI_LORDS = [
     "Mars", "Venus", "Mercury", "Moon", "Sun", "Mercury",
     "Venus", "Mars", "Jupiter", "Saturn", "Saturn", "Jupiter"
@@ -90,7 +99,7 @@ def calculate_ascendant_and_mc(lst_deg: float, lat_deg: float, obliquity_deg: fl
 
     y_asc = cos_ramc
     x_asc = -(sin_ramc * cos_eps + tan_phi * sin_eps)
-    asc_trop = (math.degrees(math.atan2(y_asc, x_asc)) + 90.0) % 360.0
+    asc_trop = (math.degrees(math.atan2(y_asc, x_asc))) % 360.0
     asc_sid = (asc_trop - ayanamsha_deg) % 360.0
 
     asc_sign_idx = int(asc_sid // 30.0)
@@ -189,21 +198,20 @@ def calculate_sripati_chalit(asc_sid: float, mc_sid: float) -> dict:
 
 def calculate_kp_placidus_cusps(jd_ut: float, lat_deg: float, lon_deg: float, kp_ayanamsha_deg: float) -> list[float]:
     """
-    Calculate tropical Placidus cusps via Swiss Ephemeris and convert to KP Sidereal cusps.
+    Calculate tropical Placidus cusps via Swiss Ephemeris or analytical semi-arcs
+    and convert to KP Sidereal cusps.
     Verifies strictly monotonic, non-repeating cusp sequence.
     """
     if HAS_SWISSEPH:
         try:
-            cusps_trop, ascmc_trop = swe.houses(jd_ut, lat_deg, lon_deg, b'P')
-            # cusps_trop is 1-indexed (length 13 or 12 depending on swe version)
-            raw = [cusps_trop[i] for i in range(1, 13)] if len(cusps_trop) >= 13 else list(cusps_trop[:12])
+            cusps_t, _ = swe.houses_ex(jd_ut, lat_deg, lon_deg, b'P', 0)
+            raw = [float(cusps_t[i]) % 360.0 for i in range(12)]
             sid_cusps = [(c - kp_ayanamsha_deg) % 360.0 for c in raw]
             return sid_cusps
         except Exception:
             pass
 
     # Analytical Placidus semi-arc algorithm
-    # Compute RAMC and obliquity
     t_cent = (jd_ut - 2451545.0) / 36525.0
     eps0 = 23.43929111 - (46.8150 * t_cent) / 3600.0
     eps = math.radians(eps0)
@@ -216,13 +224,12 @@ def calculate_kp_placidus_cusps(jd_ut: float, lat_deg: float, lon_deg: float, kp
     mc = (math.degrees(math.atan2(math.sin(ramc), math.cos(ramc) * math.cos(eps)))) % 360.0
     cusps = [0.0] * 12
     cusps[9] = mc
-    cusps[3] = (mc + 180.0) % 360.0  # Cusp 4 = IC
 
     # Semi-arc iteration for Cusps 11, 12, 1, 2, 3
     def _placidus_cusp(h_ramc_deg, f):
         r = math.radians(h_ramc_deg)
         l = r
-        for _ in range(15):
+        for _ in range(25):
             d = math.asin(math.sin(eps) * math.sin(l))
             tan_phi_d = math.tan(phi) * math.tan(d)
             if abs(tan_phi_d) > 1.0:
@@ -232,15 +239,21 @@ def calculate_kp_placidus_cusps(jd_ut: float, lat_deg: float, lon_deg: float, kp
             l = math.atan2(math.sin(m), math.cos(m) * math.cos(eps))
         return (math.degrees(l)) % 360.0
 
-    cusps[10] = _placidus_cusp((ramc_deg + 30.0) % 360.0, 1.0 / 3.0)   # 11
-    cusps[11] = _placidus_cusp((ramc_deg + 60.0) % 360.0, 2.0 / 3.0)   # 12
-    cusps[0] = (math.degrees(math.atan2(math.cos(ramc), -(math.sin(ramc) * math.cos(eps) + math.tan(phi) * math.sin(eps)))) + 90.0) % 360.0 # Asc
-    cusps[1] = _placidus_cusp((ramc_deg + 120.0) % 360.0, -2.0 / 3.0)  # 2
-    cusps[2] = _placidus_cusp((ramc_deg + 150.0) % 360.0, -1.0 / 3.0)  # 3
+    cusps[10] = _placidus_cusp((ramc_deg + 30.0) % 360.0, 1.0 / 3.0)   # Cusp 11
+    cusps[11] = _placidus_cusp((ramc_deg + 60.0) % 360.0, 2.0 / 3.0)   # Cusp 12
+    y_asc = math.cos(ramc)
+    x_asc = -(math.sin(ramc) * math.cos(eps) + math.tan(phi) * math.sin(eps))
+    cusps[0] = (math.degrees(math.atan2(y_asc, x_asc))) % 360.0         # Cusp 1 (Asc)
+    cusps[1] = _placidus_cusp((ramc_deg + 120.0) % 360.0, -2.0 / 3.0)  # Cusp 2
+    cusps[2] = _placidus_cusp((ramc_deg + 150.0) % 360.0, -1.0 / 3.0)  # Cusp 3
 
-    # Opposite cusps
-    for i in range(6):
-        cusps[i + 6] = (cusps[i] + 180.0) % 360.0
+    # Opposite cusps (180° opposite in ecliptic longitude)
+    cusps[3] = (cusps[9] + 180.0) % 360.0   # Cusp 4 is opposite Cusp 10
+    cusps[4] = (cusps[10] + 180.0) % 360.0  # Cusp 5 is opposite Cusp 11
+    cusps[5] = (cusps[11] + 180.0) % 360.0  # Cusp 6 is opposite Cusp 12
+    cusps[6] = (cusps[0] + 180.0) % 360.0   # Cusp 7 is opposite Cusp 1
+    cusps[7] = (cusps[1] + 180.0) % 360.0   # Cusp 8 is opposite Cusp 2
+    cusps[8] = (cusps[2] + 180.0) % 360.0   # Cusp 9 is opposite Cusp 3
 
     return [(c - kp_ayanamsha_deg) % 360.0 for c in cusps]
 
@@ -282,3 +295,37 @@ def map_planetary_houses(planets_list: list, asc_sign_idx: int, chalit_data: dic
         p["house"] = rashi_house  # Default Parashari whole sign
 
     return planets_list
+
+
+def map_transit_houses(transit_planets: list, natal_lagna_sign_idx: int, natal_moon_sign_idx: int) -> list[dict]:
+    """
+    Map transit (Gochara) planets independently relative to:
+    1. Natal Lagna: ((transit_sign - natal_lagna_sign + 12) % 12) + 1
+    2. Natal Moon: ((transit_sign - natal_moon_sign + 12) % 12) + 1
+    """
+    results = []
+    for tp in transit_planets:
+        t_sign_idx = tp.get("sign_idx", int(tp.get("sid_lon", 0.0) / 30.0) % 12)
+        lagna_house = ((t_sign_idx - natal_lagna_sign_idx + 12) % 12) + 1
+        moon_house = ((t_sign_idx - natal_moon_sign_idx + 12) % 12) + 1
+
+        pid = tp.get("id") or tp.get("planet_en", "Sun")
+        p_hi = GRAHA_NAMES_HI.get(pid, tp.get("planet_hi", pid))
+        sign_en = RASHI_NAMES_EN[t_sign_idx]
+        sign_hi = RASHI_NAMES_HI[t_sign_idx]
+        h_suf = "st" if lagna_house == 1 else "nd" if lagna_house == 2 else "rd" if lagna_house == 3 else "th"
+
+        tp_mapped = dict(tp)
+        tp_mapped["id"] = pid
+        tp_mapped["planet_en"] = pid
+        tp_mapped["planet_hi"] = p_hi
+        tp_mapped["sign_en"] = sign_en
+        tp_mapped["sign_hi"] = sign_hi
+        tp_mapped["sign_idx"] = t_sign_idx
+        tp_mapped["lagna_house"] = lagna_house
+        tp_mapped["moon_house"] = moon_house
+        tp_mapped["house"] = lagna_house  # Parashari standard Gochara from Lagna
+        tp_mapped["header_en"] = f"{pid} is in {sign_en} in your {lagna_house}{h_suf} house"
+        tp_mapped["header_hi"] = f"गोचरमध्ये {p_hi} आपल्या कुंडलीच्या {lagna_house}व्या भावात ({sign_hi} राशी) स्थित आहे"
+        results.append(tp_mapped)
+    return results
