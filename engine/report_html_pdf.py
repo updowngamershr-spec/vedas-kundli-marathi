@@ -387,84 +387,100 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       </div>
     </div>
 
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:10px; line-height:1.4;">
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:9.2px; line-height:1.35;">
       <!-- Column 1 -->
       <div>
-        <div class="box-heading" style="margin-bottom:5px; font-size:10.8px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:4px 8px; border-radius:5px;">
+        <div class="box-heading" style="margin-bottom:3px; font-size:10px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:3px 6px; border-radius:4px;">
           {T("Section I: Core Charts & Foundations", "विभाग १: मूळ कुंडली व पंचांग विज्ञान")}
         </div>
-        <table class="data-table ultra-compact" style="margin-bottom:7px; width:100%;">
-          <tr><td style="width:75%;"><b>{T("Cover & Native Credentials", "जातक परिचय व जन्म तपशील")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Page 1</td></tr>
+        <table class="data-table ultra-compact" style="margin-bottom:5px; width:100%;">
+          <tr><td style="width:75%;"><b>{T("Cover & Native Credentials", "जातक परिचय व मुख्य मुखपृष्ठ")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Page 1</td></tr>
           <tr style="background:#FEF3C7;"><td style="font-weight:800; color:#7C2D12;"><b>{T("Index & Table of Contents", "विस्तृत अनुक्रमणिका व विषय सूची")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Page 2</td></tr>
           <tr><td>{T("Panchang & Avakahada Chakra", "पंचांग, अवकहडा चक्र व पाया")}</td><td class="c">Page 3</td></tr>
-          <tr><td>{T("D1 Lagna & Vimshottari Balance", "D1 लग्न कुंडली व दशा भोग्य")}</td><td class="c">Page 4</td></tr>
-          <tr><td>{T("Planetary Coordinates & Chalit", "ग्रह स्पष्ट, दृष्टी व चलित चक्र")}</td><td class="c">Page 5</td></tr>
+          <tr><td>{T("D1 Lagna & Vimshottari Balance", "पारंपरिक जन्म कुंडली, नवांश व दशा")}</td><td class="c">Page 4</td></tr>
+          <tr><td>{T("Planetary Coordinates & Chalit", "ग्रह स्पष्ट, दृष्टी व भाव चलित चक्र")}</td><td class="c">Page 5</td></tr>
         </table>
 
-        <div class="box-heading" style="margin-bottom:5px; font-size:10.8px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:4px 8px; border-radius:5px;">
-          {T("Section II: 16 Divisional Charts (Shodashvarga)", "विभाग २: १६-वर्ग कुंडल्या व जीवन पैलू")}
+        <div class="box-heading" style="margin-bottom:3px; font-size:10px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:3px 6px; border-radius:4px;">
+          {T("Section II: Ascendant & Life Predictions", "विभाग २: लग्न, नक्षत्र व सविस्तर जीवन फलादेश")}
         </div>
-        <table class="data-table ultra-compact" style="margin-bottom:7px; width:100%;">
-          <tr><td style="width:75%;"><b>{T("16 Divisional Charts (D1 to D60)", "१६-वर्ग कुंडल्या (होरा ते षष्ट्यंश)")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Page 6</td></tr>
-          <tr><td>{T("Nakshatra Predictions & Temperament", "नक्षत्र फलादेश व मूळ स्वभाव")}</td><td class="c">Pages 7-8</td></tr>
-          <tr><td>{T("12 Bhavas Comprehensive Predictions", "१२ भाव सविस्तर जीवन फलादेश")}</td><td class="c">Pages 9-13</td></tr>
+        <table class="data-table ultra-compact" style="margin-bottom:5px; width:100%;">
+          <tr><td style="width:75%;"><b>{T("Ascendant Personality & Vitality", "आपले जन्म लग्न फळ (आरोग्य व स्वभाव)")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Page 6</td></tr>
+          <tr><td>{T("Nakshatra Prediction & Career", "नक्षत्र फलादेश (शिक्षण, धन व कुटुंब)")}</td><td class="c">Page 7</td></tr>
+          <tr><td>{T("10 Life Domains Comprehensive Predictions", "१२ भाव सविस्तर व्यक्तिगत जीवन फलादेश")}</td><td class="c">Pages 8-11</td></tr>
         </table>
 
-        <div class="box-heading" style="margin-bottom:5px; font-size:10.8px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:4px 8px; border-radius:5px;">
+        <div class="box-heading" style="margin-bottom:3px; font-size:10px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:3px 6px; border-radius:4px;">
           {T("Section III: Doshas & Tajik Varshaphal", "विभाग ३: ग्रहदोष, महादशा व वर्षफळ")}
         </div>
+        <table class="data-table ultra-compact" style="margin-bottom:5px; width:100%;">
+          <tr><td style="width:75%;"><b>{T("Mangal Dosha Analysis & Remedies", "मांगलिक दोष विचार, प्रभाव व उपाय")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Page 12</td></tr>
+          <tr><td>{T("Shani Sade Sati 3 Phases & Remedies", "शनी साडेसाती व ढैया (तिन्ही चरणांचे फळ)")}</td><td class="c">Pages 13-16</td></tr>
+          <tr><td>{T("Kaal Sarp Yoga Analysis", "कालसर्प योग विचार व शांती विधान")}</td><td class="c">Page 17</td></tr>
+          <tr><td>{T("Tajik Annual Varshaphal & Muntha", "ताजिक वर्षफळ, वर्ष कुंडली व मुद्दा दशा")}</td><td class="c">Pages 18-20</td></tr>
+        </table>
+
+        <div class="box-heading" style="margin-bottom:3px; font-size:10px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:3px 6px; border-radius:4px;">
+          {T("Section IV: Dashas, Jaimini & Transit", "विभाग ४: दशा चक्र, जैमिनी व गोचर")}
+        </div>
         <table class="data-table ultra-compact" style="width:100%;">
-          <tr><td style="width:75%;"><b>{T("Mangal Dosha, Kaalsarp & Sade Sati", "मंगळ दोष, कालसर्प व साडेसाती")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Pages 14-17</td></tr>
-          <tr><td>{T("Annual Varshaphal & Tajik Muntha", "वार्षिक वर्षफळ व ताजिक मुन्था")}</td><td class="c">Pages 18-20</td></tr>
-          <tr><td>{T("Planetary Yogas & Rajyogas", "कुंडलीतील शुभ योग व राजयोग")}</td><td class="c">Pages 21-28</td></tr>
-          <tr><td>{T("Lal Kitab 1952 Predictions & Upay", "लाल किताब फलादेश व प्रामाणिक तोडगे")}</td><td class="c">Pages 29-33</td></tr>
-          <tr><td>{T("Lal Kitab Teva & 35-Yr Dasha", "लाल किताब तेवा व ३५-वर्षीय दशा")}</td><td class="c">Page 34</td></tr>
-          <tr><td>{T("Vimshottari Dasha Complete Timeline", "विंशोत्तरी महादशा-अंतर्दशा चक्र")}</td><td class="c">Pages 35-44</td></tr>
+          <tr><td style="width:75%;"><b>{T("Vimshottari Mahadasha Predictions", "विंशोत्तरी महादशा फलादेश (९ ग्रह)")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Pages 21-22</td></tr>
+          <tr><td>{T("Yogini Dasha Complete Timetable", "योगिनी दशा संपूर्ण तालिका व उप-दशा")}</td><td class="c">Pages 23-24</td></tr>
+          <tr><td>{T("Jaimini Chara Dasha & Karakas", "जैमिनी पद्धती (कारकांश, स्वांश व चर दशा)")}</td><td class="c">Pages 25-27</td></tr>
+          <tr><td>{T("Real-time Gochar Transit Predictions", "वर्तमान गोचर फल (९ ग्रहांचे प्रत्यक्ष भ्रमण)")}</td><td class="c">Pages 28-30</td></tr>
         </table>
       </div>
 
       <!-- Column 2 -->
       <div>
-        <div class="box-heading" style="margin-bottom:5px; font-size:10.8px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:4px 8px; border-radius:5px;">
-          {T("Section IV: KP Stellar Astrology", "विभाग ४: कृष्णमूर्ती पद्धती (KP System)")}
+        <div class="box-heading" style="margin-bottom:3px; font-size:10px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:3px 6px; border-radius:4px;">
+          {T("Section V: Lal Kitab & Navagraha", "विभाग ५: लाल किताब १९५२ व नवग्रह विचार")}
         </div>
-        <table class="data-table ultra-compact" style="margin-bottom:7px; width:100%;">
-          <tr><td style="width:75%;"><b>{T("KP Cuspal Positions & Sub-Lords", "के.पी. भाव आरंभ व कस्पल सब-लॉर्ड")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Page 45</td></tr>
-          <tr><td>{T("KP Pratyantar Dasha Micro-Cycles", "विंशोत्तरी सूक्ष्म प्रत्यंतर दशा तालिका")}</td><td class="c">Pages 46-49</td></tr>
-          <tr><td>{T("Planetary Friendships & Shadbala", "ग्रह मैत्री चक्र व षड्बल बलवानता")}</td><td class="c">Pages 50-51</td></tr>
-          <tr><td>{T("Bhavabala & Ashtakavarga SAV", "भावबल व सर्वअष्टकवर्ग (SAV)")}</td><td class="c">Page 52</td></tr>
+        <table class="data-table ultra-compact" style="margin-bottom:5px; width:100%;">
+          <tr><td style="width:75%;"><b>{T("Lal Kitab Predictions & Totke (1-12)", "लाल किताब फलादेश व सात्विक तोडगे")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Pages 31-35</td></tr>
+          <tr><td>{T("Lal Kitab Teva & 35-Yr Dasha", "लाल किताब गणित, टेवा व ३५-वर्षीय दशा")}</td><td class="c">Page 36</td></tr>
+          <tr><td>{T("Navagraha Considerations & Aspects", "नवग्रह फलादेश व विशेष सूत्र विचार")}</td><td class="c">Pages 37-41</td></tr>
         </table>
 
-        <div class="box-heading" style="margin-bottom:5px; font-size:10.8px; background:linear-gradient(90deg, #7C2D12 0%, #166534 100%); color:#FDE68A; padding:4px 8px; border-radius:5px; border:1px solid #D4AF37;">
-          {T("Section V: Authentic KP Remedies Special", "विभाग ५: 🔮 के.पी. अचूक वैज्ञानिक उपाय")}
+        <div class="box-heading" style="margin-bottom:3px; font-size:10px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:3px 6px; border-radius:4px;">
+          {T("Section VI: Shodashvarga & Strengths", "विभाग ६: षोडशवर्ग, प्रत्यंतर व बल गणना")}
         </div>
-        <table class="data-table ultra-compact" style="margin-bottom:7px; width:100%; border:1.5px solid #86EFAC; background:#F0FDF4;">
-          <tr><td style="width:75%; color:#166534; font-weight:800;"><b>{T("KP 4-Fold Significators (A, B, C, D)", "के.पी. ४-स्तरीय कार्येश मॅट्रिक्स")}</b></td><td class="c" style="color:#166534; font-weight:800;">Page 53</td></tr>
-          <tr><td style="color:#166534; font-weight:800;"><b>{T("KP 12 Cuspal Sub-Lord Event Formulas", "के.पी. १२ भाव घटना सूत्रे (विवाह, नोकरी)")}</b></td><td class="c" style="color:#166534; font-weight:800;">Page 54</td></tr>
-          <tr><td style="color:#166534; font-weight:800;"><b>{T("KP Reader III Zero-Damage Gemstones", "के.पी. वैज्ञानिक रत्न व वर्ज्य रत्न इशारा")}</b></td><td class="c" style="color:#166534; font-weight:800;">Page 55</td></tr>
-          <tr><td style="color:#166534; font-weight:800;"><b>{T("KP Medical Astrology: Disease & Cure", "के.पी. रोग निदान व शीघ्र आरोग्य प्राप्ती")}</b></td><td class="c" style="color:#166534; font-weight:800;">Page 56</td></tr>
-          <tr><td style="color:#166534; font-weight:800;"><b>{T("KP Debts & Loans Repayment Protocol", "के.पी. कर्ज मुक्ती व परतफेड शास्त्रीय विधान")}</b></td><td class="c" style="color:#166534; font-weight:800;">Page 57</td></tr>
+        <table class="data-table ultra-compact" style="margin-bottom:5px; width:100%;">
+          <tr><td style="width:75%;"><b>{T("16 Divisional Charts (D1 to D60)", "षोडशवर्ग राशी, भाव व १६ कुंडल्या")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Pages 42-45</td></tr>
+          <tr><td>{T("KP Cuspal Positions & Sub-Lords", "कृष्णमूर्ती पद्धती (KP भाव आरंभ व उपस्वामी)")}</td><td class="c">Page 46</td></tr>
+          <tr><td>{T("Pratyantar Dasha Micro-Cycles", "विंशोत्तरी सूक्ष्म प्रत्यंतर दशा तालिका")}</td><td class="c">Pages 47-50</td></tr>
+          <tr><td>{T("Friendships, Shadbala & Bhavabala", "ग्रह मैत्री, षड्बल व भावबल गणना")}</td><td class="c">Pages 51-52</td></tr>
+          <tr><td>{T("Aspect Grids & KP Sandhi", "पाश्चात्य दृष्टी व के.पी. भाव संधी दृष्टी")}</td><td class="c">Pages 53-54</td></tr>
+          <tr><td>{T("Ashtakavarga & Prastharashtakavarga", "अष्टकवर्ग (३३७ बिंदू) व प्रस्ताराष्टकवर्ग")}</td><td class="c">Pages 55-56</td></tr>
         </table>
 
-        <div class="box-heading" style="margin-bottom:5px; font-size:10.8px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:4px 8px; border-radius:5px;">
-          {T("Section VI: Ultra-VIP Remedial Measures", "विभाग ६: 💎 महा-उपाय, यंत्र व रुद्राक्ष विधान")}
+        <div class="box-heading" style="margin-bottom:3px; font-size:10px; background:linear-gradient(90deg, #7C2D12 0%, #B45309 100%); color:#FDE68A; padding:3px 6px; border-radius:4px;">
+          {T("Section VII: Identity, Marriage & Conduct", "विभाग ७: राशी परिचय, विवाह व आचरण")}
         </div>
-        <table class="data-table ultra-compact" style="width:100%;">
-          <tr><td style="width:75%;"><b>{T("Rudraksha Therapy & Kavach Rules", "रुद्राक्ष थेरपी व शिव कवच धारण")}</b></td><td class="c">Page 58</td></tr>
-          <tr><td>{T("Siddha Yantra Science & Energization", "सिद्ध यंत्र स्थापना व नित्य पूजा")}</td><td class="c">Page 59</td></tr>
-          <tr><td>{T("Navagraha Ayurvedic Herbal Bath", "नवग्रह औषधी स्नान व आभामंडळ शुद्धी")}</td><td class="c">Page 60</td></tr>
-          <tr><td>{T("Lal Kitab 1952 Satvik Totke", "लाल किताब १९५२ अचूक तोडगे")}</td><td class="c">Page 61</td></tr>
-          <tr><td>{T("Ancestral Karmic Debt Clearance", "ऋण मुक्ती टेवा (पितृ ऋण निवारण)")}</td><td class="c">Page 62</td></tr>
-          <tr><td>{T("Navagraha Daan Samagri & Muhurat", "नवग्रह दान सामग्री, मुहूर्त व संकल्प")}</td><td class="c">Page 63</td></tr>
-          <tr><td>{T("Vedic & Tantrik Beej Mantras", "वैदिक व तांत्रिक नवग्रह बीज मंत्र")}</td><td class="c">Page 64</td></tr>
-          <tr><td>{T("Nitya Path & Stotra Kavach", "नित्य पठण व संकट नाशक स्तोत्रे")}</td><td class="c">Page 65</td></tr>
-          <tr><td>{T("Vastu Shastra Directional Alignment", "वास्तु शास्त्र व दिशा ऊर्जा संतुलन")}</td><td class="c">Page 66</td></tr>
-          <tr><td>{T("Planetary Fasting & Dietary Codes", "व्रत, उपवास संहिता व अन्न संस्कार")}</td><td class="c">Page 67</td></tr>
+        <table class="data-table ultra-compact" style="margin-bottom:5px; width:100%;">
+          <tr><td style="width:75%;"><b>{T("Personal Rashi Identity & Guide", "आपली राशी परिचय व शुभ घटक मार्गदर्शन")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Pages 57-58</td></tr>
+          <tr><td>{T("Marriage 36-Guna & Partner Analysis", "विवाह व दांपत्य जीवन (३६ गुण मिलान)")}</td><td class="c">Page 59</td></tr>
+          <tr><td>{T("Panchang Phal & Rahu-Ketu Protocol", "पंचांग फलादेश व राहू-केतू विश्लेषण")}</td><td class="c">Page 60</td></tr>
+          <tr><td>{T("Conduct Code & Do's and Don'ts", "कुंडली सुलभ मार्गदर्शन व आचरण संहिता")}</td><td class="c">Page 61</td></tr>
+        </table>
+
+        <div class="box-heading" style="margin-bottom:3px; font-size:10px; background:linear-gradient(90deg, #7C2D12 0%, #166534 100%); color:#FDE68A; padding:3px 6px; border-radius:4px; border:1px solid #D4AF37;">
+          {T("Section VIII: Authentic KP Remedies", "विभाग ८: 🔮 के.पी. वैज्ञानिक उपाय व वैधानिक उद्घोषणा")}
+        </div>
+        <table class="data-table ultra-compact" style="width:100%; border:1px solid #86EFAC; background:#F0FDF4;">
+          <tr><td style="width:75%; color:#166534; font-weight:800;"><b>{T("KP 4-Fold Significators (A, B, C, D)", "के.पी. ४-स्तरीय कार्येश मॅट्रिक्स")}</b></td><td class="c" style="color:#166534; font-weight:800;">Page 62</td></tr>
+          <tr><td style="color:#166534; font-weight:800;"><b>{T("KP 12 Cuspal Sub-Lord Calculations", "के.पी. १२ भाव उपस्वामी (CSL) निष्कर्ष")}</b></td><td class="c" style="color:#166534; font-weight:800;">Page 63</td></tr>
+          <tr><td style="color:#166534; font-weight:800;"><b>{T("KP Zero-Damage Gemstone Protocol", "के.पी. वैज्ञानिक रत्न व वर्ज्य रत्न इशारा")}</b></td><td class="c" style="color:#166534; font-weight:800;">Page 64</td></tr>
+          <tr><td>{T("Medical Astrology & Debt Clearance", "रोग निदान व कर्ज मुक्ती शास्त्रीय विधान")}</td><td class="c">Pages 65-66</td></tr>
+          <tr><td>{T("Rudraksha, Yantra & Herbal Bath", "रुद्राक्ष थेरपी, सिद्ध यंत्र व औषधी स्नान")}</td><td class="c">Pages 67-69</td></tr>
+          <tr><td>{T("Lal Kitab Totke, Debts & Daan", "लाल किताब तोडगे, ऋण मुक्ती व दान मुहूर्त")}</td><td class="c">Pages 70-72</td></tr>
+          <tr><td>{T("Mantras, Stotras, Vastu & Fasting", "बीज मंत्र, स्तोत्रे, वास्तु संतुलन व उपवास")}</td><td class="c">Pages 73-77</td></tr>
+          <tr><td><b>{T("Master Legal Disclaimer & Copyright", "वैधानिक उद्घोषणा व सर्वाधिकार सुरक्षित")}</b></td><td class="c" style="color:#7C2D12; font-weight:800;">Page 78</td></tr>
         </table>
       </div>
     </div>
 
-    <div style="margin-top:9px; padding:6px 12px; background:linear-gradient(90deg, #FFFBEB 0%, #FEF3C7 100%); border:1px solid #D4AF37; border-radius:6px; display:flex; justify-content:space-between; align-items:center; font-size:9.5px; color:#78350F; font-weight:700;">
+    <div style="margin-top:6px; padding:5px 10px; background:linear-gradient(90deg, #FFFBEB 0%, #FEF3C7 100%); border:1px solid #D4AF37; border-radius:5px; display:flex; justify-content:space-between; align-items:center; font-size:9px; color:#78350F; font-weight:700;">
       <span>🔱 {brand.get("kendra_name", "शिवांश ॲस्ट्रो-वास्तू")} • {brand.get("astrologer_name") or "Mayur Mandhare (BE.E&TC)"} &nbsp;&bull;&nbsp; 📞 {brand.get("phone") or "9373058052"}</span>
       <span>{meta["name"]} — {meta["place"]} ({meta["dob_str"]})</span>
     </div>

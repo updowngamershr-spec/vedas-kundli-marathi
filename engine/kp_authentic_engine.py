@@ -173,6 +173,18 @@ KP_EVENT_RULES = {
 }
 
 
+KP_CODE_MAP = {
+    "SUN": "Sun", "MON": "Moon", "MAR": "Mars", "MER": "Mercury",
+    "JUP": "Jupiter", "VEN": "Venus", "SAT": "Saturn", "RAH": "Rahu", "KET": "Ketu",
+    "MERC": "Mercury", "JUPT": "Jupiter", "VENU": "Venus", "SATN": "Saturn"
+}
+
+def normalize_kp_planet_name(p_name: str) -> str:
+    if not p_name:
+        return ""
+    clean = p_name.replace("[R]", "").strip().upper()
+    return KP_CODE_MAP.get(clean, p_name.strip().capitalize())
+
 def compute_four_fold_significators(planets_data: list, cusps_data: list) -> dict:
     """
     Computes 4-Fold Significators (A, B, C, D) as defined in Krishnamurti Padhdhati Reader III.
@@ -181,32 +193,32 @@ def compute_four_fold_significators(planets_data: list, cusps_data: list) -> dic
     Level C: Planets in constellation of the lord of the house.
     Level D: Planet owning the house (Ruler of the sign on the cusp).
     """
-    # Map planets to their occupants and star lords
-    # In Vedic Kundli engine, each planet dict has 'sign_lord', 'nak_lord', 'sub_lord', 'house'
     house_occupants = {i: [] for i in range(1, 13)}
     house_lords = {i: None for i in range(1, 13)}
     planet_stars = {}
     
     for p in planets_data:
-        p_name = p.get("planet") or p.get("name_en") or p.get("id") or ""
-        p_name = p_name.replace("[R]", "").strip()
+        p_name = p.get("id") or p.get("name_en") or p.get("planet") or ""
+        norm_name = normalize_kp_planet_name(p_name)
+        if norm_name in ("ASC", "Uran", "Nept", "Plut", "Uranus", "Neptune", "Pluto"):
+            continue
         h = p.get("house") or 1
         if 1 <= h <= 12:
-            house_occupants[h].append(p_name)
+            house_occupants[h].append(norm_name)
         # Nakshatra lord of planet
-        star_lord = p.get("nak_lord") or p.get("star_lord") or ""
-        planet_stars[p_name] = star_lord
+        star_lord = p.get("nak_lord_en") or p.get("nak_lord") or p.get("star_lord") or ""
+        planet_stars[norm_name] = normalize_kp_planet_name(star_lord)
 
     for c in cusps_data:
-        h = c.get("house") or 1
-        sign_lord = c.get("sign_lord") or c.get("rasi_lord") or ""
-        house_lords[h] = sign_lord
+        h = c.get("cusp") or c.get("house") or 1
+        sign_code = c.get("rasi") or c.get("sign_lord") or c.get("rasi_lord") or ""
+        house_lords[h] = normalize_kp_planet_name(sign_code)
 
     # Compute A, B, C, D for each house
     significators = {}
     for h in range(1, 13):
         # Level B: Occupants
-        B = list(set(house_occupants.get(h, [])))
+        B = list(dict.fromkeys(house_occupants.get(h, [])))
         
         # Level A: Planets in the star of occupants (Level B)
         A = []
@@ -214,7 +226,7 @@ def compute_four_fold_significators(planets_data: list, cusps_data: list) -> dic
             for pl, st in planet_stars.items():
                 if st and st.lower() == occ.lower():
                     A.append(pl)
-        A = list(set(A))
+        A = list(dict.fromkeys(A))
         
         # Level D: House Lord
         h_lord = house_lords.get(h)
@@ -226,7 +238,7 @@ def compute_four_fold_significators(planets_data: list, cusps_data: list) -> dic
             for pl, st in planet_stars.items():
                 if st and st.lower() == h_lord.lower():
                     C.append(pl)
-        C = list(set(C))
+        C = list(dict.fromkeys(C))
         
         significators[h] = {
             "Level_A": A,
@@ -238,9 +250,7 @@ def compute_four_fold_significators(planets_data: list, cusps_data: list) -> dic
 
     # Invert mapping: for each planet, list which houses it signifies
     planet_signifies = {}
-    for p in planets_data:
-        p_name = p.get("planet") or p.get("name_en") or p.get("id") or ""
-        p_name = p_name.replace("[R]", "").strip()
+    for p_name in ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"]:
         sig_houses = []
         for h in range(1, 13):
             if p_name in significators[h]["all_significators"]:
@@ -267,31 +277,26 @@ def evaluate_kp_gemstones(asc_sub_lord: str, eleventh_sub_lord: str, planet_sign
     rejected_gems = []
     
     candidates = [
-        ("Lagna Cusp Sub-Lord", asc_sub_lord),
-        ("11th Cusp Sub-Lord", eleventh_sub_lord)
+        ("लग्न कस्प उपस्वामी (Lagna Cusp Sub-Lord)", asc_sub_lord),
+        ("११वे भाव कस्प उपस्वामी (11th Cusp Sub-Lord)", eleventh_sub_lord)
     ]
     
+    seen_planets = set()
     for label, pl in candidates:
         if not pl:
             continue
-        clean_pl = pl.replace("[R]", "").strip().capitalize()
-        # Find canonical match
-        matched_canonical = None
-        for k in KP_PLANET_METALS_GEMS.keys():
-            if k.lower() in clean_pl.lower():
-                matched_canonical = k
-                break
+        canonical_pl = normalize_kp_planet_name(pl)
+        if not canonical_pl or canonical_pl in seen_planets:
+            continue
+        seen_planets.add(canonical_pl)
         
-        if not matched_canonical:
-            matched_canonical = "Jupiter"  # Safe benchmark default
-            
-        signified = planet_significations.get(clean_pl, [])
+        gem_info = KP_PLANET_METALS_GEMS.get(canonical_pl, KP_PLANET_METALS_GEMS["Jupiter"])
+        signified = planet_significations.get(canonical_pl, [])
         is_evil_connected = any(h in signified for h in [6, 8, 12])
-        gem_info = KP_PLANET_METALS_GEMS.get(matched_canonical, KP_PLANET_METALS_GEMS["Jupiter"])
         
         entry = {
             "source": label,
-            "planet": matched_canonical,
+            "planet": canonical_pl,
             "signified_houses": signified,
             "gem_mr": gem_info["gem_mr"],
             "gem_en": gem_info["gem_en"],
@@ -303,11 +308,12 @@ def evaluate_kp_gemstones(asc_sub_lord: str, eleventh_sub_lord: str, planet_sign
             "aushadhi_snan_mr": gem_info["aushadhi_snan_mr"]
         }
         
+        sig_str = ", ".join(map(str, sorted(signified))) if signified else "—"
         if is_evil_connected:
-            entry["reason_mr"] = f"हा ग्रह ६, ८ किंवा १२ या दुःस्थान भावांचे कार्येश (Significator) बनतो. के.पी. नियमानुसार हा रत्न धारण केल्यास रोग किंवा हानी वाढू शकते, म्हणून पूर्णतः वर्ज्य (REJECTED) केला आहे."
+            entry["reason_mr"] = f"हा ग्रह ६, ८ किंवा १२ या रोग/ऋण/व्यय भावांचा कार्येश (Signified Houses: {sig_str}) आहे. के.पी. नियमानुसार हा रत्न धारण केल्यास जीवनात संकट किंवा आर्थिक हानी वाढू शकते, म्हणून पूर्णतः वर्ज्य (REJECTED) केला आहे."
             rejected_gems.append(entry)
         else:
-            entry["reason_mr"] = f"हा ग्रह ६, ८, १२ च्या अनिष्ट प्रभावांपासून पूर्णतः मुक्त असून १, २, ३, ५, ९, १०, ११ भावांना शुभ ऊर्जा पुरवतो. के.पी. शास्त्रानुसार अत्यंत लाभदायी व सुरक्षित आहे."
+            entry["reason_mr"] = f"हा ग्रह ६, ८, १२ च्या अनिष्ट प्रभावांपासून पूर्णतः मुक्त असून शुभ भावांचा कार्येश (Signified Houses: {sig_str}) आहे. के.पी. शास्त्रानुसार जातकासाठी अत्यंत लाभदायी, भाग्योदयकारक व सुरक्षित रत्न आहे."
             approved_gems.append(entry)
 
     # If both candidates rejected, prescribe default Yogakaraka / Lagnesh benefic with safe semi-precious upratna

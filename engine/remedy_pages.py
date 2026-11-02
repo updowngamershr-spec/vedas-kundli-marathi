@@ -1,9 +1,13 @@
 
+# -*- coding: utf-8 -*-
+import os
+import sys
 import base64
 
 def get_image_base64(fname: str) -> str:
     """Return data URI for an optimized asset image."""
-    img_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "images")
+    base_dir = getattr(sys, '_MEIPASS', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    img_dir = os.path.join(base_dir, "assets", "images")
     img_path = os.path.join(img_dir, fname)
     if os.path.exists(img_path):
         with open(img_path, "rb") as f:
@@ -91,38 +95,103 @@ def generate_vip_remedy_pages(data: dict, T, P) -> list[dict]:
     # -------------------------------------------------------------------------
     # PAGE 2: KP CUSPAL SUB-LORD LIFE EVENT GROUPINGS (HOUSES 1-12)
     # -------------------------------------------------------------------------
+    cuspal_list = data.get("kp", {}).get("cuspal_positions", [])
+    planet_sigs = four_fold.get("planet_significations", {})
+    
+    BHAVA_NAMES_MR = [
+        "तनु (आरोग्य व व्यक्तिमत्त्व)",
+        "धन (संपत्ती, कुटुंब व वाणी)",
+        "सहज (पराक्रम, भावंडे व अनुबंध)",
+        "सुख (घर, वाहन व मानसिक समाधान)",
+        "पुत्र (बुद्धिमत्ता, शिक्षण व संतती)",
+        "रोग/रिपु (नोकरी, स्पर्धा व आरोग्य)",
+        "जाया (विवाह, भागीदारी व सहकार्य)",
+        "आयु (दीर्घायुष्य, वारसा व अचानक लाभ)",
+        "भाग्य (भाग्योदय, उच्च शिक्षण व प्रवास)",
+        "कर्म (करिअर, पद-प्रतिष्ठा व व्यवसाय)",
+        "लाभ (इच्छापूर्ती, धनलाभ व मित्रमंडळ)",
+        "व्यय (परदेश गमन, गुंतवणूक व मोक्ष)"
+    ]
+
+    KP_CODE_MAP_LOCAL = {
+        "SUN": ("Sun", "सूर्य"), "MON": ("Moon", "चंद्र"), "MAR": ("Mars", "मंगळ"),
+        "MER": ("Mercury", "बुध"), "JUP": ("Jupiter", "गुरु"), "VEN": ("Venus", "शुक्र"),
+        "SAT": ("Saturn", "शनी"), "RAH": ("Rahu", "राहू"), "KET": ("Ketu", "केतू")
+    }
+
+    def _get_csl_verdict(h_num: int, signified: list, sub_mr: str) -> tuple[str, bool]:
+        fav_map = {
+            1: ([1, 3, 5, 9, 10, 11], [6, 8, 12], "उत्कृष्ट आरोग्य, प्रदीर्घ आयुष्य व समाजात उच्च मान-सन्मान लाभेल."),
+            2: ([2, 6, 10, 11], [5, 8, 12], "अखंड धनसंचय, वडिलोपार्जित संपत्ती वृद्धी व कौटुंबिक सौख्य लाभेल."),
+            3: ([3, 1, 11], [8, 12], "प्रचंड पराक्रम, साहसी निर्णय व व्यवसायात फायदेशीर कंत्राटे मिळतील."),
+            4: ([4, 11, 12], [3, 6], "स्वतःचे घर, वाहन व स्थावर मालमत्ता प्राप्तीचे बलवान राजयोग आहेत."),
+            5: ([2, 5, 11], [1, 4, 10], "प्रखर बुद्धिमत्ता, उच्च विद्या, कला-क्रीडा व सुसंस्कृत संतती सुख."),
+            6: ([2, 6, 10, 11], [5, 8, 12], "स्पर्धा परीक्षांमध्ये विजय, नोकरीत उच्च पद व सर्व कर्जांवर मात."),
+            7: ([2, 7, 11], [1, 6, 10], "अत्यंत अनुरूप, सुविद्य जीवनसाथी व सुखी, समृद्ध दांपत्य जीवन योग."),
+            8: ([2, 6, 8, 11], [1, 12], "दीर्घायुष्य, विमा किंवा वारसाहक्काने अचानक गुप्त धनलाभ संभवतो."),
+            9: ([9, 1, 11, 12], [6, 8], "परदेश यात्रा, तीर्थाटन, उच्च शिक्षण व वडिलांकडून उत्तम भाग्यवृद्धी."),
+            10: ([2, 6, 10, 11], [5, 8], "प्रशासन, नेतृत्व, उद्योग आणि कार्यक्षेत्रात सर्वोच्च सन्मान व स्थिरता."),
+            11: ([1, 2, 6, 10, 11], [8, 12], "सर्व महत्त्वाकांक्षांची पूर्ती, अखंड लाभ व प्रतिष्ठित लोकांचे सहकार्य."),
+            12: ([3, 9, 12], [6, 8], "परदेशात स्थायी निवास, आयात-निर्यात यश व आंतरिक आध्यात्मिक उन्नती.")
+        }
+        fav_h, adv_h, pos_txt = fav_map.get(h_num, ([h_num], [6, 8, 12], "हा भाव जातकाच्या जीवनात फलदायी आहे."))
+        has_fav = any(x in signified for x in fav_h)
+        has_adv = any(x in signified for x in adv_h)
+        if has_fav and not has_adv:
+            return (f"✅ अत्यंत शुभ: उपस्वामी {sub_mr} हा {pos_txt}", True)
+        elif has_fav and has_adv:
+            return (f"⚖️ मिश्र फल: उपस्वामी {sub_mr} हा अनुकूल व प्रतिकूल अशा दोन्ही भावांशी जोडल्यामुळे मध्यम यश देईल.", True)
+        elif has_adv:
+            return (f"⚠️ दक्षता आवश्यक: उपस्वामी {sub_mr} प्रतिकूल भावांशी संबंधित असल्याने या क्षेत्रात सावधगिरी बाळगावी.", False)
+        else:
+            return (f"✨ सामान्य शुभ: उपस्वामी {sub_mr} हा {pos_txt}", True)
+
     p2_html = f"""
-    <div class="prose-block" style="font-size:10px; line-height:1.52;">
-      <div style="background:#FFFBEB; border:1.5px solid #B45309; padding:8px 12px; border-radius:6px; margin-bottom:10px;">
-        <h4 style="margin:0 0 3px 0; color:#7C2D12; font-size:12px;">
-          १२ भाव उपस्वामी व अचूक घटना विश्लेषण (KP Cuspal Sub-Lord Event Groupings)
+    <div class="prose-block" style="font-size:9.5px; line-height:1.48;">
+      <div style="background:#FFFBEB; border:1.5px solid #B45309; padding:7px 10px; border-radius:6px; margin-bottom:8px;">
+        <h4 style="margin:0 0 2px 0; color:#7C2D12; font-size:11.5px;">
+          १२ भाव उपस्वामी (CSL) व अचूक व्यक्तिगत घटना निष्कर्ष (KP Cuspal Sub-Lord Calculations)
         </h4>
-        <p style="margin:0; font-size:10px; color:#78350F;">
-          कृष्णमूर्ती पद्धती (के.पी.) च्या प्रामाणिक 'कस्पल भाव समूह' (KP House Groupings) सिद्धांतानुसार प्रत्येक भावाचा उपस्वामी कोणत्या भाव समूहाला जोडला आहे यावरून निश्चित होणारे शास्त्रीय फलादेश:
+        <p style="margin:0; font-size:9.5px; color:#78350F;">
+          कृष्णमूर्ती पद्धती (के.पी.) च्या प्रामाणिक सिद्धांतानुसार प्रत्येक भावाचा निकाल त्या भावाचा कस्पल उपस्वामी (CSL) कोणत्या भावांचे कार्येशत्व करतो यावरून निश्चित होतो. जातकाच्या प्रत्यक्ष कुंडलीवरून काढलेला १२ भावांचा गणितीय निष्कर्ष:
         </p>
       </div>
 
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
     """
     for h in range(1, 13):
-        rules = kp_events.get(h, [])
+        c_info = cuspal_list[h - 1] if len(cuspal_list) >= h else {}
+        deg_str = c_info.get("dms", "—")
+        r_code = c_info.get("rasi", "")
+        sub_raw = c_info.get("sub", "")
+        star_raw = c_info.get("nak", "")
+        
+        canon_sub, sub_mr = KP_CODE_MAP_LOCAL.get(sub_raw, (sub_raw.capitalize(), sub_raw))
+        _, star_mr = KP_CODE_MAP_LOCAL.get(star_raw, (star_raw.capitalize(), star_raw))
+        _, rasi_mr = KP_CODE_MAP_LOCAL.get(r_code, (r_code, r_code))
+        
+        sig_houses = sorted(planet_sigs.get(canon_sub, []))
+        sig_str = "-".join(map(str, sig_houses)) if sig_houses else "—"
+        
+        verdict_txt, is_fav = _get_csl_verdict(h, sig_houses, sub_mr)
+        border_col = "#86EFAC" if is_fav else "#FED7AA"
+        bg_col = "#F0FDF4" if is_fav else "#FFFBEB"
+        
         p2_html += f"""
-        <div style="background:#FFFFFF; border:1.2px solid #E2E8F0; padding:6px 8px; border-radius:6px; box-shadow:0 1px 2px rgba(0,0,0,0.03);">
-          <div style="font-weight:800; color:#7C2D12; border-bottom:1px solid #FED7AA; padding-bottom:2px; margin-bottom:4px; font-size:10.5px;">
-            भाव {h} विश्लेषण (House {h} CSL)
+        <div style="background:{bg_col}; border:1.2px solid {border_col}; padding:5px 7px; border-radius:5px; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #E2E8F0; padding-bottom:2px; margin-bottom:3px;">
+            <span style="font-weight:800; color:#7C2D12; font-size:10px;">भाव {h}: {BHAVA_NAMES_MR[h-1]}</span>
+            <span style="font-size:8.8px; color:#64748B; background:#FFF; padding:1px 4px; border-radius:3px; border:1px solid #E2E8F0;">{deg_str}</span>
           </div>
+          <div style="font-size:9px; margin-bottom:2px; display:flex; justify-content:space-between;">
+            <span>नक्षत्र स्वामी: <b>{star_mr}</b> | कस्प उपस्वामी: <b style="color:#7C2D12;">{sub_mr}</b></span>
+            <span style="background:#FEF3C7; padding:0 4px; border-radius:3px; font-weight:800; color:#9A3412;">कार्येश: {sig_str}</span>
+          </div>
+          <div style="font-size:8.8px; color:#1E293B; line-height:1.35; margin-top:2px;">
+            {verdict_txt}
+          </div>
+        </div>
         """
-        for r in rules[:2]:
-            icon = "✅" if r.get("fav") else "⚠️"
-            color = "#166534" if r.get("fav") else "#B91C1C"
-            p2_html += f"""
-            <div style="margin-bottom:3px; font-size:9.5px;">
-              <span style="color:{color}; font-weight:700;">{icon} {r['event_mr']}:</span>
-              <span style="background:#FEF3C7; padding:1px 4px; border-radius:3px; font-weight:800; color:#7C2D12;">{'-'.join(map(str, r['houses']))}</span>
-              <div style="color:#64748B; font-size:8.8px; margin-top:1px;">{r['desc_mr']}</div>
-            </div>
-            """
-        p2_html += "</div>"
 
     p2_html += """
       </div>

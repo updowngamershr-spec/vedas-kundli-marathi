@@ -82,7 +82,7 @@ def generate_complete_kundli(
     written_reports = compute_all_written_reports(core, vimshottari, varshaphal_transit)
 
     # Authentic Mathematical KP Engine (Reader III + KP House Groupings)
-    kp_cusps_list = kp.get("kp_cusps", [])
+    kp_cusps_list = kp.get("cuspal_positions", [])
     four_fold = compute_four_fold_significators(core["planets"], kp_cusps_list)
     
     asc_csl = kp_cusps_list[0].get("sub", "Jupiter") if kp_cusps_list else "Jupiter"

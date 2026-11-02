@@ -13,6 +13,7 @@ Covers:
 """
 
 from engine.lal_kitab_corpus import build_lal_kitab_corpus, evaluate_chamatkari_sutras_and_career_rules
+from engine.personalized_predictions import build_dynamic_life_predictions, get_planet_specific_prediction
 
 
 ASCENDANT_DATA = {
@@ -207,8 +208,13 @@ def get_nakshatra_prediction(nak_en: str, nak_hi: str, pada: int):
 
 def get_life_predictions(core_data: dict):
     """
-    Return the 10 Life Prediction sections (Pages 6-9 of benchmark PDF) in English and Hindi.
+    Return the 10 Life Prediction sections dynamically computed from the native's actual chart.
     """
+    if core_data and "meta" in core_data and "planet_by_id" in core_data:
+        try:
+            return build_dynamic_life_predictions(core_data)
+        except Exception as e_dyn:
+            print("Notice using fallback life predictions:", e_dyn)
     return [
         {
             "title_en": "Character",
@@ -761,14 +767,15 @@ def compute_all_written_reports(core_data: dict, vim_data: dict, varsha_data: di
             f"{p_obj['base_hi']} की दृष्टि {asp_given_hi} भाव पर है तथा यह {asp_rec_str_hi} से दृष्ट है।"
         )
 
+        pl_mr, pl_en = get_planet_specific_prediction(pid, h_num, s_num, dig_en)
         planet_considerations.append({
             "id": pid,
             "title_en": f"{pid} Consideration",
             "title_hi": f"{p_obj['base_hi']} विचार ({pid} Consideration)",
             "intro_en": intro_en,
             "intro_hi": intro_hi,
-            "body_en": BHAV_PREDICTIONS_EN.get(h_num, BHAV_PREDICTIONS_EN[1]),
-            "body_hi": BHAV_PREDICTIONS_HI.get(h_num, BHAV_PREDICTIONS_HI[1]),
+            "body_en": pl_en,
+            "body_hi": pl_mr,
             "dignity_en": dig_en,
             "dignity_hi": dig_hi,
         })

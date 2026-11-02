@@ -727,8 +727,11 @@ def api_export_pdf(req: KundliRequest):
             data["brand"]["tagline_en"] = brand_cfg["tagline"]
     html_str = build_full_56_page_html(data, lang=req.lang, package=req.report_package)
     safe_name = "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in req.name).strip("_") or "Kundli"
-    pkg_suffix = f"_{req.report_package.upper()}" if req.report_package != "maha" else ""
-    pdf_filename = f"Shivansh_Astro_Vastu_{safe_name}{pkg_suffix}_{req.lang.upper()}.pdf"
+    pkg_name = (req.report_package or "VIP").upper()
+    ts_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+    brand_kendra = data["brand"].get("kendra_name") or "Shivansh_Astro_Vastu"
+    safe_brand = "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in brand_kendra).strip("_")
+    pdf_filename = f"{safe_name}_{pkg_name}_{ts_str}_{safe_brand}.pdf"
     pdf_path = os.path.join(REPORTS_DIR, pdf_filename)
 
     res = export_html_to_pdf(html_str, pdf_path, split_single_pages=(req.report_package == "maha"))
@@ -3310,11 +3313,15 @@ def index_ui():
     </button>
   </nav>
 
-  <!-- Filmora-Style Luxury Progress Modal -->
+  <!-- Filmora-Style Luxury Progress Modal with Live Countdown -->
   <div id="loadingModal">
     <div class="modal-content-box">
       <div class="chakra-spinner">☸</div>
       <h3 style="color:#FEF08A; font-size:17px; font-weight:900; letter-spacing:1.5px; margin-bottom:6px;">COMPILING VEDIC HOROSCOPE</h3>
+      <div id="loadingCountdownWrap" style="background:rgba(0,0,0,0.35); border:1.2px solid #D97706; border-radius:20px; padding:3px 14px; margin-bottom:10px; display:inline-flex; align-items:center; gap:8px;">
+        <span style="font-size:14px;">⏱️</span>
+        <span style="color:#FEF08A; font-size:12px; font-weight:800;">अंदाजे वेळ शिल्लक: <span id="loadingCountdownSecs" style="font-size:15px; color:#38BDF8; font-weight:900;">15</span> सेकंद (Estimated Time: 15s)</span>
+      </div>
       <p id="loadingStageText" style="color:#FED7AA; font-size:12px; margin-bottom:14px; min-height:18px;">Initializing calculations...</p>
 
       <div class="progress-bar-wrap">
@@ -4820,23 +4827,32 @@ def index_ui():
       }
       if (!validateInputs(p)) return;
 
-      // Show Filmora-Style Progress Modal
+      // Show Filmora-Style Progress Modal with Live Countdown
       const modal = document.getElementById('loadingModal');
       const bar = document.getElementById('loadingBarFill');
       const txt = document.getElementById('loadingStageText');
       const pct = document.getElementById('loadingPercentText');
+      const countEl = document.getElementById('loadingCountdownSecs');
 
       modal.style.display = 'flex'; modal.style.pointerEvents = 'auto';
       bar.style.width = '12%';
       txt.innerText = 'Calibrating VSOP87 Astronomical Coordinates & Lahiri Ayanamsha...';
-      pct.innerText = '15%';
+      pct.innerText = '12%';
+
+      let remainingSecs = 15;
+      if (countEl) countEl.innerText = remainingSecs;
+      const countTimer = setInterval(() => {
+        remainingSecs--;
+        if (remainingSecs < 1) remainingSecs = 1;
+        if (countEl) countEl.innerText = remainingSecs;
+      }, 1000);
 
       const stages = [
-        {w: '30%', t: 'Computing 16 Classical Shodashvarga Charts (D1 to D60)...', p: '30%'},
-        {w: '50%', t: 'Calculating Vimshottari Dasha Periods & Lal Kitab Debts...', p: '50%'},
-        {w: '70%', t: 'Evaluating Shadbala Strengths & 337-Point Ashtakavarga...', p: '70%'},
-        {w: '88%', t: 'Rendering 81-Page VIP Dossier with Authentic KP Remedies...', p: '88%'},
-        {w: '96%', t: 'Finalizing Complete Vector PDF & Royal Seals...', p: '96%'}
+        {w: '28%', t: 'Computing 16 Classical Shodashvarga Charts (D1 to D60)...', p: '28%'},
+        {w: '48%', t: 'Calculating Vimshottari Dasha Periods & Lal Kitab Debts...', p: '48%'},
+        {w: '68%', t: 'Evaluating Shadbala Strengths & 337-Point Ashtakavarga...', p: '68%'},
+        {w: '86%', t: 'Rendering 78-Page VIP Dossier with Authentic KP 12 CSL Remedies...', p: '86%'},
+        {w: '95%', t: 'Finalizing Complete Vector PDF & Royal Seals...', p: '95%'}
       ];
 
       let sIdx = 0;
@@ -4847,7 +4863,7 @@ def index_ui():
           pct.innerText = stages[sIdx].p;
           sIdx++;
         }
-      }, 600);
+      }, 2500);
 
       try {
         const res = await fetch('/api/export-pdf', {
@@ -4856,11 +4872,13 @@ def index_ui():
           body: JSON.stringify(p)
         });
         clearInterval(timer);
+        clearInterval(countTimer);
         const data = await res.json();
 
         bar.style.width = '100%';
         pct.innerText = '100%';
-        txt.innerText = '✨ 81-Page Kundli Dossier Ready!';
+        if (countEl) countEl.innerText = '0';
+        txt.innerText = '✨ 78-Page Kundli Dossier Ready!';
 
         setTimeout(() => {
           modal.style.display = 'none'; modal.style.pointerEvents = 'none';

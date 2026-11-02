@@ -168,12 +168,37 @@ def compute_vimshottari_dasha(moon_sid_lon: float, birth_year: int, birth_month:
             else:
                 ad_end_y, ad_end_m, ad_end_d = _add_ymd(ad_start_y, ad_start_m, ad_start_d, ay, am, ad_days)
 
+            ad_start_tuple = (ad_start_y, ad_start_m, ad_start_d)
+            ad_end_tuple = (ad_end_y, ad_end_m, ad_end_d)
+            birth_tuple = (birth_year, birth_month, birth_day)
+
+            # Strict Date Validation: Never display pre-birth dates as active for native
+            if ad_end_tuple <= birth_tuple:
+                disp_start_str = "00/00/0000"
+                disp_end_str = "00/00/0000"
+                is_pre_birth = True
+                is_active_at_birth = False
+            elif ad_start_tuple < birth_tuple < ad_end_tuple:
+                disp_start_str = _fmt_date_short(birth_year, birth_month, birth_day)
+                disp_end_str = _fmt_date_short(ad_end_y, ad_end_m, ad_end_d)
+                is_pre_birth = False
+                is_active_at_birth = True
+            else:
+                disp_start_str = _fmt_date_short(ad_start_y, ad_start_m, ad_start_d)
+                disp_end_str = _fmt_date_short(ad_end_y, ad_end_m, ad_end_d)
+                is_pre_birth = False
+                is_active_at_birth = False
+
             antardashas.append({
                 "code": ad_code,
                 "name_en": ad_en,
                 "name_hi": ad_hi,
-                "start_str": _fmt_date_short(ad_start_y, ad_start_m, ad_start_d),
-                "end_str": _fmt_date_short(ad_end_y, ad_end_m, ad_end_d),
+                "start_str": disp_start_str,
+                "end_str": disp_end_str,
+                "raw_start_str": _fmt_date_short(ad_start_y, ad_start_m, ad_start_d),
+                "raw_end_str": _fmt_date_short(ad_end_y, ad_end_m, ad_end_d),
+                "is_pre_birth": is_pre_birth,
+                "is_active_at_birth": is_active_at_birth,
                 "end_y": ad_end_y,
                 "end_m": ad_end_m,
                 "end_d": ad_end_d,
@@ -181,8 +206,6 @@ def compute_vimshottari_dasha(moon_sid_lon: float, birth_year: int, birth_month:
 
             # Build Pratyantardasha (3rd level) block for this MD--AD pair
             # Only include blocks that end on or after birth date
-            ad_end_tuple = (ad_end_y, ad_end_m, ad_end_d)
-            birth_tuple = (birth_year, birth_month, birth_day)
             if ad_end_tuple >= birth_tuple and len(pratyantar_blocks) < 60:
                 pd_rows = []
                 pd_start_y, pd_start_m, pd_start_d = ad_start_y, ad_start_m, ad_start_d
