@@ -21,6 +21,7 @@ from engine.varshaphal_sadesati_yogas import (
     compute_varshaphal_and_transit, compute_yogas_and_gemstones
 )
 from engine.knowledge_predictions import compute_all_written_reports
+from engine.vastu_engine import compute_astro_vastu_audit
 from engine.kp_authentic_engine import (
     compute_four_fold_significators, evaluate_kp_gemstones,
     evaluate_kp_debts_and_loans, evaluate_kp_disease_and_cure,
@@ -136,4 +137,5 @@ def generate_complete_kundli(
         "yogas": yogas_gems["yogas"],
         "gemstones": yogas_gems["gemstones"],
         "written": written_reports,
+        "vastu": compute_astro_vastu_audit(core),
     }

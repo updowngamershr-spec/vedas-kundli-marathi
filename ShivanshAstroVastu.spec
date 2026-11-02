@@ -49,6 +49,8 @@ hidden_imports = [
     'engine.marathi_engine',
     'engine.personalized_predictions',
     'engine.kp_authentic_engine',
+    'engine.vastu_engine',
+    'swisseph',
     'crm_db',
     'app',
 ]
