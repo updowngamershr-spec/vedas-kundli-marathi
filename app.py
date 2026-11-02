@@ -667,7 +667,7 @@ def api_export_milan_person_pdf(person: MilanPerson, lang: str = "hi"):
         place=person.place, lat=p_lat, lon=p_lon, tz=p_tz,
     )
     html_str = build_full_56_page_html(data, lang=lang)
-    safe_name = "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in person.name).strip("_") or "Kundli"
+    safe_name = make_safe_filename(person.name)
     pdf_filename = f"Shivansh_Astro_Vastu_{safe_name}_{lang.upper()}.pdf"
     pdf_path = os.path.join(REPORTS_DIR, pdf_filename)
     res = export_html_to_pdf(html_str, pdf_path, split_single_pages=False)
@@ -706,6 +706,15 @@ def api_generate_html(req: KundliRequest):
     return HTMLResponse(content=html_str)
 
 
+def make_safe_filename(name: str) -> str:
+    import unicodedata
+    if not name:
+        return "Kundli"
+    clean = "".join(c if unicodedata.category(c) in ('Lu', 'Ll', 'Lt', 'Lm', 'Lo', 'Mn', 'Mc', 'Nd') or c in ("_", "-") else "_" for c in name)
+    clean = re.sub(r'_+', '_', clean).strip('_')
+    return clean or "Kundli"
+
+
 @app.post("/api/export-pdf")
 def api_export_pdf(req: KundliRequest):
     data = generate_complete_kundli(
@@ -727,7 +736,7 @@ def api_export_pdf(req: KundliRequest):
         if brand_cfg.get("tagline"):
             data["brand"]["tagline_en"] = brand_cfg["tagline"]
     html_str = build_full_56_page_html(data, lang=req.lang, package=req.report_package)
-    safe_name = "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in req.name).strip("_") or "Kundli"
+    safe_name = make_safe_filename(req.name)
     pkg_name = (req.report_package or "VIP").upper()
     ts_str = datetime.now().strftime("%Y%m%d_%H%M%S")
     brand_kendra = data["brand"].get("kendra_name") or "Shivansh_Astro_Vastu"
@@ -5055,9 +5064,33 @@ def index_ui():
       if (nameEl) nameEl.innerText = filename || 'Kundli_VIP.pdf';
       if (locEl) locEl.innerText = path || "C:\\Users\\Downloads";
       if (modal) {
-        modal.style.display = 'flex';
-        modal.style.pointerEvents = 'auto';
+        modal.style.setProperty('display', 'flex', 'important');
+        modal.style.setProperty('z-index', '999999999', 'important');
+        modal.style.setProperty('pointer-events', 'auto', 'important');
       }
+      
+      // Double guarantee: Persistent Action Toast with Direct Buttons
+      let toast = document.getElementById('nativeAppToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'nativeAppToast';
+        document.body.appendChild(toast);
+      }
+      toast.style.cssText = 'position:fixed; top:20px; right:24px; z-index:999999999; min-width:340px; max-width:480px; background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border:2px solid #e0a943; border-radius:12px; box-shadow:0 16px 40px rgba(0,0,0,0.85); padding:16px 20px; color:#f8fafc; font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif; display:block;';
+      toast.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div style="font-weight:800; font-size:14.5px; color:#fbbf24; display:flex; align-items:center; gap:6px;">
+            <span>✅</span> <span>PDF तयार झाली! (Download Complete)</span>
+          </div>
+          <button onclick="this.parentElement.parentElement.style.display='none'" style="background:transparent; border:none; color:#94a3b8; font-size:16px; font-weight:700; cursor:pointer;">✕</button>
+        </div>
+        <div style="font-size:12px; color:#94a3b8; margin-bottom:4px;">फाइल: <span style="color:#38bdf8; font-weight:700;">${filename || 'Kundli.pdf'}</span></div>
+        <div style="font-size:11.5px; color:#a7f3d0; margin-bottom:12px; word-break:break-all;">📂 स्थान: ${path || 'Downloads Folder'}</div>
+        <div style="display:flex; gap:10px;">
+          <button type="button" onclick="openGeneratedPdf()" style="flex:1; background:linear-gradient(135deg, #e0a943 0%, #d97706 100%); color:#0b0f19; border:none; padding:8px 12px; border-radius:6px; font-weight:800; font-size:12px; cursor:pointer;">📄 Open PDF</button>
+          <button type="button" onclick="openGeneratedPdfLocation()" style="flex:1; background:#1e293b; color:#38bdf8; border:1px solid #38bdf8; padding:8px 12px; border-radius:6px; font-weight:800; font-size:12px; cursor:pointer;">📂 Open Location</button>
+        </div>
+      `;
     }
 
     function closeDownloadSuccessModal() {
