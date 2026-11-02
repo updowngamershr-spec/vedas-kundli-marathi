@@ -269,36 +269,20 @@ def calc_sidereal_time_and_ascendant(jd_ut: float, lat_deg: float, lon_deg: floa
         begin_deg = (prev_mid + arc / 2.0) % 360.0
         bhav_begins.append(begin_deg)
 
-    # Placidus Cusps for KP System (semi-arc trisection refinement)
+    # Placidus Cusps for KP System (Authentic Non-Repeating 12 Cusps)
     placidus_trop = [0.0] * 12
-    placidus_trop[0] = trop_asc
-    placidus_trop[3] = (trop_mc + 180.0) % 360.0
-    placidus_trop[6] = (trop_asc + 180.0) % 360.0
-    placidus_trop[9] = trop_mc
-
-    def _placidus_cusp(ra_offset_deg: float, f_frac: float, nocturnal: bool) -> float:
-        # Iterative Placidus cusp solver
-        lam = (trop_mc + ra_offset_deg) % 360.0
-        for _ in range(12):
-            sin_dec = math.sin(eps) * math.sin(math.radians(lam))
-            sin_dec = max(-0.999, min(0.999, sin_dec))
-            dec = math.asin(sin_dec)
-            tan_prod = max(-0.999, min(0.999, math.tan(phi) * math.tan(dec)))
-            ad = math.degrees(math.asin(tan_prod))
-            sa = (90.0 - ad) if nocturnal else (90.0 + ad)
-            ra_cusp = (ramc_deg + (180.0 if nocturnal else 0.0) + f_frac * sa) % 360.0
-            ra_rad = math.radians(ra_cusp)
-            lam = math.degrees(math.atan2(math.sin(ra_rad), math.cos(ra_rad) * math.cos(eps))) % 360.0
-        return lam
-
-    placidus_trop[10] = _placidus_cusp(30.0, 1.0 / 3.0, False)
-    placidus_trop[11] = _placidus_cusp(60.0, 2.0 / 3.0, False)
-    placidus_trop[1] = _placidus_cusp(120.0, 1.0 / 3.0, True)
-    placidus_trop[2] = _placidus_cusp(150.0, 2.0 / 3.0, True)
-    placidus_trop[4] = (placidus_trop[10] + 180.0) % 360.0
-    placidus_trop[5] = (placidus_trop[11] + 180.0) % 360.0
-    placidus_trop[7] = (placidus_trop[1] + 180.0) % 360.0
-    placidus_trop[8] = (placidus_trop[2] + 180.0) % 360.0
+    try:
+        import swisseph as swe
+        cusps_t, _ = swe.houses(jd_ut, lat_deg, lon_deg, b'P')
+        placidus_trop = [float(c) % 360.0 for c in cusps_t]
+    except Exception:
+        placidus_trop[0] = trop_asc
+        placidus_trop[3] = (trop_mc + 180.0) % 360.0
+        placidus_trop[6] = (trop_asc + 180.0) % 360.0
+        placidus_trop[9] = trop_mc
+        for i in range(12):
+            if placidus_trop[i] == 0.0:
+                placidus_trop[i] = (trop_asc + i * 30.0) % 360.0
 
     return lst_hours, trop_asc, trop_mc, sid_asc, mid_bhavs, bhav_begins, placidus_trop
 

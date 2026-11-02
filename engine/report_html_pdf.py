@@ -638,8 +638,26 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     # =========================================================================
     # PAGE 4: PLANETARY POSITIONS, ASHTAKAVARGA & COMPLETE CHALIT TABLE
     # =========================================================================
+    b_beg = [c.get("begin_lon", 0.0) for c in data.get("chalit_table", [])]
+    def _get_chalit_bhava(plon: float) -> int:
+        plon = plon % 360.0
+        for i in range(12):
+            s = b_beg[i]
+            e = b_beg[(i + 1) % 12]
+            arc_tot = (e - s) % 360.0
+            arc_p = (plon - s) % 360.0
+            if arc_p < arc_tot:
+                return i + 1
+        return 1
+
     planet_rows_html = "".join(
-        f"<tr><td><b>{L(p['name_en'], p['name_hi'])}</b></td><td>{L(p['sign_en'], p['sign_hi'])}</td><td>{p['dms']}</td><td>{L(p['nakshatra_en'], p['nakshatra_hi'])}</td><td class='c'>{p['pada']}</td></tr>"
+        f"<tr><td><b>{L(p['name_en'], p['name_hi'])}</b></td>"
+        f"<td>{L(p['sign_en'], p['sign_hi'])}</td>"
+        f"<td class='c'>{p['dms']}</td>"
+        f"<td class='c'><b>{p['house']}</b></td>"
+        f"<td class='c'><b>{_get_chalit_bhava(p['sid_lon'])}</b></td>"
+        f"<td>{L(p['nakshatra_en'], p['nakshatra_hi'])}</td>"
+        f"<td class='c'>{p['pada']}</td></tr>"
         for p in data["planets"]
     )
 
@@ -660,7 +678,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       <div>
         <div class="box-heading">{T("Planetary Positions (Graha Sphuta)", "ग्रह स्पष्ट तालिका")}</div>
         <table class="data-table compact">
-          <thead><tr><th>Planets</th><th>Sign</th><th>Longitude</th><th>Nakshatra</th><th>Pada</th></tr></thead>
+          <thead><tr><th>{T("Planets", "ग्रह")}</th><th>{T("Sign", "राशी")}</th><th>{T("Longitude", "अंश")}</th><th>{T("Rashi Bhav", "राशी भाव")}</th><th>{T("Chalit Bhav", "चलित भाव")}</th><th>{T("Nakshatra", "नक्षत्र")}</th><th>{T("Pada", "चरण")}</th></tr></thead>
           <tbody>{planet_rows_html}</tbody>
         </table>
 

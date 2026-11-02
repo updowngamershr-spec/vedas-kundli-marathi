@@ -172,10 +172,10 @@ def compute_vimshottari_dasha(moon_sid_lon: float, birth_year: int, birth_month:
             ad_end_tuple = (ad_end_y, ad_end_m, ad_end_d)
             birth_tuple = (birth_year, birth_month, birth_day)
 
-            # Strict Date Validation: Never display pre-birth dates as active for native
+            # Authentic Historical & Running Date Sequence (No 00/00/0000)
             if ad_end_tuple <= birth_tuple:
-                disp_start_str = "00/00/0000"
-                disp_end_str = "00/00/0000"
+                disp_start_str = _fmt_date_short(ad_start_y, ad_start_m, ad_start_d)
+                disp_end_str = _fmt_date_short(ad_end_y, ad_end_m, ad_end_d)
                 is_pre_birth = True
                 is_active_at_birth = False
             elif ad_start_tuple < birth_tuple < ad_end_tuple:
@@ -219,10 +219,7 @@ def compute_vimshottari_dasha(moon_sid_lon: float, birth_year: int, birth_month:
                     else:
                         pd_end_y, pd_end_m, pd_end_d = _add_ymd(pd_start_y, pd_start_m, pd_start_d, py, pm, pd_days)
 
-                    if (pd_end_y, pd_end_m, pd_end_d) < birth_tuple:
-                        end_disp = "00/00/00"
-                    else:
-                        end_disp = _fmt_date_short(pd_end_y, pd_end_m, pd_end_d)
+                    end_disp = _fmt_date_short(pd_end_y, pd_end_m, pd_end_d)
 
                     pd_rows.append({
                         "code": pd_code,
