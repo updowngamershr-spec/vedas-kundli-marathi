@@ -8,6 +8,7 @@ added_files = [
     ('data/lal_kitab_hindi_cleaned.json', 'data'),
     ('app_icon.ico', '.'),
     ('assets', 'assets'),
+    ('engine', 'engine'),
 ]
 
 hidden_imports = [
