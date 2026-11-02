@@ -2538,9 +2538,8 @@ def index_ui():
                 <div style="background:linear-gradient(135deg, #7C2D12 0%, #B45309 100%); padding:12px 18px; color:#fff; display:flex; justify-content:space-between; align-items:center;">
                   <span style="font-weight:900; font-size:14px; letter-spacing:0.5px;">👑 Royal Vedic Matrimonial Milan Dossier (३-पृष्ठीय अष्टकूट मिलान)</span>
                   <div style="display:flex; gap:10px;">
-                    <button onclick="printMilanDossier()" style="background:#059669; color:#fff; border:none; padding:7px 16px; border-radius:6px; font-weight:800; cursor:pointer; font-size:12px;">🖨️ प्रिंट / PDF सेव्ह करा (Print / Save)</button>
-                    <button onclick="exportMilanPDF()" style="background:#D97706; color:#fff; border:none; padding:7px 16px; border-radius:6px; font-weight:800; cursor:pointer; font-size:12px;">⬇️ Download PDF</button>
-                    <button onclick="closeMilanPreview()" style="background:#EF4444; color:#fff; border:none; padding:7px 14px; border-radius:6px; font-weight:800; cursor:pointer; font-size:12px;">✕ Close</button>
+                    <button onclick="printMilanDossier()" style="background:#059669; color:#fff; border:none; padding:8px 18px; border-radius:6px; font-weight:800; cursor:pointer; font-size:12px; box-shadow:0 2px 8px rgba(5,150,105,0.35);">🖨️ प्रिंट / PDF सेव्ह करा (Print / Save)</button>
+                    <button onclick="closeMilanPreview()" style="background:#EF4444; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:800; cursor:pointer; font-size:12px;">✕ Close</button>
                   </div>
                 </div>
                 <div style="flex:1; padding:12px; background:#F5EFEB; overflow:hidden;">
@@ -2740,8 +2739,8 @@ def index_ui():
               </div>
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap; width:100%; max-width:340px;">
-              <button type="button" onclick="exportPDF()" style="flex:1; min-width:145px; background:linear-gradient(135deg, #7C2D12 0%, #451A03 100%); color:#FEF08A; border:1px solid #D4AF37; font-weight:900; font-size:12.5px; padding:10px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 8px rgba(124,45,18,0.25);">
-                📄 संपूर्ण ७८-पृष्ठीय PDF डाऊनलोड करा (Download PDF)
+              <button type="button" onclick="loadInAppPdfPreview(); switchNav('reports'); setTimeout(printReportFrame, 700);" style="flex:1; min-width:145px; background:linear-gradient(135deg, #059669 0%, #047857 100%); color:#FFFFFF; border:1px solid #10B981; font-weight:900; font-size:12.5px; padding:10px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 8px rgba(5,150,105,0.25);">
+                🖨️ प्रिंट / PDF सेव्ह करा (Print / Save)
               </button>
               <button type="button" onclick="loadInAppPdfPreview(); switchNav('reports');" style="flex:1; min-width:130px; background:#FFFFFF; color:#7C2D12; border:1.5px solid #D4AF37; font-weight:800; font-size:12px; padding:10px 12px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                 👁️ थेट पूर्वदृश्य (Live Preview)
@@ -3190,9 +3189,8 @@ def index_ui():
                 <div style="font-size:14px; font-weight:800; color:#92400E;" id="milanVerdict">Auspicious Match</div>
                 <div style="font-size:12px; font-weight:700; color:#B45309; margin-top:4px;" id="milanManglikHarmony">Manglik Harmony Verified</div>
                 <div style="display:flex; justify-content:center; gap:10px; margin-top:14px; flex-wrap:wrap;">
-                  <button class="btn-primary-gradient" id="btnExportMilan" onclick="exportMilanPDF()">⬇️ Download 3-Page Royal Milan PDF</button>
-                  <button class="btn-primary-gradient" style="background:linear-gradient(135deg, #059669 0%, #047857 100%);" onclick="printMilanDossier()">🖨️ प्रिंट / PDF सेव्ह करा (Print / Save) (Instant)</button>
-                  <button class="btn-secondary-outline" style="border-color:#B45309; color:#78350F; font-weight:800; background:#FFFBEB;" onclick="previewMilanDossier()">👁️ Live Dossier Preview</button>
+                  <button class="btn-primary-gradient" style="background:linear-gradient(135deg, #059669 0%, #047857 100%); padding:9px 18px; font-weight:800; box-shadow:0 4px 12px rgba(5,150,105,0.35);" onclick="printMilanDossier()">🖨️ प्रिंट / PDF सेव्ह करा (Print / Save)</button>
+                  <button class="btn-secondary-outline" style="border-color:#B45309; color:#78350F; font-weight:800; background:#FFFBEB; padding:9px 16px;" onclick="previewMilanDossier()">👁️ Live Dossier Preview</button>
                 </div>
               </div>
 
@@ -3219,17 +3217,14 @@ def index_ui():
                 </h3>
                 <span class="badge" id="reportNativeBadge" style="font-size:11px; background:#FEF3C7; color:#78350F; padding:2px 8px; border-radius:12px; font-weight:700;">Active Native: नवीन जातक (New Client)</span>
               </div>
-              <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                <button class="btn-primary-gradient" onclick="exportPDF()" style="padding:8px 12px; font-size:12px; font-weight:800; display:inline-flex; align-items:center; gap:4px;">
-                  ⬇️ Download PDF
-                </button>
-                <button class="btn-primary-gradient" style="background:linear-gradient(135deg, #059669 0%, #047857 100%); padding:8px 12px; font-size:12px; font-weight:800; display:inline-flex; align-items:center; gap:4px;" onclick="printReportFrame()">
+              <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                <button class="btn-primary-gradient" style="background:linear-gradient(135deg, #059669 0%, #047857 100%); padding:9px 18px; font-size:13px; font-weight:800; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(5,150,105,0.35);" onclick="printReportFrame()">
                   🖨️ प्रिंट / PDF सेव्ह करा (Print / Save)
                 </button>
-                <button class="btn-secondary-outline" onclick="openReportInNewTab()" style="padding:8px 10px; font-size:11.5px; font-weight:700; display:inline-flex; align-items:center; gap:4px;">
+                <button class="btn-secondary-outline" onclick="openReportInNewTab()" style="padding:8px 12px; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:4px;">
                   📱 नवीन टॅबमध्ये उघडा (Fullscreen Tab)
                 </button>
-                <button class="btn-secondary-outline" onclick="loadInAppPdfPreview()" style="padding:8px 10px; font-size:11.5px; font-weight:700;">
+                <button class="btn-secondary-outline" onclick="loadInAppPdfPreview()" style="padding:8px 12px; font-size:12px; font-weight:700;">
                   🔄 रिफ्रेश करा (Refresh)
                 </button>
               </div>
@@ -5196,14 +5191,24 @@ def index_ui():
       }
     }
 
-    function printReportFrame() {
+    async function printReportFrame() {
       const frame = document.getElementById('reportFrame');
-      if (frame && frame.contentWindow && frame.srcdoc && frame.srcdoc.length > 500) {
-        frame.contentWindow.focus();
-        frame.contentWindow.print();
-      } else {
-        openReportInNewTab();
+      if (!frame) return;
+      if (!frame.srcdoc || frame.srcdoc.length < 500) {
+        showNativeToast('⏳ अहवाल तयार होत आहे, कृपया क्षणभर प्रतीक्षा करा...', 'info');
+        await loadInAppPdfPreview();
       }
+      setTimeout(() => {
+        try {
+          if (frame.contentWindow) {
+            frame.contentWindow.focus();
+            frame.contentWindow.print();
+          }
+        } catch (err) {
+          console.warn('Print frame error:', err);
+          openReportInNewTab();
+        }
+      }, 500);
     }
 
     function downloadSinglePagesZip() {
