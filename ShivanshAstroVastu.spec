@@ -7,6 +7,7 @@ added_files = [
     ('data/world_cities.db', 'data'),
     ('data/lal_kitab_hindi_cleaned.json', 'data'),
     ('app_icon.ico', '.'),
+    ('ShivanshAstroVastu.exe.config', '.'),
     ('assets', 'assets'),
     ('engine', 'engine'),
 ]

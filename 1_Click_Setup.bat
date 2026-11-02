@@ -9,7 +9,10 @@ echo                  Mayur Mandhare (BE.E^&TC) - 9373058052
 echo ===============================================================================
 echo.
 
-echo   [1/3] Setting up Shivansh Astro-Vastu Desktop Icon with Golden Logo...
+echo   [1/4] Unblocking downloaded files from Windows security lock...
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-ChildItem -Path '%~dp0' -Recurse | Unblock-File -ErrorAction SilentlyContinue" 2>nul
+
+echo   [2/4] Setting up Shivansh Astro-Vastu Desktop Icon with Golden Logo...
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "$desktop = [Environment]::GetFolderPath('Desktop');" ^
   "$ws = New-Object -ComObject WScript.Shell;" ^
@@ -21,7 +24,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "$s.Save();" ^
   "Write-Host '   Desktop Icon Created Successfully!' -ForegroundColor Green;"
 
-echo   [2/3] Setting up Windows Start Menu Shortcut...
+echo   [3/4] Setting up Windows Start Menu Shortcut...
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "$startMenu = [Environment]::GetFolderPath([Environment+SpecialFolder]::Programs);" ^
   "$ws = New-Object -ComObject WScript.Shell;" ^
@@ -34,7 +37,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "Write-Host '   Start Menu Shortcut Created Successfully!' -ForegroundColor Green;"
 
 echo.
-echo   [3/3] Setup Completed!
+echo   [4/4] Setup Completed!
 echo ===============================================================================
 echo   Credentials:
 echo     - Username: Admin
@@ -43,6 +46,16 @@ echo.
 echo   Launching Shivansh Astro-Vastu Professional now...
 echo ===============================================================================
 echo.
+
+if exist "%~dp0ShivanshAstroVastu\_internal\python311.dll" (
+    set "PYTHONNET_PYDLL=%~dp0ShivanshAstroVastu\_internal\python311.dll"
+    set "PYTHONNET_RUNTIME_DIR=%~dp0ShivanshAstroVastu\_internal\pythonnet\runtime"
+    set "PATH=%~dp0ShivanshAstroVastu;%~dp0ShivanshAstroVastu\_internal;%PATH%"
+) else if exist "%~dp0_internal\python311.dll" (
+    set "PYTHONNET_PYDLL=%~dp0_internal\python311.dll"
+    set "PYTHONNET_RUNTIME_DIR=%~dp0_internal\pythonnet\runtime"
+    set "PATH=%~dp0;%~dp0_internal;%PATH%"
+)
 
 if exist "%~dp0ShivanshAstroVastu\ShivanshAstroVastu.exe" (
     cd /d "%~dp0ShivanshAstroVastu"
