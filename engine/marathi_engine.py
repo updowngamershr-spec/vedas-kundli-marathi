@@ -98,6 +98,17 @@ MARATHI_TITLES_MAP = {
     "Comprehensive Marriage & Partner Compatibility Guide (विवाह एवं दांपत्य सुख सम्पूर्ण विश्लेषण)": "विवाह आणि दांपत्य सुख संपूर्ण विश्लेषण — वर-वधू कुंडली मिलान",
     "100% Ad-Free Sacred Report": "१००% प्रामाणिक व पवित्र वैदिक कुंडली",
     "78-Page Complete Authentic Edition": "७८ पानांची संपूर्ण प्रामाणिक बृहत् पत्रिका",
+    "Section VIII: Authentic KP Remedies": "विभाग ८: 🔮 के.पी. वैज्ञानिक उपाय व वैधानिक उद्घोषणा",
+    "KP 4-Fold Significators (A, B, C, D)": "के.पी. ४-स्तरीय कार्येश मॅट्रिक्स",
+    "KP 12 Cuspal Sub-Lord Calculations": "के.पी. १२ भाव उपस्वामी (CSL) निष्कर्ष",
+    "KP Zero-Damage Gemstone Protocol": "के.पी. वैज्ञानिक रत्न व वर्ज्य रत्न इशारा",
+    "KP 4-Fold Significators Matrix (Levels A, B, C, D)": "कृष्णमूर्ती पद्धती ४-स्तरीय ग्रह कार्येश मॅट्रिक्स",
+    "KP Cuspal Sub-Lord Event Formulas (Houses 1-12)": "के.पी. १२ भाव उपस्वामी घटना सूत्रे व फलादेश",
+    "Ancient Gurus Gemstone Protocol & Strict Warnings": "प्राचीन ऋषीप्रणीत रत्न निवड व वर्ज्य रत्न इशारा",
+    "KP Medical Astrology: Disease Diagnosis & Cure Window": "के.पी. वैद्यकीय ज्योतिष: रोग निदान व शीघ्र मुक्ती",
+    "Ancient Gurus Debts & Loans Clearance Protocol": "प्राचीन ऋषीप्रणीत ऋण मुक्ती व कर्ज परतफेड शास्त्रीय विधान",
+    "KP Cuspal Positions & Sub-Lords": "कृष्णमूर्ती पद्धती (के.पी. भाव आरंभ व उपस्वामी)",
+    "KP System": "कृष्णमूर्ती पद्धती (के.पी.)",
 }
 
 # English Calendar months and days to Marathi
@@ -694,9 +705,14 @@ def to_marathi(text: str) -> str:
             return key
         s = re.sub(r'data:image/[^;]+;base64,[A-Za-z0-9+/=]+', _save_data_uri, s)
 
+    # 0b. Protect KP / के.पी. abbreviations from any single-word 'के' -> 'चे' replacement
+    kp_token = "__KP_ACRONYM_PROTECTED__"
+    s = re.sub(r'(?:के\.?\s*पी\.?|के\.?\s*पि\.?|चे\.?\s*पी\.?|चे\.?\s*पि\.?|(?:\bK\.?\s*P\.?\b))', kp_token, s, flags=re.IGNORECASE)
+
     # 1. Exact title shortcut
     if s in MARATHI_TITLES_MAP:
-        return MARATHI_TITLES_MAP[s]
+        res = MARATHI_TITLES_MAP[s]
+        return res.replace(kp_token, "के.पी.")
 
     # 2. Strip external AstroSage remnants
     s = re.sub(r'https?://[^\s]*astrosage[^\s]*', '', s)
@@ -749,12 +765,22 @@ def to_marathi(text: str) -> str:
 
     # 11. Single words with strict Devanagari boundary
     for w, r in MARATHI_SINGLE_WORDS:
-        pat = rf'(?<!{DEVA_LETTER})' + re.escape(w) + rf'(?!{DEVA_LETTER})'
+        if w == "के":
+            pat = rf'(?<!{DEVA_LETTER})के(?![.\s]*[पीpP])(?!\.)(?!{DEVA_LETTER})'
+        elif w in ("का", "की"):
+            pat = rf'(?<!{DEVA_LETTER})' + re.escape(w) + rf'(?!\.)(?!{DEVA_LETTER})'
+        else:
+            pat = rf'(?<!{DEVA_LETTER})' + re.escape(w) + rf'(?!{DEVA_LETTER})'
         s = re.sub(pat, r, s)
 
     # 12. Clean double spaces and punctuation artifacts
     s = re.sub(r'\s+', ' ', s)
     s = s.replace(" ,", ",").replace(" .", ".").replace(" :", ":")
+
+    # Restore KP token and guarantee 'के.पी.'
+    s = s.replace(kp_token, "के.पी.")
+    s = re.sub(r'चे[\s.]*पी\.?', 'के.पी.', s)
+    s = re.sub(r'चे[\s.]*पि\.?', 'के.पि.', s)
 
     # Restore protected Base64 data URIs
     if placeholders:
