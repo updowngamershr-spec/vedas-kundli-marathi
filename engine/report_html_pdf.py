@@ -692,7 +692,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       <div>
         <div class="box-heading">{T("Chalit Table (Sripati Bhava — Complete 12 Houses)", "चलित तालिका (श्रीपति भाव — द्वादश भाव संधि)")}</div>
         <table class="data-table compact">
-          <thead><tr><th>Bhav</th><th>Sign</th><th>Bhav Begin</th><th>Sign</th><th>Mid Bhav</th></tr></thead>
+          <thead><tr><th>{T("Bhav", "भाव")}</th><th>{T("Sign", "राशी")}</th><th>{T("Bhav Begin", "भाव आरंभ")}</th><th>{T("Sign", "राशी")}</th><th>{T("Mid Bhav", "भाव मध्य")}</th></tr></thead>
           <tbody>{chalit_rows_html}</tbody>
         </table>
 
@@ -1398,7 +1398,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
       <div>
         <div class="box-heading">{T("Ruling Planet", "शासक ग्रह (Ruling Planets)")}</div>
         <table class="data-table ultra-compact">
-          <thead><tr><th>Planet</th><th>Rasi Lord</th><th>Nak Lord</th><th>Sub Lord</th></tr></thead>
+          <thead><tr><th>{T("Planet", "ग्रह")}</th><th>{T("Rasi Lord", "राशी स्वामी")}</th><th>{T("Nak Lord", "नक्षत्र स्वामी")}</th><th>{T("Sub Lord", "उपस्वामी")}</th></tr></thead>
           <tbody>
             <tr><td>Lagna</td><td>{rp['lagna']['rasi']}</td><td>{rp['lagna']['nak']}</td><td>{rp['lagna']['sub']}</td></tr>
             <tr><td>Moon</td><td>{rp['moon']['rasi']}</td><td>{rp['moon']['nak']}</td><td>{rp['moon']['sub']}</td></tr>
@@ -1408,13 +1408,13 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
 
         <div class="box-heading mt-4">{T("Cuspal Positions (Placidus)", "भाव संधि स्पष्ट (Cusps)")}</div>
         <table class="data-table ultra-compact">
-          <thead><tr><th>Cusp</th><th>Degree</th><th>RASH</th><th>NAK</th><th>SUB</th><th>SS</th></tr></thead>
+          <thead><tr><th>{T("Cusp", "भाव संधि")}</th><th>{T("Degree", "अंश/कला")}</th><th>{T("Sign Lord", "राशी स्वामी")}</th><th>{T("Star Lord", "नक्षत्र स्वामी")}</th><th>{T("Sub Lord", "उपस्वामी")}</th><th>{T("Sub-Sub Lord", "उप-उपस्वामी")}</th></tr></thead>
           <tbody>{cusp_rows}</tbody>
         </table>
 
         <div class="box-heading mt-4">{T("Planetary Positions (KP)", "ग्रह स्पष्ट (KP)")}</div>
         <table class="data-table ultra-compact">
-          <thead><tr><th>Planet</th><th>Degree</th><th>RASH</th><th>NAK</th><th>SUB</th><th>SS</th></tr></thead>
+          <thead><tr><th>{T("Planet", "ग्रह")}</th><th>{T("Degree", "अंश/कला")}</th><th>{T("Sign Lord", "राशी स्वामी")}</th><th>{T("Star Lord", "नक्षत्र स्वामी")}</th><th>{T("Sub Lord", "उपस्वामी")}</th><th>{T("Sub-Sub Lord", "उप-उपस्वामी")}</th></tr></thead>
           <tbody>{kp_p_rows}</tbody>
         </table>
 
@@ -1504,13 +1504,13 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     )}</p>
     <div class="box-heading">{T("ShadBala Table", "षड्बल तालिका")}</div>
     <table class="data-table ultra-compact">
-      <thead><tr><th>Strength Source</th><th>SUN</th><th>MOON</th><th>MARS</th><th>MER</th><th>JUP</th><th>VEN</th><th>SAT</th></tr></thead>
+      <thead><tr><th>{T("Strength Source", "षड्बल घटक")}</th><th>{T("SUN", "रवी")}</th><th>{T("MOON", "चंद्र")}</th><th>{T("MARS", "मंगळ")}</th><th>{T("MER", "बुध")}</th><th>{T("JUP", "गुरू")}</th><th>{T("VEN", "शुक्र")}</th><th>{T("SAT", "शनि")}</th></tr></thead>
       <tbody>{sb_rows_html}</tbody>
     </table>
 
     <div class="box-heading mt-8">{T("BhavBala Table", "भावबल तालिका")}</div>
     <table class="data-table ultra-compact">
-      <thead><tr><th>Bhav Strength</th>{"".join(f"<th class='c'>{i}</th>" for i in range(1,13))}</tr></thead>
+      <thead><tr><th>{T("Bhav Strength", "भाव सामर्थ्य")}</th>{"".join(f"<th class='c'>{i}</th>" for i in range(1,13))}</tr></thead>
       <tbody>{bb_rows_html}</tbody>
     </table>
     """
@@ -1522,7 +1522,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
     aspect_legend = """
     <div class="box-heading mt-8">Note : Aspect Orbs &amp; Weights</div>
     <table class="data-table ultra-compact">
-      <thead><tr><th>Abbr-Aspect</th><th>Degree</th><th>Orb</th><th>Weight</th><th>Abbr-Aspect</th><th>Degree</th><th>Orb</th><th>Weight</th></tr></thead>
+      <thead><tr><th>{T("Abbr-Aspect", "दृष्टी प्रकार")}</th><th>{T("Degree", "अंश")}</th><th>{T("Orb", "कक्षा")}</th><th>{T("Weight", "भार")}</th><th>{T("Abbr-Aspect", "दृष्टी प्रकार")}</th><th>{T("Degree", "अंश")}</th><th>{T("Orb", "कक्षा")}</th><th>{T("Weight", "भार")}</th></tr></thead>
       <tbody>
         <tr><td>CONJ-CONJUNCTION</td><td>0</td><td>15</td><td>10</td><td>OPPN-OPPOSITION</td><td>180</td><td>15</td><td>10</td></tr>
         <tr><td>TRIN-TRINE</td><td>120</td><td>6</td><td>3</td><td>SQUR-SQUARE</td><td>90</td><td>6</td><td>3</td></tr>
@@ -2660,7 +2660,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
             p.replace("__PAGE_NUM__", str(idx)).replace("__TOTAL_PAGES__", str(total_pages))
         )
 
-    return f"""<!DOCTYPE html>
+    full_html = f"""<!DOCTYPE html>
 <html lang="{lang}">
 <head>
   <meta charset="UTF-8"/>
@@ -2673,6 +2673,9 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
 </body>
 </html>
 """
+    if is_mr:
+        full_html = to_marathi(full_html)
+    return full_html
 
 
 def export_html_to_pdf(html_content: str, output_pdf_path: str, split_single_pages: bool = True) -> dict:
