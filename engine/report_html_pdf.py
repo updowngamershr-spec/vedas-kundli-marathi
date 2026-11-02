@@ -30,18 +30,30 @@ from engine.ephemeris import (
 
 import base64
 
+try:
+    from engine._logo_b64 import SHIVANSH_LOGO_BASE64
+except Exception:
+    SHIVANSH_LOGO_BASE64 = ""
+
 def get_image_base64(fname: str) -> str:
     """Return data URI for an optimized asset image."""
+    if "logo" in fname and SHIVANSH_LOGO_BASE64:
+        return SHIVANSH_LOGO_BASE64
     base_dir = getattr(sys, '_MEIPASS', os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
-    img_dir = os.path.join(base_dir, "assets", "images")
-    img_path = os.path.join(img_dir, fname)
-    if not os.path.exists(img_path):
-        img_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "images", fname)
-    if os.path.exists(img_path):
-        with open(img_path, "rb") as f:
-            b64 = base64.b64encode(f.read()).decode("ascii")
-            ext = "jpeg" if fname.endswith(".jpg") or fname.endswith(".jpeg") else "png"
-            return f"data:image/{ext};base64,{b64}"
+    candidates = [
+        os.path.join(base_dir, "assets", "images", fname),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "images", fname),
+        os.path.join(base_dir, "_internal", "assets", "images", fname),
+        os.path.join(os.path.dirname(sys.executable or ""), "_internal", "assets", "images", fname),
+    ]
+    for img_path in candidates:
+        if os.path.exists(img_path):
+            with open(img_path, "rb") as f:
+                b64 = base64.b64encode(f.read()).decode("ascii")
+                ext = "jpeg" if fname.endswith(".jpg") or fname.endswith(".jpeg") else "png"
+                return f"data:image/{ext};base64,{b64}"
+    if "logo" in fname and SHIVANSH_LOGO_BASE64:
+        return SHIVANSH_LOGO_BASE64
     return ""
 
 def _page_wrapper(page_num: int, meta: dict, brand: dict, title_en: str, title_hi: str, inner_html: str, lang: str = "en") -> str:
@@ -785,7 +797,7 @@ def build_full_56_page_html(data: dict, lang: str = "mr", package: str = "maha")
         extra_p9 = ""
         if p_num == 9:
             yoga_cards = "".join(
-                f"<div class='yoga-card'><h4>✦ {L(y['name_en'], y['name_hi'])}</h4><p>{P(y['desc_en'], y['desc_hi'])}</p></div>"
+                f"<div class='yoga-card'><h4>✦ {to_marathi(y.get('name') or y.get('name_hi')) if is_mr else L(y['name_en'], y['name_hi'])}</h4><p>{P(y['desc_en'], y.get('description') or y['desc_hi'])}</p></div>"
                 for y in yogas
             )
             extra_p9 = f"""

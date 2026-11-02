@@ -736,6 +736,14 @@ def api_export_pdf(req: KundliRequest):
 
     res = export_html_to_pdf(html_str, pdf_path, split_single_pages=(req.report_package == "maha"))
     if res.get("success"):
+        # Auto-copy to user's Downloads folder for instant access
+        try:
+            import shutil
+            user_downloads = os.path.join(os.path.expanduser("~"), "Downloads")
+            if os.path.exists(user_downloads):
+                shutil.copy2(pdf_path, os.path.join(user_downloads, pdf_filename))
+        except Exception:
+            pass
         return {
             "success": True,
             "filename": pdf_filename,
@@ -791,7 +799,16 @@ def api_download_pdf(filename: str):
     for s_dir in candidate_dirs:
         pdf_path = os.path.join(s_dir, safe_name)
         if os.path.exists(pdf_path) and os.path.isfile(pdf_path):
-            return FileResponse(pdf_path, media_type="application/pdf", filename=safe_name)
+            return FileResponse(
+                pdf_path,
+                media_type="application/pdf",
+                filename=safe_name,
+                headers={
+                    "Content-Disposition": f'attachment; filename="{safe_name}"',
+                    "Content-Type": "application/pdf",
+                    "Cache-Control": "no-cache"
+                }
+            )
     return JSONResponse({"error": "File not found"}, status_code=404)
 
 
@@ -4882,22 +4899,26 @@ def index_ui():
 
         setTimeout(() => {
           modal.style.display = 'none'; modal.style.pointerEvents = 'none';
-          if (data.download_url && !data.direct_print) {
-            window.open(data.download_url, '_blank');
+          if (data.download_url) {
+            const dlLink = document.createElement('a');
+            dlLink.href = data.download_url;
+            dlLink.setAttribute('download', data.filename || 'Kundli.pdf');
+            document.body.appendChild(dlLink);
+            dlLink.click();
+            document.body.removeChild(dlLink);
             if (data.single_pages_url) {
               currentSingleZipUrl = data.single_pages_url;
               document.getElementById('btnSingleZip').style.display = 'block';
             }
             loadDashboard();
           } else {
-            // Direct client print-to-PDF: opens 81-page dynamic HTML report and triggers native print!
-            printReportFrame();
+            loadDashboard();
           }
         }, 500);
       } catch (err) {
         clearInterval(timer);
         modal.style.display = 'none'; modal.style.pointerEvents = 'none';
-        printReportFrame();
+        loadDashboard();
       }
     }
 

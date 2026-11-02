@@ -48,6 +48,7 @@ hidden_imports = [
     'engine.varshaphal_sadesati_yogas',
     'engine.remedy_pages',
     'engine.marathi_engine',
+    'engine._logo_b64',
     'engine.personalized_predictions',
     'engine.kp_authentic_engine',
     'engine.vastu_engine',
