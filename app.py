@@ -2460,27 +2460,7 @@ def index_ui():
             </div>
 
             
-            <!-- Download Success Popup Screen (Open PDF / Open Location) -->
-            <div id="downloadSuccessModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(11,15,25,0.82); backdrop-filter:blur(8px); z-index:9999999; justify-content:center; align-items:center;">
-              <div style="background:linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border:2px solid #e0a943; border-radius:18px; width:92vw; max-width:540px; padding:32px 26px; box-shadow:0 24px 60px rgba(0,0,0,0.75); text-align:center; color:#f8fafc; font-family:'Segoe UI',sans-serif; position:relative;">
-                
-                <div style="width:72px; height:72px; margin:0 auto 16px; border-radius:50%; background:linear-gradient(135deg, #e0a943 0%, #ca8a04 100%); display:flex; align-items:center; justify-content:center; font-size:36px; box-shadow:0 8px 25px rgba(224,169,67,0.45);">
-                  ✅
-                </div>
-                
-                <h2 style="font-size:22px; font-weight:800; color:#fbbf24; margin:0 0 8px; letter-spacing:0.5px;">
-                  PDF डाऊनलोड यशस्वी! (Download Complete)
-                </h2>
-                <p style="font-size:13.5px; color:#cbd5e1; margin:0 0 18px; line-height:1.5;">
-                  आपली ७८ पानांची बृहत् जन्मपत्रिका यशस्वीरीत्या तयार होऊन डाऊनलोड झाली आहे.
-                </p>
 
-                <div style="background:#0b0f19; border:1px solid #334155; border-radius:12px; padding:14px 16px; margin-bottom:24px; text-align:left;">
-                  <div style="font-size:11.5px; color:#94a3b8; margin-bottom:4px; font-weight:700;">📄 फाइलचे नाव (File Name):</div>
-                  <div id="successModalFileName" style="font-size:13px; font-weight:700; color:#38bdf8; word-break:break-all;"></div>
-                  <div style="font-size:11.5px; color:#94a3b8; margin-top:10px; margin-bottom:4px; font-weight:700;">📂 साठवण स्थान (Saved Folder Location):</div>
-                  <div id="successModalFileLocation" style="font-size:12px; color:#a7f3d0; word-break:break-all;">Downloads &amp; Software Reports Folder</div>
-                </div>
 
                 <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:16px;">
                   <button onclick="openGeneratedPdf()" style="flex:1; min-width:160px; background:linear-gradient(135deg, #e0a943 0%, #d97706 100%); color:#0b0f19; border:none; padding:13px 20px; border-radius:10px; font-weight:800; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(224,169,67,0.4);">
@@ -2698,7 +2678,7 @@ def index_ui():
               <span style="font-size:24px;">👑</span>
               <div>
                 <strong style="font-family:'Cinzel', serif; font-size:14px; font-weight:900; color:#78350F; display:block;">
-                  संपूर्ण ५६-पृष्ठीय VIP महा-जन्मपत्रिका (Full 56-Page VIP Dossier)
+                  संपूर्ण ७८-पृष्ठीय VIP महा-जन्मपत्रिका (Full 78-Page VIP Dossier)
                 </strong>
                 <span style="font-size:11px; color:#92400E; font-weight:600;">
                   १६ वर्ग कुंडली • विंशोत्तरी महादशा • लाल किताब १९५२ चे अचूक उपाय व अष्टकवर्ग
@@ -2707,7 +2687,7 @@ def index_ui():
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap; width:100%; max-width:340px;">
               <button type="button" onclick="exportPDF()" style="flex:1; min-width:145px; background:linear-gradient(135deg, #7C2D12 0%, #451A03 100%); color:#FEF08A; border:1px solid #D4AF37; font-weight:900; font-size:12.5px; padding:10px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 8px rgba(124,45,18,0.25);">
-                📄 संपूर्ण ५६-पृष्ठीय PDF पहा (PDF पहा)
+                📄 संपूर्ण ७८-पृष्ठीय PDF डाऊनलोड करा (Download PDF)
               </button>
               <button type="button" onclick="loadInAppPdfPreview(); switchNav('reports');" style="flex:1; min-width:130px; background:#FFFFFF; color:#7C2D12; border:1.5px solid #D4AF37; font-weight:800; font-size:12px; padding:10px 12px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                 👁️ थेट पूर्वदृश्य (Live Preview)
@@ -3181,7 +3161,7 @@ def index_ui():
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1.5px solid #EADBC8;">
               <div>
                 <h3 style="font-family:'Cinzel', serif; font-size:15.5px; font-weight:900; color:#7C2D12; margin:0 0 2px 0;">
-                  📄 ५६-पृष्ठीय VIP महा-जन्मपत्रिका पूर्वदृश्य (मराठी आवृत्ती)
+                  📄 ७८-पृष्ठीय VIP महा-जन्मपत्रिका पूर्वदृश्य (मराठी आवृत्ती)
                 </h3>
                 <span class="badge" id="reportNativeBadge" style="font-size:11px; background:#FEF3C7; color:#78350F; padding:2px 8px; border-radius:12px; font-weight:700;">Active Native: नवीन जातक (New Client)</span>
               </div>
@@ -3443,6 +3423,51 @@ def index_ui():
       </div>
     </div>
   </div>
+
+  <!-- Download Success Popup Screen (Open PDF / Open Location) - ROOT LEVEL (Independent of all view-panes) -->
+  <div id="downloadSuccessModal" style="display:none; position:fixed; inset:0; width:100vw; height:100vh; background:rgba(11,15,25,0.88); backdrop-filter:blur(8px); z-index:99999999; justify-content:center; align-items:center; pointer-events:auto;" onclick="if(event.target===this)closeDownloadSuccessModal()">
+    <div style="background:linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border:2px solid #e0a943; border-radius:18px; width:92vw; max-width:540px; padding:32px 26px; box-shadow:0 24px 60px rgba(0,0,0,0.85); text-align:center; color:#f8fafc; font-family:'Segoe UI',sans-serif; position:relative; pointer-events:auto;" onclick="event.stopPropagation()">
+      
+      <!-- Close button top-right -->
+      <button type="button" onclick="closeDownloadSuccessModal()" style="position:absolute; top:14px; right:16px; background:transparent; border:none; color:#94a3b8; font-size:22px; font-weight:700; cursor:pointer; line-height:1; padding:4px 8px;" title="बंद करा (Close)">✕</button>
+
+      <div style="width:70px; height:70px; margin:0 auto 14px; border-radius:50%; background:linear-gradient(135deg, #e0a943 0%, #ca8a04 100%); display:flex; align-items:center; justify-content:center; font-size:36px; box-shadow:0 8px 25px rgba(224,169,67,0.45);">
+        ✅
+      </div>
+      
+      <h2 style="font-size:22px; font-weight:800; color:#fbbf24; margin:0 0 6px; letter-spacing:0.5px;">
+        PDF डाऊनलोड यशस्वी!
+      </h2>
+      <div style="font-size:13px; color:#cbd5e1; margin:0 0 16px; font-weight:600;">
+        (78-Page Comprehensive Horoscope Downloaded)
+      </div>
+      <p style="font-size:13.5px; color:#e2e8f0; margin:0 0 18px; line-height:1.5;">
+        आपली ७८ पानांची बृहत् जन्मपत्रिका यशस्वीरीत्या तयार होऊन संगणकात डाऊनलोड झाली आहे.
+      </p>
+
+      <div style="background:#0b0f19; border:1px solid #334155; border-radius:12px; padding:14px 16px; margin-bottom:22px; text-align:left;">
+        <div style="font-size:11.5px; color:#94a3b8; margin-bottom:4px; font-weight:700;">📄 फाइलचे नाव (File Name):</div>
+        <div id="successModalFileName" style="font-size:13px; font-weight:700; color:#38bdf8; word-break:break-all;">Kundli_VIP.pdf</div>
+        <div style="font-size:11.5px; color:#94a3b8; margin-top:10px; margin-bottom:4px; font-weight:700;">📂 साठवण स्थान (Saved Folder Location):</div>
+        <div id="successModalFileLocation" style="font-size:12px; color:#a7f3d0; word-break:break-all;">Downloads Folder</div>
+      </div>
+
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:14px;">
+        <button type="button" onclick="openGeneratedPdf()" style="flex:1; min-width:160px; background:linear-gradient(135deg, #e0a943 0%, #d97706 100%); color:#0b0f19; border:none; padding:14px 20px; border-radius:10px; font-weight:800; font-size:14.5px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(224,169,67,0.4);">
+          <span style="font-size:17px;">📄</span> Open PDF (PDF उघडा)
+        </button>
+
+        <button type="button" onclick="openGeneratedPdfLocation()" style="flex:1; min-width:160px; background:#1e293b; color:#38bdf8; border:1.5px solid #38bdf8; padding:14px 20px; border-radius:10px; font-weight:800; font-size:14.5px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <span style="font-size:17px;">📂</span> Open Location (स्थान पहा)
+        </button>
+      </div>
+
+      <button type="button" onclick="closeDownloadSuccessModal()" style="background:transparent; border:none; color:#94a3b8; font-size:13px; font-weight:600; cursor:pointer; padding:6px 14px; text-decoration:underline;">
+        ✕ विंडो बंद करा (Close)
+      </button>
+    </div>
+  </div>
+
 
   <!-- Javascript Logic -->
   <script>
@@ -3719,7 +3744,7 @@ def index_ui():
                   <td>${r.size_mb} MB</td>
                   <td style="font-size:11.5px; color:#6B7280;">${r.modified}</td>
                   <td>
-                    <a href="${r.download_url}" target="_blank" class="btn-table-action" style="text-decoration:none; display:inline-block;">📥 PDF डाउनलोड</a>
+                    <a href="${r.download_url}" target="_blank" class="btn-table-action" style="text-decoration:none; display:inline-block;" onclick="showDownloadSuccessModal('${r.filename}', '${r.path || ""}')">📥 PDF डाउनलोड</a>
                   </td>
                 </tr>
               `).join('');
@@ -4753,6 +4778,7 @@ def index_ui():
           a.click();
           document.body.removeChild(a);
           alert('✅ 3-Page Royal Kundli Milan PDF downloaded successfully!');
+          showDownloadSuccessModal(data.filename, data.downloads_path || data.path);
         } else {
           console.warn('Backend export notice:', data ? data.error : 'Unknown');
           await printMilanDossier();
@@ -5002,10 +5028,10 @@ def index_ui():
               currentSingleZipUrl = data.single_pages_url;
               document.getElementById('btnSingleZip').style.display = 'block';
             }
-            loadDashboard();
+          }
+          loadDashboard();
+          if (data.filename) {
             showDownloadSuccessModal(data.filename, data.downloads_path || data.path);
-          } else {
-            loadDashboard();
           }
         }, 500);
       } catch (err) {
@@ -5020,44 +5046,73 @@ def index_ui():
     let currentGeneratedPdfPath = '';
 
     function showDownloadSuccessModal(filename, path) {
+      console.log('showDownloadSuccessModal called with:', filename, path);
       currentGeneratedPdfName = filename || '';
       currentGeneratedPdfPath = path || '';
       const modal = document.getElementById('downloadSuccessModal');
       const nameEl = document.getElementById('successModalFileName');
       const locEl = document.getElementById('successModalFileLocation');
       if (nameEl) nameEl.innerText = filename || 'Kundli_VIP.pdf';
-      if (locEl) locEl.innerText = path || "C:\\Users\\...\\Downloads";
-      if (modal) modal.style.display = 'flex';
+      if (locEl) locEl.innerText = path || "C:\\Users\\Downloads";
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.style.pointerEvents = 'auto';
+      }
     }
 
     function closeDownloadSuccessModal() {
       const modal = document.getElementById('downloadSuccessModal');
-      if (modal) modal.style.display = 'none';
+      if (modal) {
+        modal.style.display = 'none';
+        modal.style.pointerEvents = 'none';
+      }
     }
 
     async function openGeneratedPdf() {
-      if (!currentGeneratedPdfName) return;
+      if (!currentGeneratedPdfName) {
+        showNativeToast('⚠️ कोणतीही फाईल निवडलेली नाही (No file selected)', 'warning');
+        return;
+      }
+      showNativeToast('📄 PDF उघडत आहे... (Opening PDF)', 'info');
       try {
-        await fetch('/api/open-pdf-file', {
+        const res = await fetch('/api/open-pdf-file', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({filename: currentGeneratedPdfName})
         });
+        const data = await res.json();
+        if (data && data.success) {
+          showNativeToast('✅ PDF यशस्वीरीत्या उघडली! (PDF Opened)', 'success');
+        } else {
+          showNativeToast('⚠️ ' + ((data && data.error) || 'PDF उघडता आली नाही'), 'error');
+        }
       } catch (e) {
         console.error('Error opening PDF:', e);
+        showNativeToast('⚠️ त्रुटी: ' + e, 'error');
       }
     }
 
     async function openGeneratedPdfLocation() {
-      if (!currentGeneratedPdfName) return;
+      if (!currentGeneratedPdfName) {
+        showNativeToast('⚠️ कोणतीही फाईल निवडलेली नाही (No file selected)', 'warning');
+        return;
+      }
+      showNativeToast('📂 फोल्डर उघडत आहे... (Opening Location)', 'info');
       try {
-        await fetch('/api/open-file-location', {
+        const res = await fetch('/api/open-file-location', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({filename: currentGeneratedPdfName})
         });
+        const data = await res.json();
+        if (data && data.success) {
+          showNativeToast('✅ फाइल स्थान एक्सप्लोररमध्ये उघडले! (Folder Opened)', 'success');
+        } else {
+          showNativeToast('⚠️ ' + ((data && data.error) || 'स्थान उघडता आले नाही'), 'error');
+        }
       } catch (e) {
         console.error('Error opening file location:', e);
+        showNativeToast('⚠️ त्रुटी: ' + e, 'error');
       }
     }
 
