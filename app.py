@@ -645,10 +645,24 @@ def api_export_milan_summary_pdf(req: MilanRequest):
     pdf_path = os.path.join(REPORTS_DIR, milan_filename)
 
     res = export_html_to_pdf(milan_html, pdf_path, split_single_pages=False)
-    if res["success"]:
+    if res.get("success"):
+        try:
+            import shutil
+            user_downloads = os.path.join(os.path.expanduser("~"), "Downloads")
+            if os.path.exists(user_downloads):
+                shutil.copy2(pdf_path, os.path.join(user_downloads, milan_filename))
+        except Exception:
+            pass
+        dl_full_path = os.path.join(os.path.expanduser("~"), "Downloads", milan_filename)
+        final_file_path = dl_full_path if os.path.exists(dl_full_path) else pdf_path
+        if sys.platform == "win32":
+            import threading
+            threading.Thread(target=prompt_user_native_dialog, args=(final_file_path,), daemon=True).start()
         return {
             "success": True,
             "filename": milan_filename,
+            "path": pdf_path,
+            "downloads_path": final_file_path,
             "download_url": f"/api/download-pdf/{milan_filename}",
             "page_count": res.get("page_count", 3)
         }
@@ -706,6 +720,41 @@ def api_generate_html(req: KundliRequest):
     return HTMLResponse(content=html_str)
 
 
+def prompt_user_native_dialog(pdf_path):
+    try:
+        import ctypes
+        import subprocess
+        MB_YESNOCANCEL = 0x00000003
+        MB_ICONINFORMATION = 0x00000040
+        MB_TOPMOST = 0x00040000
+        
+        fname = os.path.basename(pdf_path)
+        fdir = os.path.dirname(pdf_path)
+        
+        msg = (
+            f"✅ जन्मपत्रिका यशस्वीरीत्या डाऊनलोड झाली आहे!\n"
+            f"(78-Page Kundli Dossier Downloaded)\n\n"
+            f"📄 फाईल: {fname}\n"
+            f"📂 साठवण स्थान: {fdir}\n\n"
+            f"• [Yes] वर क्लिक करा -> थेट PDF उघडण्यासाठी (Open PDF)\n"
+            f"• [No] वर क्लिक करा -> डाऊनलोड फोल्डर उघडण्यासाठी (Open Downloads Folder)\n"
+            f"• [Cancel] -> बंद करा (Close)"
+        )
+        title = "Shivansh Astro-Vastu — PDF डाऊनलोड यशस्वी!"
+        
+        res = ctypes.windll.user32.MessageBoxW(0, msg, title, MB_YESNOCANCEL | MB_ICONINFORMATION | MB_TOPMOST)
+        if res == 6:  # IDYES
+            if os.path.exists(pdf_path):
+                os.startfile(os.path.normpath(pdf_path))
+        elif res == 7:  # IDNO
+            if os.path.exists(pdf_path):
+                subprocess.Popen(f'explorer /select,"{os.path.normpath(pdf_path)}"')
+            else:
+                subprocess.Popen(f'explorer "{os.path.normpath(fdir)}"')
+    except Exception as e:
+        print("Native dialog exception:", e)
+
+
 def make_safe_filename(name: str) -> str:
     import unicodedata
     if not name:
@@ -755,11 +804,15 @@ def api_export_pdf(req: KundliRequest):
         except Exception:
             pass
         dl_full_path = os.path.join(os.path.expanduser("~"), "Downloads", pdf_filename)
+        final_file_path = dl_full_path if os.path.exists(dl_full_path) else pdf_path
+        if sys.platform == "win32":
+            import threading
+            threading.Thread(target=prompt_user_native_dialog, args=(final_file_path,), daemon=True).start()
         return {
             "success": True,
             "filename": pdf_filename,
             "path": pdf_path,
-            "downloads_path": dl_full_path if os.path.exists(dl_full_path) else pdf_path,
+            "downloads_path": final_file_path,
             "download_url": f"/api/download-pdf/{pdf_filename}",
             "single_pages_url": f"/api/download-single-pages-zip/{pdf_filename}",
             "page_count": res.get("page_count", 0),
@@ -5059,9 +5112,7 @@ def index_ui():
       if (locEl) locEl.innerText = path || "C:\\Users\\Downloads";
       if (modal) {
         modal.classList.add('show-modal');
-        modal.style.setProperty('display', 'flex', 'important');
-        modal.style.setProperty('z-index', '999999999', 'important');
-        modal.style.setProperty('pointer-events', 'auto', 'important');
+        modal.style.cssText = 'display: flex !important; position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(11,15,25,0.92) !important; z-index: 999999999 !important; justify-content: center !important; align-items: center !important; pointer-events: auto !important; opacity: 1 !important; visibility: visible !important;';
       }
       
       // Double guarantee: Persistent Action Toast with Direct Buttons
