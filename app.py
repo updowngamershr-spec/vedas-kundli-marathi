@@ -2020,6 +2020,15 @@ def index_ui():
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
+  
+    #downloadSuccessModal.show-modal {
+      display: flex !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      z-index: 999999999 !important;
+    }
+
   </style>
 
 </head>
@@ -4762,15 +4771,10 @@ def index_ui():
           body: JSON.stringify(payload)
         });
         const data = await res.json();
-        if (data && data.download_url) {
-          const a = document.createElement('a');
-          a.href = data.download_url;
-          a.download = data.filename || 'Kundli_Milan.pdf';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          alert('✅ 3-Page Royal Kundli Milan PDF downloaded successfully!');
-          showDownloadSuccessModal(data.filename, data.downloads_path || data.path);
+        if (data && (data.filename || data.download_url)) {
+          const fName = data.filename || 'Kundli_Milan.pdf';
+          const fPath = data.downloads_path || data.path || 'Downloads Folder';
+          showDownloadSuccessModal(fName, fPath);
         } else {
           console.warn('Backend export notice:', data ? data.error : 'Unknown');
           await printMilanDossier();
@@ -5008,24 +5012,31 @@ def index_ui():
         txt.innerText = '✨ 78-Page Kundli Dossier Ready!';
 
         setTimeout(() => {
-          modal.style.display = 'none'; modal.style.pointerEvents = 'none';
-          if (data.download_url) {
-            const dlLink = document.createElement('a');
-            dlLink.href = data.download_url;
-            dlLink.setAttribute('download', data.filename || 'Kundli.pdf');
-            document.body.appendChild(dlLink);
-            dlLink.click();
-            document.body.removeChild(dlLink);
-            if (data.single_pages_url) {
-              currentSingleZipUrl = data.single_pages_url;
-              document.getElementById('btnSingleZip').style.display = 'block';
+          // 1. Hide progress modal
+          modal.style.display = 'none';
+          modal.style.pointerEvents = 'none';
+
+          // 2. Set single pages zip URL if available
+          if (data.single_pages_url) {
+            currentSingleZipUrl = data.single_pages_url;
+            const szBtn = document.getElementById('btnSingleZip');
+            if (szBtn) szBtn.style.display = 'block';
+          }
+
+          // 3. SHOW THE SUCCESS POPUP SCREEN WITH THE 2 BUTTONS IMMEDIATELY!
+          const fName = data.filename || 'Kundli_VIP.pdf';
+          const fPath = data.downloads_path || data.path || 'Downloads Folder';
+          showDownloadSuccessModal(fName, fPath);
+
+          // 4. Safely refresh dashboard in background without blocking UI
+          try {
+            if (typeof loadDashboard === 'function') {
+              loadDashboard();
             }
+          } catch (e) {
+            console.warn('Dashboard refresh notice:', e);
           }
-          loadDashboard();
-          if (data.filename) {
-            showDownloadSuccessModal(data.filename, data.downloads_path || data.path);
-          }
-        }, 500);
+        }, 300);
       } catch (err) {
         clearInterval(timer);
         modal.style.display = 'none'; modal.style.pointerEvents = 'none';
@@ -5047,6 +5058,7 @@ def index_ui():
       if (nameEl) nameEl.innerText = filename || 'Kundli_VIP.pdf';
       if (locEl) locEl.innerText = path || "C:\\Users\\Downloads";
       if (modal) {
+        modal.classList.add('show-modal');
         modal.style.setProperty('display', 'flex', 'important');
         modal.style.setProperty('z-index', '999999999', 'important');
         modal.style.setProperty('pointer-events', 'auto', 'important');
@@ -5079,7 +5091,8 @@ def index_ui():
     function closeDownloadSuccessModal() {
       const modal = document.getElementById('downloadSuccessModal');
       if (modal) {
-        modal.style.display = 'none';
+        modal.classList.remove('show-modal');
+        modal.style.setProperty('display', 'none', 'important');
         modal.style.pointerEvents = 'none';
       }
     }
