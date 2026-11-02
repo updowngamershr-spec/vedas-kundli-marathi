@@ -2468,24 +2468,7 @@ def index_ui():
               </table>
             </div>
 
-            
 
-
-                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:16px;">
-                  <button onclick="openGeneratedPdf()" style="flex:1; min-width:160px; background:linear-gradient(135deg, #e0a943 0%, #d97706 100%); color:#0b0f19; border:none; padding:13px 20px; border-radius:10px; font-weight:800; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(224,169,67,0.4);">
-                    <span style="font-size:16px;">📄</span> Open PDF (PDF उघडा)
-                  </button>
-
-                  <button onclick="openGeneratedPdfLocation()" style="flex:1; min-width:160px; background:#1e293b; color:#38bdf8; border:1.5px solid #38bdf8; padding:13px 20px; border-radius:10px; font-weight:800; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
-                    <span style="font-size:16px;">📂</span> Open Location (स्थान पहा)
-                  </button>
-                </div>
-
-                <button onclick="closeDownloadSuccessModal()" style="background:transparent; border:none; color:#94a3b8; font-size:13px; font-weight:600; cursor:pointer; padding:6px 14px; text-decoration:underline;">
-                  ✕ विंडो बंद करा (Close)
-                </button>
-              </div>
-            </div>
 
             <!-- Milan Preview & Print Modal -->
             <div id="milanPreviewModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.72); z-index:999999; justify-content:center; align-items:center;">
