@@ -48,8 +48,8 @@ def generate_vip_remedy_pages(data: dict, T, P) -> list[dict]:
         </h3>
         <p style="margin:0; font-size:10.5px; color:#574032;">
           {P(
-            "Prof. K.S. Krishnamurti Reader III Rule: Level A (planets in constellation of occupants) is the strongest significator, followed by Level B (occupants), Level C (planets in star of cusp lord), and Level D (sign ruler).",
-            "प्रो. के. एस. कृष्णमूर्ति रीडर ३ चा अचूक नियम: स्तर 'अ' (भावात बसलेल्या ग्रहाच्या नक्षत्रातील ग्रह) सर्वात बलवान असतो, त्यानंतर स्तर 'ब' (भावात स्थित ग्रह), स्तर 'क' (भावेशाच्या नक्षत्रातील ग्रह) आणि स्तर 'ड' (राशी स्वामी)."
+            "Ancient Vedic & Stellar Gurus Principle: Level A (planets in constellation of occupants) is the strongest significator, followed by Level B (occupants), Level C (planets in star of cusp lord), and Level D (sign ruler).",
+            "प्राचीन ऋषीप्रणीत नक्षत्र सिद्धांत नियम: स्तर 'अ' (भावात बसलेल्या ग्रहाच्या नक्षत्रातील ग्रह) सर्वात बलवान असतो, त्यानंतर स्तर 'ब' (भावात स्थित ग्रह), स्तर 'क' (भावेशाच्या नक्षत्रातील ग्रह) आणि स्तर 'ड' (राशी स्वामी)."
           )}
         </p>
       </div>
@@ -212,7 +212,7 @@ def generate_vip_remedy_pages(data: dict, T, P) -> list[dict]:
     <div class="prose-block" style="font-size:10px; line-height:1.55;">
       <div style="background:#FEF2F2; border:1.5px solid #EF4444; padding:9px 12px; border-radius:6px; margin-bottom:10px;">
         <h4 style="margin:0 0 3px 0; color:#991B1B; font-size:12px;">
-          ⚠️ प्रो. के. एस. कृष्णमूर्ति रत्न निवड व वर्ज्य नियम (KP Zero Damage Gemstone Rule — Reader III, p. 414)
+          ⚠️ प्राचीन ऋषीप्रणीत नक्षत्र रत्न निवड व वर्ज्य नियम (Ancient Gurus Zero-Damage Gemstone Rule)
         </h4>
         <p style="margin:0; font-size:9.8px; color:#7F1D1D;">
           "१ल्या (लग्न) आणि ११व्या भावाचा उपस्वामी तपासा. जर तो ६, ८ किंवा १२ शी जोडलेला असेल, तर त्याचा रत्न घालणे <strong>पूर्णतः वर्ज्य</strong> करा, अन्यथा गंभीर रोग, कर्ज किंवा हानी संभवते. केवळ ६, ८, १२ पासून मुक्त असणारा ग्रहच रत्न म्हणून वापरावा."
@@ -255,8 +255,8 @@ def generate_vip_remedy_pages(data: dict, T, P) -> list[dict]:
             """
     p3_html += "</div>"
     pages.append({
-        "title_en": "KP Reader III Gemstone Protocol & Strict Warnings",
-        "title_hi": "के.पी. वैज्ञानिक रत्न निवड व वर्ज्य रत्न इशारा",
+        "title_en": "Ancient Gurus Gemstone Protocol & Strict Warnings",
+        "title_hi": "प्राचीन ऋषीप्रणीत रत्न निवड व वर्ज्य रत्न इशारा",
         "html": p3_html
     })
 
@@ -270,7 +270,7 @@ def generate_vip_remedy_pages(data: dict, T, P) -> list[dict]:
           वैद्यकीय ज्योतिष: रोग निदान व शीघ्र रोगमुक्ती (KP Medical Astrology & Cure Window)
         </h3>
         <p style="margin:0; font-size:10px; color:#574032;">
-          प्रो. कृष्णमूर्ति रीडर ३ (पृष्ठ २७८-२९५) नुसार १ल्या आणि ६व्या भावाचे कार्येश आजारपण आणतात, तर ५व्या (६व्यापासून १२वा - रोगनाशक) व ११व्या (६व्यापासून ६वा - आरोग्य पुनर्प्राप्ती) भावाचे कार्येश आजाराचे कायमस्वरूपी उच्चाटन करतात.
+          प्राचीन महर्षी व नक्षत्र सिद्धांतानुसार १ल्या आणि ६व्या भावाचे कार्येश आजारपण आणतात, तर ५व्या (६व्यापासून १२वा - रोगनाशक) व ११व्या (६व्यापासून ६वा - आरोग्य पुनर्प्राप्ती) भावाचे कार्येश आजाराचे कायमस्वरूपी उच्चाटन करतात.
         </p>
       </div>
 
@@ -322,7 +322,7 @@ def generate_vip_remedy_pages(data: dict, T, P) -> list[dict]:
           कर्ज मुक्ती व वित्तीय स्वातंत्र्य (KP Debts Borrowing vs Repayment Analysis)
         </h3>
         <p style="margin:0; font-size:10px; color:#1E3A8A;">
-          प्रो. कृष्णमूर्ति रीडर ३ (पृष्ठ २७६-२८९) चे सूत्र: २, ६, १०, ११ भाव एकत्र आल्यास कर्ज घेणे किंवा भांडवल उभारणी होते; तर ४, ५, ८, १२ भाव सक्रिय झाल्यास कर्जाची परतफेड होते.
+          प्राचीन वैदिक व नक्षत्र सिद्धांताचे सूत्र: २, ६, १०, ११ भाव एकत्र आल्यास कर्ज घेणे किंवा भांडवल उभारणी होते; तर ४, ५, ८, १२ भाव सक्रिय झाल्यास कर्जाची परतफेड होते.
         </p>
       </div>
 
@@ -352,8 +352,8 @@ def generate_vip_remedy_pages(data: dict, T, P) -> list[dict]:
     </div>
     """
     pages.append({
-        "title_en": "KP Debts & Loans Clearance Protocol (Reader III)",
-        "title_hi": "के.पी. ऋण मुक्ती व कर्ज परतफेड शास्त्रीय विधान",
+        "title_en": "Ancient Gurus Debts & Loans Clearance Protocol",
+        "title_hi": "प्राचीन ऋषीप्रणीत ऋण मुक्ती व कर्ज परतफेड शास्त्रीय विधान",
         "html": p5_html
     })
 

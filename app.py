@@ -2965,7 +2965,7 @@ def index_ui():
             <div style="background:linear-gradient(135deg, #7C2D12 0%, #451A03 100%); color:#FDE68A; padding:12px 16px; border-radius:8px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; border:1.5px solid #D4AF37; box-shadow:0 2px 8px rgba(124,45,18,0.25);">
               <div>
                 <div style="font-weight:900; font-size:14px; color:#FFFFFF;">🔮 कृष्णमूर्ती पद्धती (के.पी.) अचूक वैज्ञानिक उपाय व ग्रह कार्येश</div>
-                <div style="font-size:11px; color:#FDE68A; opacity:0.9;">Prof. K. S. Krishnamurti Reader III Zero-Damage Gemstones, 4-Fold Significators &amp; KP 12-Cuspal House Grouping Formulas</div>
+                <div style="font-size:11px; color:#FDE68A; opacity:0.9;">प्राचीन ऋषीप्रणीत नक्षत्र सिद्धांत, Zero-Damage Gemstones, 4-Fold Significators &amp; Cuspal House Grouping Formulas</div>
               </div>
               <button type="button" class="btn-time-step" style="background:#FDE68A; color:#7C2D12; font-weight:900; font-size:12px; padding:6px 14px; border:none; border-radius:6px; cursor:pointer;" onclick="openKPRemediesDirectPDF()">
                 📄 थेट उपाय PDF पहा / प्रिंट करा
