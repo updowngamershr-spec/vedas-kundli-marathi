@@ -18,6 +18,7 @@ import sys
 import io
 import zipfile
 import webbrowser
+import subprocess
 from threading import Timer
 from fastapi import FastAPI, Query
 from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
@@ -744,10 +745,12 @@ def api_export_pdf(req: KundliRequest):
                 shutil.copy2(pdf_path, os.path.join(user_downloads, pdf_filename))
         except Exception:
             pass
+        dl_full_path = os.path.join(os.path.expanduser("~"), "Downloads", pdf_filename)
         return {
             "success": True,
             "filename": pdf_filename,
             "path": pdf_path,
+            "downloads_path": dl_full_path if os.path.exists(dl_full_path) else pdf_path,
             "download_url": f"/api/download-pdf/{pdf_filename}",
             "single_pages_url": f"/api/download-single-pages-zip/{pdf_filename}",
             "page_count": res.get("page_count", 0),
@@ -809,6 +812,56 @@ def api_download_pdf(filename: str):
                     "Cache-Control": "no-cache"
                 }
             )
+    return JSONResponse({"error": "File not found"}, status_code=404)
+
+
+class FileActionRequest(BaseModel):
+    filename: str
+
+@app.post("/api/open-pdf-file")
+def api_open_pdf_file(req: FileActionRequest):
+    safe_name = os.path.basename(req.filename)
+    user_dl = os.path.join(os.path.expanduser("~"), "Downloads")
+    candidate_dirs = [
+        user_dl,
+        REPORTS_DIR,
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "reports"),
+        r"D:\Downloads c",
+    ]
+    for s_dir in candidate_dirs:
+        pdf_path = os.path.join(s_dir, safe_name)
+        if os.path.exists(pdf_path) and os.path.isfile(pdf_path):
+            try:
+                if sys.platform == "win32":
+                    os.startfile(os.path.normpath(pdf_path))
+                else:
+                    subprocess.Popen(["xdg-open", pdf_path])
+                return {"success": True, "path": pdf_path}
+            except Exception as e:
+                return JSONResponse({"error": str(e)}, status_code=500)
+    return JSONResponse({"error": "File not found"}, status_code=404)
+
+@app.post("/api/open-file-location")
+def api_open_file_location(req: FileActionRequest):
+    safe_name = os.path.basename(req.filename)
+    user_dl = os.path.join(os.path.expanduser("~"), "Downloads")
+    candidate_dirs = [
+        user_dl,
+        REPORTS_DIR,
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "reports"),
+        r"D:\Downloads c",
+    ]
+    for s_dir in candidate_dirs:
+        pdf_path = os.path.join(s_dir, safe_name)
+        if os.path.exists(pdf_path) and os.path.isfile(pdf_path):
+            try:
+                if sys.platform == "win32":
+                    subprocess.Popen(f'explorer /select,"{os.path.normpath(pdf_path)}"')
+                else:
+                    subprocess.Popen(["xdg-open", os.path.dirname(pdf_path)])
+                return {"success": True, "path": pdf_path, "dir": os.path.dirname(pdf_path)}
+            except Exception as e:
+                return JSONResponse({"error": str(e)}, status_code=500)
     return JSONResponse({"error": "File not found"}, status_code=404)
 
 
@@ -2404,6 +2457,45 @@ def index_ui():
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            
+            <!-- Download Success Popup Screen (Open PDF / Open Location) -->
+            <div id="downloadSuccessModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(11,15,25,0.82); backdrop-filter:blur(8px); z-index:9999999; justify-content:center; align-items:center;">
+              <div style="background:linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border:2px solid #e0a943; border-radius:18px; width:92vw; max-width:540px; padding:32px 26px; box-shadow:0 24px 60px rgba(0,0,0,0.75); text-align:center; color:#f8fafc; font-family:'Segoe UI',sans-serif; position:relative;">
+                
+                <div style="width:72px; height:72px; margin:0 auto 16px; border-radius:50%; background:linear-gradient(135deg, #e0a943 0%, #ca8a04 100%); display:flex; align-items:center; justify-content:center; font-size:36px; box-shadow:0 8px 25px rgba(224,169,67,0.45);">
+                  ✅
+                </div>
+                
+                <h2 style="font-size:22px; font-weight:800; color:#fbbf24; margin:0 0 8px; letter-spacing:0.5px;">
+                  PDF डाऊनलोड यशस्वी! (Download Complete)
+                </h2>
+                <p style="font-size:13.5px; color:#cbd5e1; margin:0 0 18px; line-height:1.5;">
+                  आपली ७८ पानांची बृहत् जन्मपत्रिका यशस्वीरीत्या तयार होऊन डाऊनलोड झाली आहे.
+                </p>
+
+                <div style="background:#0b0f19; border:1px solid #334155; border-radius:12px; padding:14px 16px; margin-bottom:24px; text-align:left;">
+                  <div style="font-size:11.5px; color:#94a3b8; margin-bottom:4px; font-weight:700;">📄 फाइलचे नाव (File Name):</div>
+                  <div id="successModalFileName" style="font-size:13px; font-weight:700; color:#38bdf8; word-break:break-all;"></div>
+                  <div style="font-size:11.5px; color:#94a3b8; margin-top:10px; margin-bottom:4px; font-weight:700;">📂 साठवण स्थान (Saved Folder Location):</div>
+                  <div id="successModalFileLocation" style="font-size:12px; color:#a7f3d0; word-break:break-all;">Downloads &amp; Software Reports Folder</div>
+                </div>
+
+                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:16px;">
+                  <button onclick="openGeneratedPdf()" style="flex:1; min-width:160px; background:linear-gradient(135deg, #e0a943 0%, #d97706 100%); color:#0b0f19; border:none; padding:13px 20px; border-radius:10px; font-weight:800; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(224,169,67,0.4);">
+                    <span style="font-size:16px;">📄</span> Open PDF (PDF उघडा)
+                  </button>
+
+                  <button onclick="openGeneratedPdfLocation()" style="flex:1; min-width:160px; background:#1e293b; color:#38bdf8; border:1.5px solid #38bdf8; padding:13px 20px; border-radius:10px; font-weight:800; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <span style="font-size:16px;">📂</span> Open Location (स्थान पहा)
+                  </button>
+                </div>
+
+                <button onclick="closeDownloadSuccessModal()" style="background:transparent; border:none; color:#94a3b8; font-size:13px; font-weight:600; cursor:pointer; padding:6px 14px; text-decoration:underline;">
+                  ✕ विंडो बंद करा (Close)
+                </button>
+              </div>
             </div>
 
             <!-- Milan Preview & Print Modal -->
@@ -4911,6 +5003,7 @@ def index_ui():
               document.getElementById('btnSingleZip').style.display = 'block';
             }
             loadDashboard();
+            showDownloadSuccessModal(data.filename, data.downloads_path || data.path);
           } else {
             loadDashboard();
           }
@@ -4919,6 +5012,52 @@ def index_ui():
         clearInterval(timer);
         modal.style.display = 'none'; modal.style.pointerEvents = 'none';
         loadDashboard();
+      }
+    }
+
+    
+    let currentGeneratedPdfName = '';
+    let currentGeneratedPdfPath = '';
+
+    function showDownloadSuccessModal(filename, path) {
+      currentGeneratedPdfName = filename || '';
+      currentGeneratedPdfPath = path || '';
+      const modal = document.getElementById('downloadSuccessModal');
+      const nameEl = document.getElementById('successModalFileName');
+      const locEl = document.getElementById('successModalFileLocation');
+      if (nameEl) nameEl.innerText = filename || 'Kundli_VIP.pdf';
+      if (locEl) locEl.innerText = path || "C:\\Users\\...\\Downloads";
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeDownloadSuccessModal() {
+      const modal = document.getElementById('downloadSuccessModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function openGeneratedPdf() {
+      if (!currentGeneratedPdfName) return;
+      try {
+        await fetch('/api/open-pdf-file', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({filename: currentGeneratedPdfName})
+        });
+      } catch (e) {
+        console.error('Error opening PDF:', e);
+      }
+    }
+
+    async function openGeneratedPdfLocation() {
+      if (!currentGeneratedPdfName) return;
+      try {
+        await fetch('/api/open-file-location', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({filename: currentGeneratedPdfName})
+        });
+      } catch (e) {
+        console.error('Error opening file location:', e);
       }
     }
 
